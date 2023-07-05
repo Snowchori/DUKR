@@ -1,0 +1,84 @@
+/* common */
+body,div,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,a,button,select { padding:0;}
+body,td,th,div,span,input,select,textarea,button,table { font-family:'NanumGothic','돋움',dotum,Verdana,AppleGothic,Arial,Helvetica,sans-serif;font-size:12px; color:#666; line-height:16px; }
+img, th, td, fieldset,iframe { border:0;}
+img { vertical-align:top;}
+li { list-style:none;}
+em,address {font-style:normal;}
+input,select,button {vertical-align:middle;}
+
+/*common add */
+caption,legend,.blind {visibility:hidden; overflow:hidden; position:absolute; top:0; left:-999em; width:0; height:0; font-size:0; line-height:0; text-align:left;}
+
+/* input */
+button { margin:0; *margin:0 2px; padding:0; cursor:pointer; border:0; vertical-align:middle; background-repeat:no-repeat; background-position:top left; }
+textarea { height:120px; border:1px solid #cecece;}
+select{ height:26px; padding:2px; border:1px solid #cecece; /*font-size:12px; color:#444;*/ vertical-align:middle;}
+table { border-collapse:collapse; border-spacing:0;}
+hr {display:none;}
+
+/* link */
+a:link { color:#666; text-decoration: none; }
+a:visited {color:#666; text-decoration: none;}
+a:hover { color:#0b96d4; text-decoration: underline;}
+a:active { color:#0b96d4; text-decoration: none;}
+
+.site_navi { width:100%; text-align:right; font-size:11px; color:#838383; border-bottom:1px solid #ddd; padding-bottom:7px;}
+.contents_sub { width:100%; margin:0; }
+.contents_sub table {width:100%; border-collapse:collapse;}
+
+.board_top {width:100%; overflow:hidden;}
+.board_top .f_search {float:right; width:330px; text-align:right;} 
+.board_top .bold {float:left; width:200px; margin:0px 0;}
+
+.board_title {font:bold 14px dotum; color:#000;}
+.board_list {border-top:1px solid #464646;}
+.board {width:100%; padding:15px 0;}
+.board th {height:36px; background:url('./images/bg_th.gif') repeat-x; color:#fff; font:bold 12px dotum; word-wrap: break-word; word-break: break-all; }
+.board td {color:#797979; text-align:center; padding:0 5px; word-wrap: break-word; word-break: break-all;}
+.board table.boardT {padding:15px 0;}
+.board_input { border:1px solid #cecece; height:24px; width:160px;}
+.board span.txt_f11 {font-size:11px;}
+
+.board .boardThumbWrap {padding: 0 0 10px 0;}
+/* 썸네일 테두리 사이즈는 width:160px; height:130px; 으로 고정. 수직/수평 가운데 정렬 */
+.board .boardThumb { display: table-cell; width:160px; height:130px; border:1px solid #eee; text-align:center; vertical-align: middle; margin:0 auto;}
+.board .boardItem { display: table-cell; width:160px; height:16px; text-align:center; vertical-align: middle; margin:0 auto;}
+.coment_number { font:bold 10px verdana; color:#1787f0;}
+.last2 {border-bottom:2px solid #f2f2f2; padding:10px;} 
+
+/* Paging */
+.paginate_regular {padding:10px 0;text-align:center;line-height:normal;}  
+.paginate_regular a,  
+.paginate_regular strong{display:inline-block;position:relative;margin:0 -2px;padding:2px 8px;font-weight:600;line-height:normal;text-decoration:none;vertical-align:middle;}  
+.paginate_regular a:hover,  
+.paginate_regular a:active,  
+.paginate_regular a:focus {background-color:#f8f8f8;}  
+
+.paginate_regular strong{color:#f60;}  
+.paginate_regular .direction{font-weight:normal;color:#767676;white-space:nowrap;}  
+.paginate_regular .direction span{font-weight:bold;font-size:14px;}  
+
+.paginate_regular .direction:hover,  
+.paginate_regular .direction:active,  
+.paginate_regular .direction:focus {background-color:#fff;color:#333;}
+
+/* Button */
+.btn_write { display:inline-block; background:#5f5f5f; border:1px solid #404144;padding:6px 17px 7px 17px;}
+.btn_txt01 {color:#fff; font-weight:600;} 
+.btn_search { display:inline-block; color:#333; padding:4px 16px 6px 26px; background:url('../images/btn_search_bg.gif') no-repeat 0 0;}
+
+/* Align*/
+.align_right {text-align:right; margin:10px 0; overflow:hidden;}
+.align_right button {float:right;}
+.tR {text-align:right;}
+
+/* Color */
+.txt_blue { font-weight:bold; color:#7ab5df; }
+.txt_orange { font:bold 12px verdana; color:#ff7e00; }
+
+.con_title {overflow:hidden; position:relative; height: 30px; margin-bottom: 10px;}
+.con_title h3 {margin:0px 0 0px 0;  text-align:left; }
+.con_title p {margin-top: 10px; padding-bottom: 5px; border-bottom: 1px solid #DADADA;}    
+.contents1 .con_txt{ clear:both;}    
+.contents1 {margin-top: 30px;}

@@ -1,0 +1,50 @@
+/* common */
+body,div,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,a,button,select { padding:0;}
+body,td,th,div,span,input,select,textarea,button,table { font-family:'NanumGothic','돋움',dotum,Verdana,AppleGothic,Arial,Helvetica,sans-serif;font-size:12px; color:#666; line-height:16px; }
+img, th, td, fieldset,iframe { border:0;}
+img { vertical-align:top;}
+li { list-style:none;}
+em,address {font-style:normal;}
+input,select,button {vertical-align:middle;}
+
+/*common add */
+caption,legend,.blind {visibility:hidden; overflow:hidden; position:absolute; top:0; left:-999em; width:0; height:0; font-size:0; line-height:0; text-align:left;}
+
+/* input */
+button { margin:0; *margin:0 2px; padding:0; cursor:pointer; border:0; vertical-align:middle; background-repeat:no-repeat; background-position:top left; }
+textarea { height:120px; border:1px solid #cecece;}
+select{ height:26px; padding:2px; border:1px solid #cecece; /*font-size:12px; color:#444;*/ vertical-align:middle;}
+table { border-collapse:collapse; border-spacing:0;}
+hr {display:none;}
+
+/* link */
+a:link { color:#666; text-decoration: none; }
+a:visited {color:#666; text-decoration: none;}
+a:hover { color:#0b96d4; text-decoration: underline;}
+a:active { color:#0b96d4; text-decoration: none;}
+
+.contents_sub { width:92%; margin:40px auto; }
+.contents_sub table.box {width:45%; border-collapse:collapse; margin:20px auto;}
+.contents_sub table.box table {width:100%;}
+
+.board_view {width:100%; border:1px solid #ccc; background:#f9f9fb;}
+.board_view th, .board_view td {background:#f9f9fb;}
+.board_view th {width:100px; height:40px; text-align:left; word-wrap: break-word; word-break: break-all;}
+.board_view td {height:40px; color:#797979; padding:0 5px; text-align:center; word-wrap: break-word; word-break: break-all;}
+.board_view td.left {text-align:left;}
+
+.delete_input {border:1px solid #cecece; height:24px; width:230px;}
+.align_center button {margin:0 5px;}
+
+/* Button */
+.btn_write02 { display:inline-block; background:#5f5f5f; border:1px solid #404144;padding:7px 18px 8px 18px;}
+.btn_list02  { display:inline-block; background:#fcfcfc; border:1px solid #bcbcbc;padding:7px 18px 8px 18px;}
+.btn_txt01 {color:#fff; font-weight:600;} 
+.btn_txt02 {color:#1f1f1f; font-weight:600;}
+
+/* Align*/
+.align_center {text-align:center; margin:20px auto; overflow:hidden;}
+.align_center button {text-align:center;}
+.board_view th.delete_txt {color:#333; font-weight:600;}
+.bold {font-weight:600; color:red;}
+
