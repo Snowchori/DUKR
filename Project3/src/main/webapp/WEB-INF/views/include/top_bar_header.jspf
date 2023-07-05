@@ -24,7 +24,7 @@
                     </ul>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/meetSearch">모임검색</a>
+                    <a class="nav-link" href="/meetSearch">모임지도</a>
                   </li>
                   <%= adminHtml %>
             </ul>
