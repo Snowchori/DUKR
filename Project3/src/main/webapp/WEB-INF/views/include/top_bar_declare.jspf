@@ -1,0 +1,37 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@page import="com.example.model.MemberTO"%>
+<%@page import="com.example.model.EvaluationTO"%>
+<%@page import="com.example.model.BoardTO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.example.model.BoardgameTO"%>
+<%
+	MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+	String userSeq = null;
+	boolean isAdmin = false;
+	StringBuilder loginHtml = new StringBuilder();
+	if(userInfo != null) {
+		userSeq = userInfo.getSeq();
+		isAdmin = userInfo.isAdmin();
+		loginHtml.append("<a href='/logout' class='badge badge-light'>로그아웃</a>");
+	} else {
+		loginHtml.append("<a href='/login' class='badge badge-light'>로그인</a>");
+	}
+	
+	loginHtml.append("<a href='/mypage' class='badge badge-light'>마이페이지</a>");
+	
+	StringBuilder adminHtml = new StringBuilder();
+	if(isAdmin) {
+		adminHtml.append("<li class='nav-item dropdown'>");
+		adminHtml.append("<a class='nav-link dropdown-toggle' href='#' data-bs-toggle='dropdown' aria-expanded='false'>관리자</a>");
+		adminHtml.append("<ul class='dropdown-menu'>");
+		adminHtml.append("<li><a class='dropdown-item' href='#'>신고글 목록</a></li>");
+		adminHtml.append("<li><a class='dropdown-item' href='#'>밴유저 관리</a></li>");
+		adminHtml.append("<li><a class='dropdown-item' href='#'>유저 목록</a></li>");
+		adminHtml.append("<li><a class='dropdown-item' href='#'>전체 쪽지 보내기</a></li>");
+		adminHtml.append("<li><a class='dropdown-item' href='#'>문의 관리</a></li>");
+		adminHtml.append("<li><a class='dropdown-item' href='gameManage'>게임 관리</a></li>");
+		adminHtml.append("</ul>");
+		adminHtml.append("</li>");
+	}
+%>
