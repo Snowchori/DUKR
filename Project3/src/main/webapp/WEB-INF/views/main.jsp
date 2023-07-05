@@ -4,8 +4,6 @@
 <!doctype html>
 <html>
 <!-- java 영역 -->
-<!-- 테스트 수정 -->
-
 <head>
     <!-- 페이지 제목 -->
     <title>DUKrule?</title>
