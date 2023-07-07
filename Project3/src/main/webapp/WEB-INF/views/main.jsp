@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <!doctype html>
+<!--테스트-->
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
