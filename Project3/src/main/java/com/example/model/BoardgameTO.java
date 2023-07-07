@@ -6,23 +6,23 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BoardgameTO {
-	String seq;
-	String title;
-	String imageUrl;
-	String yearpublished;
-	String minPlayer;
-	String maxPlayer;
-	String minPlaytime;
-	String maxPlaytime;
-	String minAge;
-	String brief;
-	String hit;
-	String recCnt;
-	String evalCnt;
-	String theme;
-	String genre;
-	String difficulty;
-	String rate;
-	boolean isinDB;
-	boolean isModi;
+	private String seq;
+	private String title;
+	private String imageUrl;
+	private String yearpublished;
+	private String minPlayer;
+	private String maxPlayer;
+	private String minPlaytime;
+	private String maxPlaytime;
+	private String minAge;
+	private String brief;
+	private String hit;
+	private String recCnt;
+	private String evalCnt;
+	private String theme;
+	private String genre;
+	private String difficulty;
+	private String rate;
+	private boolean isinDB;
+	private boolean isModi;
 }

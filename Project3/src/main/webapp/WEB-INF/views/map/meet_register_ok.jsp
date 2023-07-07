@@ -2,11 +2,10 @@
 	pageEncoding="UTF-8"%>
 <%
 	int flag = (int)request.getAttribute("flag");
-	
 	out.println("<script type='text/javascript'>");
 	if(flag == 0){
 		out.println("alert('성공');");
-	}else{
+	} else {
 		out.println("alert('실패');");
 	}
 	out.println("history.back();");

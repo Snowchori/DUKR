@@ -6,17 +6,18 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BoardTO {
-	String seq;
-	String memSeq;
-	String subject;
-	String content;
-	String wip;
-	String wdate;
-	String hit;
-	String recCnt;
-	String cmtCnt;
-	boolean isDel;
-	String tag;
-	boolean hasFile;
-	String writer;
+	private String seq;
+	private String memSeq;
+	private String subject;
+	private String content;
+	private String wip;
+	private String wdate;
+	private String hit;
+	private String recCnt;
+	private String cmtCnt;
+	private boolean isDel;
+	private String tag;
+	private String boardType;
+	private boolean hasFile;
+	private String writer;
 }

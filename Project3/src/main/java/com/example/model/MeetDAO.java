@@ -9,7 +9,6 @@ import com.example.config.MeetingMapperInter;
 
 @Repository
 public class MeetDAO {
-	
 	@Autowired
 	private MeetingMapperInter meetMapper;
 	

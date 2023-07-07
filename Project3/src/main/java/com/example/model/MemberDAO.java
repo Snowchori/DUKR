@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.example.config.MemberMapperInter;
 
 @Repository
-@MapperScan( basePackages = { "com.example.config" } )
 public class MemberDAO {
 	@Autowired
 	private MemberMapperInter memberMapper;
@@ -62,6 +61,12 @@ public class MemberDAO {
 		return count;
 	}
 	
+	// 회원가입 시 이메일 중복확인
+	public int emailDuplCheck(String email) {
+		int count = memberMapper.emailDuplCheck(email);
+		return count;
+	}
+	
 	// 비밀번호 찾기
 	public MemberTO findPassword(MemberTO to) {
 		to = memberMapper.findPassword(to);
@@ -100,5 +105,34 @@ public class MemberDAO {
 		// 소셜로그인 시도한 계정 정보와 seq정보를 포함시켜 리턴
 		return to;
 	}
-
+	
+	// 닉네임 중복확인
+	public int nicknameDuplCheck(String nickname) {
+		int count = memberMapper.nicknameDuplCheck(nickname);
+		return count;
+	}
+	
+	// 회원정보 변경
+	public int memberUpdate(MemberTO to) {
+		int result = memberMapper.memberUpdate(to);
+		return result;
+	}
+	
+	// 소셜회원가입유저 정보 변경
+	public int socialmemberUpdate(MemberTO to) {
+		int result = memberMapper.socialmemberUpdate(to);
+		return result;
+	}
+	
+	// 비밀번호 확인
+	public int memberpasswordCheck(MemberTO to) {
+		int result = memberMapper.memberpasswordCheck(to);
+		return result;
+	}
+	
+	//seq로 멤버 정보 가져오기
+	public MemberTO memberinfoGet(String seq) {
+		MemberTO memberTO = memberMapper.memberinfoGet(seq);
+		return memberTO;
+	}
 }

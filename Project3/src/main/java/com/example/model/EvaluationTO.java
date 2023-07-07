@@ -6,14 +6,14 @@ import lombok.Setter;
 @Setter
 @Getter
 public class EvaluationTO {
-	String seq;
-	String gameSeq;
-	String memSeq;
-	String rate;
-	String eval;
-	String recCnt;
-	String difficulty;
-	String wdate;
-	int isEvalRec;
-	String writer;
+	private String seq;
+	private String gameSeq;
+	private String memSeq;
+	private String rate;
+	private String eval;
+	private String recCnt;
+	private String difficulty;
+	private String wdate;
+	private int isEvalRec;
+	private String writer;
 }

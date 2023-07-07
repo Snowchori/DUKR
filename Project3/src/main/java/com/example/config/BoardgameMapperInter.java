@@ -48,8 +48,8 @@ public interface BoardgameMapperInter {
 	public int gameRecCntDown(String seq);
 	
 	@Select("select seq, title, imageUrl, yearpublished, minPlayer, maxPlayer, minPlaytime, maxPlaytime,"
-			+ "minAge, brief, theme, genre, isModi from boardgame")
-	public ArrayList<BoardgameTO> gameList();
+			+ "minAge, brief, theme, genre, isModi from boardgame order by ${sort} desc")
+	public ArrayList<BoardgameTO> gameList(String sort);
 	
 	@Update("update boardgame set brief = #{brief}, theme = #{theme}, genre=#{genre}, isModi=true where seq = #{seq}")
 	public int gameInfoModify(BoardgameTO to);

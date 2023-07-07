@@ -2,6 +2,8 @@ package com.example.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,20 +13,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.config.BoardgameMapperInter;
 
 @Repository
-@MapperScan( basePackages = { "com.example.config" } )
 public class BoardgameDAO {
 	@Autowired
 	private BoardgameMapperInter gameMapper;
 	
 	public BoardgameTO gameInfo(String gameId) {
-		
 		BoardgameTO gameTO = new BoardgameTO();
 		gameTO.setSeq(gameId);
 		
@@ -104,7 +103,7 @@ public class BoardgameDAO {
 					gameTO.setHit("0");
 					gameTO.setRecCnt("0");
 					gameTO.setEvalCnt("0");
-					gameTO.isModi = false;
+					gameTO.setIsinDB(false);
 					
 					gameMapper.gameInsert(gameTO);
 				}
@@ -182,9 +181,9 @@ public class BoardgameDAO {
 		return flag;
 	}
 	
-	public ArrayList<BoardgameTO> gameList() {
+	public ArrayList<BoardgameTO> gameList(String sort) {
 		ArrayList<BoardgameTO> lists = new ArrayList<BoardgameTO>();
-		lists = gameMapper.gameList();
+		lists = gameMapper.gameList(sort);
 		
 		return lists;
 	}
@@ -228,15 +227,20 @@ public class BoardgameDAO {
 		return lists;
 	}
 	
-	public ArrayList<Map<String, String>> gameSearch(SearchFilterTO to){
-		ArrayList<Map<String, String>> lists = new ArrayList<>();
+	public ArrayList<BoardgameTO> gameSearch(SearchFilterTO to){
+		ArrayList<BoardgameTO> lists = new ArrayList<>();
+		
+		if(to.getKeyword().equals("")) {	// 게임 이름을 검색 안했을 때 ( 첫 게임검색 페이지에 들어왔을 때, 혹은 정렬만 바꿨을 때 )			
+			lists = gameList(to.getSort());
+			
+			return lists;
+		}
 		
 		boolean playersCheck = false; // 인원 조건 유무
 		boolean playersFilter; // 인원 조건 검사 결과 ( True: 비정상, False: 정상 )
 		
 		boolean genreCheck = false;	  // 장르 조건 유무
 		boolean genreFilter; // 장르 조건 검사 결과 ( True: 비정상, False: 정상 )
-
 		
 		if( !(to.getPlayers().equals("")) ) {
 			playersCheck = true; 
@@ -244,13 +248,12 @@ public class BoardgameDAO {
 		if( !(to.getGenre().equals("")) ) {
 			genreCheck = true; 
 		}
+				
 		
 		try {				
 			// Create a URL object for the BoardGameGeek
 			Connection conn = Jsoup.connect("https://api.geekdo.com/xmlapi/search?search=" + to.getKeyword()).parser(Parser.xmlParser());
-			//Connection conn = Jsoup.connect("https://boardgamegeek.com/xmlapi/search?search=+");
 
-			
 			// Connect to the API and get the response document
 			Document document = conn.get();
 
@@ -262,13 +265,11 @@ public class BoardgameDAO {
 				
 				playersFilter = true; 
 				genreFilter = true;
-				
-				Map<String, String> gameinfo = new HashMap<String, String>();
-				
+								
 				String gameId = boardGame.attr("objectid");
 				
 				BoardgameTO gameTO = gameInfo(gameId);
-				
+
 				// 인원 조건 검사
 				if( playersCheck ) {	
 					
@@ -287,7 +288,6 @@ public class BoardgameDAO {
 					playersFilter = false;
 				}
 				
-				
 				// 장르 조건 검사
 				if( genreCheck ) {
 					String[] genres = to.getGenre().split(",");
@@ -304,13 +304,14 @@ public class BoardgameDAO {
 								break;
 							}
 						}
-					} else { // DB에 게임이 없을 때 ( xml 에서 해당 게임 조회 해서 비교 )
-						
+					} else { 
+						// DB에 게임이 없을 때 ( xml 에서 해당 게임 조회 해서 비교 )
 						String gameCategories = Jsoup.connect("https://api.geekdo.com/xmlapi/boardgame/" + gameId).get().select("boardgamecategory").text();
 						String gameCategory = "";
 						
 						for(String genre : genres) {
-							switch(genre) {		// 장르를 BGG_XML_API에서 사용하는 카테고리로 대체
+							switch(genre) {	
+								// 장르를 BGG_XML_API에서 사용하는 카테고리로 대체
 								case "전략":
 									gameCategory = "Strategy";
 									break;
@@ -337,36 +338,86 @@ public class BoardgameDAO {
 								break;
 							}
 						}
-						
-						
 					}
-					
 				} else {
 					genreFilter = false;
 				}
-				
 				
 				// 검색 조건에 해당하지 않는 게임이므로 gameInfo에 저장하지 않고 continue
 				if(playersFilter || genreFilter) {
 					continue;
 				}
-				
-			    String thumbnail = gameTO.getImageUrl();
 
-			    gameinfo.put("gameId", gameId);
-			    gameinfo.put("thumbnail", thumbnail);
-
-			    lists.add(gameinfo);
-			    
+			    lists.add(gameTO);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		
-		// 정렬
+		switch(to.getSort()) {
+		case "yearpublished":
+			Collections.sort(lists, new YearpublishedComparator().reversed());
+			break;
+			
+		case "hit":
+			Collections.sort(lists, new HitComparator().reversed());
+			break;
+			
+		case "recCtn":
+			Collections.sort(lists, new RecCntComparator().reversed());
+			break;
+			
+		case "difficulty":
+			Collections.sort(lists, new DiffComparator().reversed());		
+			break;
+			
 		
+		}
 		
 		return lists;
+	}
+	
+	class YearpublishedComparator implements Comparator<BoardgameTO>{
+
+		@Override
+		public int compare(BoardgameTO o1, BoardgameTO o2) {	// 출시년도 내림차순 정렬
+			// TODO Auto-generated method stub
+			return o1.getYearpublished().compareTo(o2.getYearpublished());
+		}
+		
+	}
+
+	class HitComparator implements Comparator<BoardgameTO>{
+
+		@Override
+		public int compare(BoardgameTO o1, BoardgameTO o2) {	// 출시년도 내림차순 정렬
+			// TODO Auto-generated method stub
+			return o1.getHit().compareTo(o2.getHit());
+
+		}
+		
+	}
+
+	class RecCntComparator implements Comparator<BoardgameTO>{
+
+		@Override
+		public int compare(BoardgameTO o1, BoardgameTO o2) {	// 출시년도 내림차순 정렬
+			// TODO Auto-generated method stub
+			return o1.getRecCnt().compareTo(o2.getRecCnt());
+
+		}
+		
+	}
+
+	class DiffComparator implements Comparator<BoardgameTO>{
+
+		@Override
+		public int compare(BoardgameTO o1, BoardgameTO o2) {	// 출시년도 내림차순 정렬
+			// TODO Auto-generated method stub
+			return o1.getDifficulty().compareTo(o2.getDifficulty());
+
+		}
 	}
 }

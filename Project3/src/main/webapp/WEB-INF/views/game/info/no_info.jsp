@@ -1,8 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%
-out.println("<script type='text/javascript'>");
-out.println("alert('게임 정보가 존재하지 않습니다.')");
-out.println("history.back();");
-out.println("</script>");
-%>
+<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
+<body>
+	<script type='text/javascript'>
+		Swal.fire({
+			icon: 'error',
+			title: '게임 정보가 존재하지 않습니다.',
+			confirmButtonText: "확인",
+			willClose: () => {
+				history.back();
+			}
+		});
+	</script>
+</body>	
+

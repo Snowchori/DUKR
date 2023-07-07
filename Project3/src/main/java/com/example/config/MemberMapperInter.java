@@ -19,8 +19,12 @@ public interface MemberMapperInter {
 	@Select("select seq, id, nickname, email, rate, isAdmin from member where id=#{id} and password=#{password}")
 	public abstract MemberTO login(MemberTO to);
 	
+	// seq로 회원정보 가져오기
+	@Select("select id, nickname, email, rate, isAdmin from member where seq=#{seq}")
+	public abstract MemberTO memberinfoGet(String seq);
+	
 	// 일반유저 회원가입
-	@Insert("insert into member values(0, #{hintSeq}, #{id}, #{password}, #{nickname}, #{email}, #{answer}, #{certification}, #{rate}, false, null)") 
+	@Insert("insert into member values(0, #{hintSeq}, #{id}, #{password}, #{nickname}, #{email}, #{answer}, #{rate}, false, null)") 
 	public abstract int newUser(MemberTO to);
 	
 	// 회원가입 시 아이디 중복확인
@@ -48,7 +52,26 @@ public interface MemberMapperInter {
 	public abstract int updateSocialAccount(MemberTO to);
 	
 	// trySocialLogin()시도 후 리턴값이 null일때(사이트에 최초 소셜로그인한 계정인 경우)
-	@Insert("insert into member values(0, #{hintSeq}, null, #{password}, #{nickname}, #{email}, #{answer}, #{certification}, #{rate}, false, #{uuid})")
+	@Insert("insert into member values(0, #{hintSeq}, null, #{password}, #{nickname}, #{email}, #{answer}, #{rate}, false, #{uuid})")
 	public int firstVisit(MemberTO to);
+	
+	// 이메일 중복확인
+	@Select("select count(*) from member where email=#{email}")
+	public int emailDuplCheck(String email);
+	
+	// 닉네임 중복확인
+	@Select("select count(*) from member where nickname=#{nickname}")
+	public int nicknameDuplCheck(String nickname);
 
+	// 비밀번호 확인
+	@Select("select count(*) from member where id=#{id} and password=#{password}")
+	public abstract int memberpasswordCheck(MemberTO to);
+	
+	// 회원정보 변경
+	@Update("update member set nickname=#{nickname}, email=#{email} , password=#{password} where seq=#{seq}")
+	public abstract int memberUpdate(MemberTO to);
+	
+	// 소셜회원가입회원 정보 변경
+	@Update("update member set nickname=#{nickname}, email=#{email} where seq=#{seq}")
+	public abstract int socialmemberUpdate(MemberTO to);
 }

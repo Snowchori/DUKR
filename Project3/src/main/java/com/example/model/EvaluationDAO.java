@@ -12,7 +12,6 @@ import com.example.config.BoardgameMapperInter;
 import com.example.config.EvaluationMapperInter;
 
 @Repository
-@MapperScan( basePackages = { "com.example.config" } )
 public class EvaluationDAO {
 	@Autowired
 	private EvaluationMapperInter evalMapper;
