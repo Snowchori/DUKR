@@ -118,7 +118,7 @@
 				}
 				
 				function loadMeet(){
-					fetch('/api/party.json?loccode=0')
+					fetch('/api/party.json')
 					.then(response => response.json())
 					.then(jsonData => {
 						datas = jsonData;
@@ -142,7 +142,7 @@
 				}
 				
 				/* 초기 도(시) select - option 생성 */
-				fetch('/api/geoCodes.json?type=sido')
+				fetch('/api/geoCodes.json')
 				.then(response => response.json())
 				.then(response => {
 					const features = response.response.result.featureCollection.features;
