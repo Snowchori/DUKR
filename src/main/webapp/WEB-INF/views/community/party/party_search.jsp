@@ -12,6 +12,15 @@
 		</script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
+				
+			const setRoadview = () => {
+				const control = document.getElementById('roadviewControl');
+				
+				// 클래스 이름 중 active의 존재 유무를 통해 css를 부여해 클릭 효과를 줌
+				// classList.add('active') + classList.remove('active')
+				control.classList.toggle('active');
+			}
+		
 			window.addEventListener('DOMContentLoaded', () => {
 				/* 초기 지도 설정 */
 				// 지도 출력될 태그 할당
@@ -45,6 +54,10 @@
 				const dosel = document.getElementById('dosel');
 				const sisel = document.getElementById('sisel');
 				const sbtn = document.getElementById('sbtn');
+				
+				const f1 = () => {
+					alert('클릭');
+				}
 				/* 선택된 조건에 따라 맵을 그리는 함수 */
 				function drawMap(){
 					let infoContents = [];
@@ -73,11 +86,11 @@
 							// 인포윈도우 작성될 정보(마커 인덱스, 내용) 배열로 저장
 							infoContents.push({
 								marker: markers.length-1,
-								content: '<div style="width:180px;text-align:center;"><a href="#" class="meet">' + inner + '</a>'
+								content: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>&nbsp;<a href="#" class="roadview"><i class="bi bi-eye"></i></a>'
 							});
 	
 						} else {
-							infoContents[infoContents.length-1].content = infoContents[infoContents.length-1].content + '<br/><a href="#" class="meet">' + inner + '</a>';
+							infoContents[infoContents.length-1].content = infoContents[infoContents.length-1].content + '<br/><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>';
 						}
 					}
 					
@@ -136,7 +149,6 @@
 						dosel.options[0].selected = true;
 						sisel.options[0].selected = true;
 						sisel.setAttribute('disabled', '');
-						
 						drawMap();
 					});
 				}
@@ -232,6 +244,10 @@
 						alert('조건에 해당하는 모임이 없습니다.');
 					}
 				};
+				
+				document.getElementById('rbtn').onclick = function(){
+					loadMeet();
+				}
 			});
 		</script>
 		<!-- 개별 CSS -->
@@ -265,6 +281,8 @@
 			.bottombody{
 				max-width: 1920px;
 			}
+			#roadviewControl {position:absolute;top:90%;left:5px;width:42px;height:42px;z-index: 2;cursor: pointer; background: url(/assets/img/kakao/img_search.png) 0 -450px no-repeat;}
+			#roadviewControl.active {background-position:0 -350px;}
 			
 			@media (min-width: 767px){
 				#map-side{
@@ -293,7 +311,8 @@
 			<!-- 메인 요소 -->
 			<div class="container-fluid d-flex justify-content-center bottombody">
 				<div class="row py-5 mapframe">
-					<div id="map" class="col mb-3 border border-5" style="width:1000px;height:600px;"></div>
+					<div id="map" class="col mb-3 border border-5" style="width:1000px;height:600px;">
+					<div id="roadviewControl" onclick="setRoadview()"></div></div>
 					<div id="map-side" class="col-lg-4 align-self-center">
 						<form action="" class="row">
 							<div class="mb-3 col-sm-6 col-lg-12">
@@ -309,7 +328,10 @@
 								</select>
 							</div>
 						</form>
-						<input type="button" class="btn btn-primary" id="sbtn" value="검색" style="width: 100%" disabled/>
+						<div class="d-flex">
+							<button class="btn btn-primary" id="rbtn"><i class='bi bi-arrow-clockwise'></i></button>&nbsp;
+							<input type="button" class="btn btn-primary" id="sbtn" value="검색" style="width: 100%" disabled/>
+						</div>
 					</div>
 				</div>
 			</div>
