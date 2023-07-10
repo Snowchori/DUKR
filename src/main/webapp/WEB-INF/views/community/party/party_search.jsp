@@ -118,7 +118,7 @@
 				}
 				
 				function loadMeet(){
-					fetch('/api/getParties.json?loccode=0')
+					fetch('/api/party.json?loccode=0')
 					.then(response => response.json())
 					.then(jsonData => {
 						datas = jsonData;
@@ -168,7 +168,7 @@
 					
 					let dcode = dosel.value;
 					if(dcode !== "0"){
-						fetch('api/geoCodes.json?loccode=' + dcode)
+						fetch('api/geoCodes.json?prvcode=' + dcode)
 						.then(response => response.json())
 						.then(response => {
 							const features = response.response.result.featureCollection.features;

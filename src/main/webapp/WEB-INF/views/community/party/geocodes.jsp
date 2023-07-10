@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/plain; charset=UTF-8"
-	pageEncoding="UTF-8" trimDirectiveWhitespaces="true" %>
+	pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	String prvcode = (String)request.getAttribute("prvcode");

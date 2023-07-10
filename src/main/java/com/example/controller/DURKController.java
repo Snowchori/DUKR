@@ -418,7 +418,7 @@ public class DURKController {
 		return model;
 	}
 
-	@GetMapping("api/getParties.json")
+	@GetMapping("api/party.json")
 	public ArrayList<ApiPartyTO> getParties(HttpServletRequest request) {
 		ArrayList<ApiPartyTO> data = null;
 		
