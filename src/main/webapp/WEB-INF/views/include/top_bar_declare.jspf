@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@page import="com.example.model.MemberTO"%>
-<%@page import="com.example.model.EvaluationTO"%>
-<%@page import="com.example.model.BoardTO"%>
+<%@page import="com.example.model.member.MemberTO"%>
+<%@page import="com.example.model.evaluation.EvaluationTO"%>
+<%@page import="com.example.model.board.BoardTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="com.example.model.BoardgameTO"%>
+<%@page import="com.example.model.boardgame.BoardgameTO"%>
 <%
 	MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 	String userSeq = null;
