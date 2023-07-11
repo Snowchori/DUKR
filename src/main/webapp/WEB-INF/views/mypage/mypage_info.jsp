@@ -8,6 +8,9 @@
 	int userType = (int)request.getAttribute("userType");
 	int rate = (int)request.getAttribute("rate");
 %>
+
+<!-- 소셜로그인 추가 -->
+
 <!doctype html>
 <html>
 	<head>
