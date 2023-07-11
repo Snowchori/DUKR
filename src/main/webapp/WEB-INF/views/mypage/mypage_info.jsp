@@ -8,9 +8,6 @@
 	int userType = (int)request.getAttribute("userType");
 	int rate = (int)request.getAttribute("rate");
 %>
-
-<!-- 소셜로그인 추가 -->
-
 <!doctype html>
 <html>
 	<head>
@@ -103,6 +100,91 @@
 		        });
 		    });
 		</script>
+		
+		<!-- 카카오 소셜인증 -->
+		<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.2.0/kakao.min.js" integrity="sha384-x+WG2i7pOR+oWb6O5GV5f1KN2Ko6N7PTGPS7UlasYWNxZMKQA63Cj/B2lbUmUfuC" crossorigin="anonymous"></script>
+		<script type="text/javascript">
+			Kakao.init('a987d1929430749f2fdae0e54a73dbf3'); // 카카오 초기화
+			console.log(Kakao.isInitialized());
+			
+			function loginWithKakao() {
+		    	Kakao.Auth.authorize({
+		    		redirectUri: 'http://localhost:8080/mypage',
+		     		state: 'userme',
+		    	});
+		  	}
+			
+			function requestUserInfo() {
+				return new Promise(function(resolve, reject) {
+					Kakao.API.request({
+		      			url: '/v2/user/me',
+		      		}).then(function(res) {
+		    			const email = res.kakao_account.email;
+		    			const id = res.id;
+		    			const nickname = res.properties.nickname;
+		    	
+		    			const userInf = id + '/' + nickname + '/' + email;
+		    			//console.log(userInf);
+		    	
+		    			resolve(userInf);
+					}).catch(function(err) {
+		  				reject('failed to request user information: ' + JSON.stringify(err));
+		  			});
+				});
+			}
+		</script>
+<%
+	if(request.getParameter("code") != null){
+		String code = "'" + request.getParameter("code") + "'";
+%>
+		<script type="text/javascript">
+			$.ajax({
+				type: "POST",
+				url: 'https://kauth.kakao.com/oauth/token',
+				data: {
+					grant_type: 'authorization_code',
+			    	client_id: 'a987d1929430749f2fdae0e54a73dbf3',
+			    	redirect_uri: 'http://localhost:8080/mypage',
+					code: <%=code%>
+				},
+				contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+				dataType: 'JSON',
+				success: function(response) {
+					Kakao.Auth.setAccessToken(response.access_token);
+
+					requestUserInfo()
+					.then(function(userInfo) {
+						console.log("userinf " + userInfo);
+
+			        	// 컨트롤러단에 POST 방식으로 유저정보 전송 
+			        	$.ajax({
+			        		url: '/kakaoCertifyOk',
+			          		type: 'POST',
+			          		data: {
+			            		userInfo: userInfo
+			          		},
+			          		success: function(res) {
+			          			swal.fire(res);
+			          			//location.href='/mypage';
+			          		},
+			          		error: function(xhr) {
+			            		swal.fire('소셜인증 오류');
+			          		}
+			        	});  
+
+					}).catch(function(err) {
+						console.error('Failed to request user information: ' + err);
+					});
+				},
+					error: function(jqXHR, error) {
+			    	console.log('토큰 실패');
+				}
+			});
+<%
+	}
+%>
+		</script>
+		
 		<style type="text/css">	
 			@font-face {
 				font-family: 'SBAggroB';
@@ -178,7 +260,7 @@
 		  				소셜 인증 하기<br><br><br>
 		  				<div id="snsImage">
 		  					<img src="./assets/img/logos/google.png" class="rounded-circle float-start" style="width:100px; height:100px;" alt="Cinque Terre" onclick="">
-		  					<img src="./assets/img/logos/kakao.png" class="rounded-circle" style="width:100px; height:100px;" alt="Cinque Terre" onclick="">
+		  					<img src="./assets/img/logos/kakao.png" class="rounded-circle" style="width:100px; height:100px;" alt="Cinque Terre" onclick="javascript:loginWithKakao()">
 		  					<img src="./assets/img/logos/naver.png" class="rounded-circle float-end" style="width:100px; height:100px;" alt="Cinque Terre" onclick="">
 		  				</div>
 					</div>

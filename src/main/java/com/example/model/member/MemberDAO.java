@@ -1,6 +1,7 @@
 package com.example.model.member;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.config.MemberMapperInter;
+import com.example.model.member.MemberTO;
 
 @Repository
 public class MemberDAO {
@@ -134,5 +136,17 @@ public class MemberDAO {
 	public MemberTO memberinfoGet(String seq) {
 		MemberTO memberTO = memberMapper.memberinfoGet(seq);
 		return memberTO;
+	}
+	
+	// 카카오 소셜인증시 유효여부
+	public int socialAccountValidCheck(String uuid) {
+		int isDupl = memberMapper.socialAccountValidCheck(uuid);
+		return isDupl;
+	}
+	
+	// 카카오 소셜인증처리
+	public int socialCertificationOk(MemberTO to) {
+		int result = memberMapper.socialCertificationOk(to);
+		return result;
 	}
 }

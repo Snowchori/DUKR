@@ -76,4 +76,12 @@ public interface MemberMapperInter {
 	// 소셜회원가입회원 정보 변경
 	@Update("update member set nickname=#{nickname}, email=#{email} where seq=#{seq}")
 	public abstract int socialmemberUpdate(MemberTO to);
+	
+	// 소셜인증시 카카오 소셜아이디 유효성(중복) 검사
+	@Select("select count(*) from member where uuid=#{uuid}")
+	public abstract int socialAccountValidCheck(String uuid);
+	
+	// 소셜인증하기(uuid 추가)
+	@Update("update member set uuid=#{uuid} where seq=#{seq}")
+	public abstract int socialCertificationOk(MemberTO to);
 }
