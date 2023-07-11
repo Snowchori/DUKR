@@ -22,7 +22,7 @@ public interface MemberMapperInter {
 	public abstract MemberTO login(MemberTO to);
 	
 	// seq로 회원정보 가져오기
-	@Select("select id, nickname, email, rate, isAdmin from member where seq=#{seq}")
+	@Select("select id, nickname, email, rate, isAdmin, uuid from member where seq=#{seq}")
 	public abstract MemberTO memberinfoGet(String seq);
 	
 	// 일반유저 회원가입

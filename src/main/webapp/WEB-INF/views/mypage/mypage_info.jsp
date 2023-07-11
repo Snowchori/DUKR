@@ -1,3 +1,4 @@
+<%@page import="ch.qos.logback.core.recovery.ResilientSyslogOutputStream"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
@@ -7,7 +8,20 @@
 	String id = (String)request.getAttribute("id");
 	int userType = (int)request.getAttribute("userType");
 	int rate = (int)request.getAttribute("rate");
-%>
+%>	
+
+<%--  
+	// 현재 소셜인증상태에서 마이페이지 새로고침하다보면 소셜버튼 깜빡임현상 있음 => 버튼영역을 $(document).ready 안에서 처리해서 나타나는 문제인듯 / StringBuilder사용하면 어떨지
+	StringBuilder sbSocialButtons = new StringBuilder();
+	if(userType == 0){
+		sbSocialButtons.append("<img src='./assets/img/logos/google.png' class='rounded-circle float-start' style='width:100px; height:100px;' alt='Cinque Terre' onclick=''>");
+		sbSocialButtons.append("<img src='./assets/img/logos/kakao.png' class='rounded-circle' style='width:100px; height:100px;' alt='Cinque Terre' onclick='javascript:loginWithKakao()'>");
+		sbSocialButtons.append("<img src='./assets/img/logos/naver.png' class='rounded-circle float-end' style='width:100px; height:100px;' alt='Cinque Terre' onclick=''>");
+	}else{
+		sbSocialButtons.append("<h2>소셜 인증을 완료했습니다</h2>");
+	}
+--%>
+
 <!doctype html>
 <html>
 	<head>
