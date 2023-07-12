@@ -990,6 +990,34 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	// 카카오 인증처리
+	@PostMapping("kakaoCertifyOk")
+	public String kakaoCertifyOk(HttpServletRequest request) {
+		String responsetText = "해당 카카오 계정으로 인증된 아이디가 이미 존재합니다";
+		
+		// 현재 접속중인(소셜인증 시도하는) 유저
+		MemberTO currentUser = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		
+		String[] userInfo = request.getParameter("userInfo").split("/");
+		String uuid = userInfo[0];
+		String nickname = userInfo[1];
+		String email = userInfo[2];
+
+		int isDupl = memberDAO.socialAccountValidCheck(uuid);
+		if(isDupl == 0) {
+			currentUser.setUuid(uuid);
+			int result = memberDAO.socialCertificationOk(currentUser);
+			
+			// 세션 - 소셜인증한 유저정보로 업데이트
+			currentUser = memberDAO.memberinfoGet(currentUser.getSeq());
+			request.getSession().setAttribute("logged_in_user", currentUser);
+			
+			responsetText = "소셜 인증이 완료되었습니다";
+		}
+		
+		return responsetText;
+	}
+	
 	@RequestMapping("/mypageEdit")
 	public ModelAndView mypageEdit(HttpServletRequest request) {
 		HttpSession session = request.getSession();
