@@ -4,21 +4,40 @@
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
 	request.setCharacterEncoding("utf-8");
+	
+	//검색 조건을 유지하기 위해 파라미터 저장
+	String sort = "";
+	String genre = "";
+	String players = "";
+	String stx = "";
+	if( request.getParameter("sort") != null ){
+		sort = request.getParameter("sort");
+	}
+	if( request.getParameter("genre") != null ){
+		genre = request.getParameter("genre");
+	}
+	if( request.getParameter("players") != null ){
+		players = request.getParameter("players");
+	}
+	if( request.getParameter("stx") != null ){
+		stx = request.getParameter("stx");
+	}
+
 	ArrayList<BoardgameTO> lists = (ArrayList)request.getAttribute("lists");
 	
 	StringBuilder sbHtml = new StringBuilder();
 	for(BoardgameTO gameInfo : lists){
 		sbHtml.append("<div class='col-lg-2 col-sm-6 mb-4'>");
-		sbHtml.append("<div class='portfolio-item'>");
-		sbHtml.append("<div class='image-container text-center'>");
-		sbHtml.append("<a href='gameView?seq="+ gameInfo.getSeq() +"'>");
-		sbHtml.append("<img class='img-fluid game_img w-100 shadow-1-strong' src="+  gameInfo.getImageUrl() +" alt='...'>");
-		sbHtml.append("</a>");	
-		sbHtml.append("</div>");
-		sbHtml.append("<div class='caption'>");
-		sbHtml.append("<div id='gameTitle'>"+ gameInfo.getTitle() +"</div>");
-		sbHtml.append("</div>");
-		sbHtml.append("</div>");
+		sbHtml.append("		<div class='portfolio-item'>");
+		sbHtml.append("			<div class='image-container text-center'>");
+		sbHtml.append("				<a href='gameView?seq="+ gameInfo.getSeq() +"'>");
+		sbHtml.append("					<img class='img-fluid game_img w-100 shadow-1-strong' src="+  gameInfo.getImageUrl() +" alt='...'>");
+		sbHtml.append("				</a>");	
+		sbHtml.append("			</div>");
+		sbHtml.append(" 		<div class='caption'>");
+		sbHtml.append("				<div id='gameTitle'>"+ gameInfo.getTitle() +"</div>");
+		sbHtml.append("			</div>");
+		sbHtml.append("		</div>");
 		sbHtml.append("</div>");
 	}
 %>
@@ -35,31 +54,23 @@
 	    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
 		
 		<style type="text/css">						
-			@font-face {
-				font-family: 'SBAggroB';
-				src:
-					url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff')
-					format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-			
-			.title {
-				font-family: SBAggroB;
-			}
-
+					
 		    .list-tsearch {
+		    	margin-top:20px;
 				display:inline-block;
 		    }
 		
 		    .list-tsearch table {
 		        border: none;
+		        border-collapse: separate;
+  				border-spacing: 10px;
 		    }
 		
 		    .list-tsearch table td, .list-tsearch table th {
 		    	width: min-content;
 		        padding: 3px 5px;
 		        line-height: 30px;
+		        text-align: left;
 		    }
 		    
 		    .list-tsearch th {
@@ -131,18 +142,7 @@
 			}
 		    
 		</style>
-		<!-- 자바 스크립트 영역 -->
-		<script type="text/javascript">
-			/* window.onload = function() {
-				document.getElementById( 'sbtn' ).onclick = function() {
-					if( document.fhsearch.stx.value.trim() == '' ) {
-						alert( '1자 이상 입력해주세요.' );
-						return false;
-					}
-					document.fhsearch.submit();
-				};
-			}; */
-		</script>
+
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
@@ -166,12 +166,13 @@
 									<input type="hidden" name="sort" value="yearpublished">	<!-- 정렬 기본값 최신순 -->
 									<input type="hidden" name="genre" value="">
 									<input type="hidden" name="players" value="">
+									
 									<table width="100%" class="table-responsive">
 										<tbody>
 											<tr>
 												<th width="50">이름</th>
 												<td>
-													<input type="text" name="stx" value="" id="stx" class="form-control input-sm" maxlength="20" placeholder="검색어 입력...">
+													<input type="text" name="stx" value="<%=stx %>" id="stx" class="form-control input-sm" maxlength="20" placeholder="검색어 입력...">
 												</td>
 											</tr>
 											<tr>
@@ -197,12 +198,7 @@
 								                </td>
 								            </tr>
 											<tr>
-								           		<th>튜토리얼</th>
-								           		<td>
-									            	<div class="form-check">	            		
-														<input class="form-check-input" type="checkbox" value="" id="check-tutorial" />
-													</div>
-												</td>
+								           		
 							            	</tr>
 											<tr>
 								                <th>정렬</th>
@@ -210,7 +206,6 @@
 								                    <span class="btn btn-danger btn-xs s-sort" data-value="yearpublished">최신순</span>
 								                    <span class="btn btn-default btn-xs s-sort" data-value="hit">조회수</span>
 								                    <span class="btn btn-default btn-xs s-sort" data-value="recCnt">추천순</span>
-								                    <span class="btn btn-default btn-xs s-sort" data-value="difficulty">난이도순</span>
 								                </td>
 								            </tr>
 											<tr>
@@ -225,6 +220,7 @@
 					    </div>
 					</div> 
 				</div>
+								
 				<!-- 버튼 이벤트 -->
 				<script type="text/javascript" >
 					// 정렬 버튼
@@ -323,7 +319,7 @@
 							selectedButton.classList.remove('btn-default');
 							selectedButton.classList.add('btn-danger');
 							
-							// input[name=headcount]에 전체값 저장
+							// input[name=players]에 전체값 저장
 							document.querySelector('input[name=players]').value = '';	
 						} else {
 							// (전체) 이외의 버튼 클릭시			
@@ -348,18 +344,95 @@
 								// 선택된 버튼이 없으면, (전체) 버튼 활성화
 								allButton.classList.replace('btn-default', 'btn-danger');
 							
-								// input[name=headcount]에 전체값 저장
+								// input[name=players]에 전체값 저장
 								document.querySelector('input[name=players]').value = '';			
 							} else {
-								// 선택된 값들 input[name=headcount]에 저장
+								// 선택된 값들 input[name=players]에 저장
 								document.querySelector('input[name=players]').value = selectedPlayers.join(',');	
 							}
 						}
 					}
 				</script>
 				
-				<!-- 조건에 맞는 게임 리스트 -->
+				<!-- 검색 조건 유지 -->
+				<script type="text/javascript">
+					
+					// 정렬 조건 유지
+					function keepSort(){
+						var searchedSort = "<%=sort%>";	// 이전에 검색했던 정렬 조건 값
+						var sorts = document.querySelectorAll('span.s-sort');
+						
+						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
+						document.querySelector('span.s-sort.btn-danger').classList.replace('btn-danger', 'btn-default');
+						
+						sorts.forEach(function(i){
+							var data = i.getAttribute('data-value');
+
+							if(data == searchedSort){
+
+								// 정렬 조건 유지하기 위한 data를 input[name=sst]로 값을 보내주어야 함.
+								// document.querySelector('input[name=sort]').value = data;
+
+								// 선택된 버튼 표현
+								i.classList.add('btn-danger');
+								i.classList.remove('btn-default');
+							}
+						});
+					}
+					
+					// 인원 조건 유지
+					function keepPlayers(){
+						var searchedPlayers = "<%=players%>".split(',');	// 이전에 검색했던 인원 조건 값
+						var players = document.querySelectorAll('span.s-players');
+
+						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
+						document.querySelector('span.s-players.btn-danger').classList.replace('btn-danger', 'btn-default');
+
+						players.forEach(function(i){
+							var data = i.getAttribute('data-value');
+
+							searchedPlayers.forEach(function(j){
+								if(data == j){
+									// 선택된 버튼 표현
+									i.classList.add('btn-danger');
+									i.classList.remove('btn-default');
+								}
+							});
+
+							
+						});
+					}
+					
+					// 장르 조건 유지
+					function keepGenre(){
+						var searchedGenre = "<%=genre%>".split(',');	// 이전에 검색했던 장르 조건 값
+						var genres = document.querySelectorAll('span.s-genre');
+
+						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
+						document.querySelector('span.s-genre.btn-danger').classList.replace('btn-danger', 'btn-default');
+
+						genres.forEach(function(i){
+							var data = i.getAttribute('data-value');
+
+							searchedGenre.forEach(function(j){
+								if(data == j){
+
+									// 선택된 버튼 표현
+									i.classList.add('btn-danger');
+									i.classList.remove('btn-default');
+								}
+							});
+
+							
+						});
+					}
+					
+					keepGenre();				
+					keepPlayers();
+					keepSort();
+				</script>
 				
+				<!-- 조건에 맞는 게임 리스트 -->				
 				<section class="page-section bg-light" id="portfolio">
 			        <div class="container" id="p1">
 			            <div class="text-center">
