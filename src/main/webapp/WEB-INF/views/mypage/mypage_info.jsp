@@ -10,17 +10,18 @@
 	int rate = (int)request.getAttribute("rate");
 %>	
 
-<%--  
-	// 현재 소셜인증상태에서 마이페이지 새로고침하다보면 소셜버튼 깜빡임현상 있음 => 버튼영역을 $(document).ready 안에서 처리해서 나타나는 문제인듯 / StringBuilder사용하면 어떨지
+<%  
 	StringBuilder sbSocialButtons = new StringBuilder();
+	StringBuilder sbSocialOption = new StringBuilder();
 	if(userType == 0){
 		sbSocialButtons.append("<img src='./assets/img/logos/google.png' class='rounded-circle float-start' style='width:100px; height:100px;' alt='Cinque Terre' onclick=''>");
 		sbSocialButtons.append("<img src='./assets/img/logos/kakao.png' class='rounded-circle' style='width:100px; height:100px;' alt='Cinque Terre' onclick='javascript:loginWithKakao()'>");
 		sbSocialButtons.append("<img src='./assets/img/logos/naver.png' class='rounded-circle float-end' style='width:100px; height:100px;' alt='Cinque Terre' onclick=''>");
+		sbSocialOption.append("소셜 인증하기");
 	}else{
-		sbSocialButtons.append("<h2>소셜 인증을 완료했습니다</h2>");
+		sbSocialButtons.append("<h2><i class='fas fa-check green-check'></i> 소셜 인증을 완료했습니다</h2>");
 	}
---%>
+%>
 
 <!doctype html>
 <html>
@@ -31,6 +32,9 @@
 	.swal2-popup {
 		width: 700px !important;
 	}
+	.green-check {
+      color: green;
+    }
 </style>
 		
 		<script type="text/javascript">
@@ -43,21 +47,23 @@
 						timer : 1500
 					})
 				});
+		        
 		        const userType = <%=userType%>;
-		        if(userType == 0) {
+		        //if(userType == 0) {
 		            //아무작업도 하지않음
-		        } else if (userType == 1) {
-		            $('#snsImage').empty();
-		            $('<i>소셜인증이 완료되었습니다</i>').appendTo('#snsImage');
-		        } else {
-		            $('#id').remove();
-		            $('#idlabel').remove();
-		            $('#password').remove();
-		            $('#passwordlabel').remove();
-		            $('#snsImage').empty();
-		            $('<i>소셜인증이 완료되었습니다</i>').appendTo('#snsImage');
-		            $('#userinfo').submit
-		        }
+		        //} else if (userType == 1) {
+		        //    $('#snsImage').empty();
+		        //    $('<i>소셜인증이 완료되었습니다</i>').appendTo('#snsImage');
+		        //} else {
+		        //    $('#id').remove();
+		        //    $('#idlabel').remove();
+		        //    $('#password').remove();
+		        //    $('#passwordlabel').remove();
+		        //    $('#snsImage').empty();
+		        //    $('<i>소셜인증이 완료되었습니다</i>').appendTo('#snsImage');
+		        //    $('#userinfo').submit
+		        //]
+		        
 		        //정보수정버튼 기능
 		        $('#userinfo').submit(function(event) {
 		            if(userType != 2) {
@@ -271,11 +277,9 @@
 		   					 <div class="progress-bar" style="width:<%=rate%>%;"><%=rate%>점</div>
 		  				</div>
 		  				<br><br><br>
-		  				소셜 인증 하기<br><br><br>
+		  				<%=sbSocialOption %><br><br><br>
 		  				<div id="snsImage">
-		  					<img src="./assets/img/logos/google.png" class="rounded-circle float-start" style="width:100px; height:100px;" alt="Cinque Terre" onclick="">
-		  					<img src="./assets/img/logos/kakao.png" class="rounded-circle" style="width:100px; height:100px;" alt="Cinque Terre" onclick="javascript:loginWithKakao()">
-		  					<img src="./assets/img/logos/naver.png" class="rounded-circle float-end" style="width:100px; height:100px;" alt="Cinque Terre" onclick="">
+		  					<%=sbSocialButtons %>
 		  				</div>
 					</div>
 				</div>
