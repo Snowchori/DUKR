@@ -12,19 +12,18 @@
 		</script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
-				
-			const setRoadview = () => {
-				const control = document.getElementById('roadviewControl');
-				
-				// 클래스 이름 중 active의 존재 유무를 통해 css를 부여해 클릭 효과를 줌
-				// classList.add('active') + classList.remove('active')
-				control.classList.toggle('active');
+			let rvlat = '';
+			let rvlng = '';
+			function setRoadviewPos(lat, lng){
+				rvlat = lat;
+				rvlng = lng;
 			}
-		
+			
 			window.addEventListener('DOMContentLoaded', () => {
 				/* 초기 지도 설정 */
 				// 지도 출력될 태그 할당
 				const container = document.getElementById('map');
+				
 				const options = {
 					center: new kakao.maps.LatLng(37.566661, 126.978378),
 					level: 10
@@ -55,11 +54,8 @@
 				const sisel = document.getElementById('sisel');
 				const sbtn = document.getElementById('sbtn');
 				
-				const f1 = () => {
-					alert('클릭');
-				}
 				/* 선택된 조건에 따라 맵을 그리는 함수 */
-				function drawMap(){
+				function drawMap(map){
 					let infoContents = [];
 					
 					for(i in datas){
@@ -86,7 +82,7 @@
 							// 인포윈도우 작성될 정보(마커 인덱스, 내용) 배열로 저장
 							infoContents.push({
 								marker: markers.length-1,
-								content: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>&nbsp;<a href="#" class="roadview"><i class="bi bi-eye"></i></a>'
+								content: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>'//&nbsp;<a href="#" class="roadview" onclick="return false"><i class="bi bi-eye"></i></a>
 							});
 	
 						} else {
@@ -149,7 +145,7 @@
 						dosel.options[0].selected = true;
 						sisel.options[0].selected = true;
 						sisel.setAttribute('disabled', '');
-						drawMap();
+						drawMap(map);
 					});
 				}
 				
@@ -248,7 +244,165 @@
 				document.getElementById('rbtn').onclick = function(){
 					loadMeet();
 				}
+				
+				
+				
+				/* 로드뷰 */
+				const control = document.getElementById('roadviewControl');
+				
+				const wrapper = document.getElementById('container');
+				
+				const mcontainer = document.getElementById('mmap'),
+					mcontrol = document.getElementById('mroadviewControl'),
+					rcontainer = document.getElementById('roadview');
+				
+				let overlayOn = false;
+				
+				const markImage = new kakao.maps.MarkerImage(
+						'https://t1.daumcdn.net/localimg/localimages/07/2018/pc/roadview_minimap_wk_2018.png',
+						new kakao.maps.Size(26, 46),
+						{
+							spriteSize: new kakao.maps.Size(1666, 168),
+							spriteOrigin: new kakao.maps.Point(705, 114),
+							offset: new kakao.maps.Point(13, 46)
+						}
+				);
+				
+				// mmap 객체 생성
+				const moptions = {
+						center: new kakao.maps.LatLng(37.566661, 126.978378),
+						level: 10
+				}
+				let mmap = new kakao.maps.Map(mcontainer, moptions);
+				
+				let rv = new kakao.maps.Roadview(rcontainer); // 로드뷰 객체 생성
+				let rvClient = new kakao.maps.RoadviewClient(); // 좌표로부터 로드뷰 파노라마ID를 가져오는 객체 생성
+
+				const marker = new kakao.maps.Marker({
+				    image : markImage,
+				    draggable: true
+				});
+				
+				// 마커를 옮길때 로드뷰도 같이 이동
+				kakao.maps.event.addListener(marker, 'dragend', function(mouseEvent) {
+				    // 마커가 놓인 자리의 좌표
+				    let position = marker.getPosition();
+				    // 마커가 놓인 위치를 기준으로 로드뷰 설정
+				    toggleRoadview(position);
+				});
+				
+				// 로드뷰를 통해서 이동할때 마커도 같이 이동
+				kakao.maps.event.addListener(rv, 'position_changed', function() {
+				    // 현재 로드뷰의 위치 좌표 
+				    let rvPosition = rv.getPosition();
+
+				    // 지도 중심을 현재 로드뷰 위치로 설정
+				    mmap.setCenter(rvPosition);
+
+				    // 지도 위에 로드뷰 도로 오버레이가 추가된 상태일때
+				    if(overlayOn) {
+				        // 마커 위치 현재 로드뷰의 위치로 설정
+				        marker.setPosition(rvPosition);
+				    }
+				});
+				
+				kakao.maps.event.addListener(map, 'click', function(mouseEvent){
+					
+				})
+				
+				const toggleMapWrapper = (active, position) => {
+					// 파노라마ID 값 존재 유무 분기(지도만 출력 / 지도-로드뷰 반반)
+					if (active) {
+						
+						// 지도 width 100%로 변경
+						wrapper.classList.remove('view_roadview');
+						// 지도 너비 변경 이후 지도 재조정
+						mmap.relayout();
+						// 지도 너비 변경 이후 중심 재조정
+						mmap.setCenter(position);
+					} else {
+						if (!wrapper.classList.contains('view_roadview')) {
+
+							// 지도 width 50%로 변경
+							wrapper.classList.add('view_roadview');
+							// 지도 너비 변경 이후 지도 재조정
+							mmap.relayout();
+							// 지도 너비 변경 이후 중심 재조정
+							mmap.setCenter(position);
+						}
+					}
+				}
+				
+				const toggleRoadview = position => {
+					// 인자로 전달받은 좌표와 50m 반경 내 가장 가까운 로드뷰 파노라마ID로 로드뷰 출력
+					rvClient.getNearestPanoId(position, 100, function(panoId){
+						if(panoId === null){
+							toggleMapWrapper(true, position);
+						}else{
+							toggleMapWrapper(false, position);
+							
+							rv.setPanoId(panoId, position);
+						}
+					})
+				}
+				
+				const toggleOverlay = active => {
+					if(active){
+						overlayOn = true;
+						
+						mmap.addOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW);
+						
+						marker.setMap(mmap);
+						marker.setPosition(mmap.getCenter());
+						
+						mcontrol.classList.add('active');
+						
+						toggleRoadview(mmap.getCenter());
+					}else{
+						overlayOn = false;
+						
+						mmap.removeOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW);
+						
+						marker.setMap(null);
+						
+						mcontrol.classList.remove('active');
+					}
+				}
+				
+				const activeRoadview = () => {
+					// 클래스 이름 중 active의 존재 유무를 통해 css를 부여해 클릭 효과를 줌
+					// classList.add('active') + classList.remove('active')
+					control.classList.toggle('active')
+					if(control.classList.contains('active')){
+						drawMap(mmap);
+						mmap.setCenter(map.getCenter());
+						mmap.setLevel(map.getLevel());
+
+						toggleOverlay(true);
+						toggleRoadview(map.getCenter());
+					}else{
+						toggleOverlay(false);
+					}
+				}
+				document.getElementById('roadviewControl').onclick = activeRoadview;
+				document.getElementById('mdbtn').onclick = activeRoadview;
+				
+				document.getElementById('mroadviewControl').onclick = () => {
+					mcontrol.classList.toggle('active');
+					if(mcontrol.classList.contains('active')){
+						toggleOverlay(true);
+					}else{
+						toggleOverlay(false);
+					}
+				};
+				document.getElementById('close').onclick = () => {
+					toggleMapWrapper(true, mmap.getCenter());
+				}
+				
+				window.onresize = () => {
+				}
 			});
+			
 		</script>
 		<!-- 개별 CSS -->
 		<style type="text/css">	
@@ -281,8 +435,19 @@
 			.bottombody{
 				max-width: 1920px;
 			}
+			
 			#roadviewControl {position:absolute;top:90%;left:5px;width:42px;height:42px;z-index: 2;cursor: pointer; background: url(/assets/img/kakao/img_search.png) 0 -450px no-repeat;}
 			#roadviewControl.active {background-position:0 -350px;}
+			#container {overflow:hidden;height:50em;position:relative;}
+			
+			#mapWrapper {width:100%;height:100%;z-index:1;}
+			#container.view_roadview #mapWrapper {width: 50%;}
+			#mroadviewControl {position:absolute;top:5px;left:5px;width:42px;height:42px;z-index: 2;cursor: pointer; background: url(/assets/img/kakao/img_search.png) 0 -450px no-repeat;}
+			#mroadviewControl.active {background-position:0 -350px;}
+			
+			#rvWrapper {width:50%;height:100%;top:0;right:0;position:absolute;z-index:0;}
+			#close {position: absolute;padding: 4px;top: 5px;left: 5px;z-index: 3;cursor: pointer;background: #fff;border-radius: 4px;border: 1px solid #c8c8c8;box-shadow: 0px 1px #888;}
+			#close .img {display: block;background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/rv_close.png) no-repeat;width: 14px;height: 14px;}
 			
 			@media (min-width: 767px){
 				#map-side{
@@ -312,7 +477,13 @@
 			<div class="container-fluid d-flex justify-content-center bottombody">
 				<div class="row py-5 mapframe">
 					<div id="map" class="col mb-3 border border-5" style="width:1000px;height:600px;">
-					<div id="roadviewControl" onclick="setRoadview()"></div></div>
+						<div id="roadviewControl" data-bs-toggle="modal" data-bs-target="#myModal"></div>
+					</div>
+					<!-- 
+					<div id="roadview" class="col mb-3 border border-5" style="width:1000px;height:600px;display: none;">
+						<div id="close" title="로드뷰닫기" onclick="closeRoadview()"><span class="img"></span></div>
+					</div>
+					 -->
 					<div id="map-side" class="col-lg-4 align-self-center">
 						<form action="" class="row">
 							<div class="mb-3 col-sm-6 col-lg-12">
@@ -336,8 +507,42 @@
 				</div>
 			</div>
 		</main>
+		<!-- Map Modal -->
+		<div class="modal" data-bs-backdrop="static" id="myModal">
+			<div class="modal-dialog modal-fullscreen "><!-- modal-dialog-centered modal-xl -->
+				<div class="modal-content">
+	
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h5 class="modal-title" style="font-family: SBAggroB;">로드뷰</h5>
+						<button type="button" id="mdbtn" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+	
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div id="container">
+							<div id="rvWrapper">
+								<div id="roadview" style="width:100%;height:100%;"></div> <!-- 로드뷰를 표시할 div 입니다 -->
+								<div id="close" title="로드뷰닫기"><span class="img"></span></div>
+							</div>
+							<div id="mapWrapper">
+								<div id="mmap" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
+								<div id="mroadviewControl"></div>
+							</div>
+						</div>
+					</div>
+	
+					<!-- Modal footer
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger"
+							data-bs-dismiss="modal" onclick="setRoadview()">Close</button>
+					</div>
+					 -->
+				</div>
+			</div>
+		</div>
 		<footer>
-			<!-- 최하단 디자인 영역 -->
+		<!-- 최하단 디자인 영역 -->
 		</footer>
 	</body>
 </html>
