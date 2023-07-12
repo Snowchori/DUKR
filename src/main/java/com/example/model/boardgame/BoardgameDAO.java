@@ -270,6 +270,76 @@ public class BoardgameDAO {
 		return lists;
 	}
 	
+	public BoardgameTO gameShortInfo(String gameId) {
+		BoardgameTO gameTO = new BoardgameTO();
+		gameTO.setSeq(gameId);
+		
+		gameTO = gameMapper.gameInfo(gameTO);
+		
+		// bgg xml api2 이용하여 보드게임 데이터 가져와서 DB에 추가
+		if(gameTO == null) {
+			try {
+				gameTO = new BoardgameTO();
+				gameTO.setSeq(gameId);
+				
+				Connection conn = Jsoup.connect("https://api.geekdo.com/xmlapi/boardgame/" + gameId).parser(Parser.xmlParser());
+				
+				Document doc = conn.get();
+				
+				Elements infos = doc.select("boardgame");
+				
+				for(Element e: infos) {
+					String imageUrl = e.select("image").text();
+					String yearpublished = e.select("yearpublished").text();
+					String minplayers = e.select("minplayers").text();
+					String maxplayers = e.select("maxplayers").text();
+					
+					if(imageUrl == "" || yearpublished == "" || minplayers == "" || maxplayers == "") {
+						return null;
+					}
+					
+					gameTO.setImageUrl(imageUrl);
+					gameTO.setYearpublished(yearpublished);
+					gameTO.setMinPlayer(minplayers);
+					gameTO.setMaxPlayer(maxplayers);
+
+					StringBuilder genre = new StringBuilder("");
+					
+					for(Element genres: e.select("boardgamecategory")) {
+						genre.append(genres.text() + "/");
+					}
+					
+					if(genre.lastIndexOf("/") > -1) {
+						genre.deleteCharAt(genre.lastIndexOf("/"));
+					}
+					
+					gameTO.setGenre(genre.toString());					
+					
+					// 한글제목 가져오기 없으면 원제목
+					boolean isFirst = true;
+					for(Element names: e.select("name")) {
+						if(isFirst) {
+							gameTO.setTitle(names.text());
+							isFirst = false;
+						}
+						String name = names.text();
+						if(name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {
+							gameTO.setTitle(name);
+							break;
+						}
+					}
+
+					
+
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
+		
+		return gameTO;
+	}
 	
 	// 인원 조건 검사
 	private boolean playersFiltering(String strPlayers, BoardgameTO to) {
@@ -301,8 +371,8 @@ public class BoardgameDAO {
 
 		// DB 에 게임이 있을 때
 		if(gameGenre != null) {
-			
-			if(gameGenre.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {	// 게임의 장르를 따로 설정해주었을 때
+
+			if(to.isModi()) {	// 게임의 장르를 따로 설정해주었을 때
 				for(String genre : selectedGenres) {
 					if(gameGenre.indexOf(genre) != -1) {
 						
@@ -431,14 +501,16 @@ public class BoardgameDAO {
 				
 				playersFilter = true; 
 				genreFilter = true;
-								
-				String gameId = boardGame.attr("objectid");
 				
-				BoardgameTO gameTO = new BoardgameTO();
-				gameTO.setSeq(gameId);
+				String gameId = boardGame.attr("objectid");				
 				
-				gameTO = gameMapper.gameInfo(gameTO);
-
+				BoardgameTO gameTO = gameShortInfo(gameId);
+				
+				// xml에 비어있는 데이터의 경우이므로 list에 추가하지 않고 continue
+				if(gameTO == null) {	
+					continue;
+				}
+				
 				// 인원 조건 검사
 				if( playersCheck ) {	
 					
@@ -457,7 +529,7 @@ public class BoardgameDAO {
 					genreFilter = false;
 				}
 				
-				// 검색 조건에 해당하지 않는 게임이므로 gameInfo에 저장하지 않고 continue
+				// 검색 조건에 해당하지 않는 게임이므로 list에 추가하지 않고 continue
 				if(playersFilter || genreFilter) {
 					continue;
 				}
@@ -468,7 +540,6 @@ public class BoardgameDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		
 		switch(to.getSort()) {
 		case "yearpublished":

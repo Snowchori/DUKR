@@ -6,7 +6,7 @@
 	request.setCharacterEncoding("utf-8");
 	
 	//검색 조건을 유지하기 위해 파라미터 저장
-	String sort = "";
+	String sort = "yearpublished";
 	String genre = "";
 	String players = "";
 	String stx = "";
@@ -367,7 +367,7 @@
 						
 						sorts.forEach(function(i){
 							var data = i.getAttribute('data-value');
-
+							
 							if(data == searchedSort){
 
 								// 정렬 조건 유지하기 위한 data를 input[name=sst]로 값을 보내주어야 함.
@@ -378,6 +378,7 @@
 								i.classList.remove('btn-default');
 							}
 						});
+						
 					}
 					
 					// 인원 조건 유지
