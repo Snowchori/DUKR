@@ -418,7 +418,7 @@ public class DURKController {
 		return model;
 	}
 
-	@GetMapping("api/party.json")
+	@GetMapping("api/getParties.json")
 	public ArrayList<ApiPartyTO> getParties(HttpServletRequest request) {
 		ArrayList<ApiPartyTO> data = null;
 		
@@ -526,6 +526,9 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		
+		gameTO = gameDAO.getBgColor(gameTO);
+		
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
@@ -798,7 +801,7 @@ public class DURKController {
 	// 회원가입 페이지
 	@RequestMapping("/signup")
 	public ModelAndView signup(HttpServletRequest req) {
-		ModelAndView mav = new ModelAndView("login/signup/signup");
+		ModelAndView mav = new ModelAndView("login/signup");
 		return mav;
 	}
 	

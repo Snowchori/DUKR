@@ -2,6 +2,7 @@ package com.example.model.boardgame;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,20 +111,6 @@ public class BoardgameDAO {
 					gameTO.setRecCnt("0");
 					gameTO.setEvalCnt("0");
 					
-					// 이미지에서 가장 많은 색 구하기 0709
-					BufferedImage image;
-					URL url = new URL(gameTO.getImageUrl());
-				    image = ImageIO.read(url);
-				    
-				    int[] rgb = ColorThief.getColor(image);
-				    
-				    int r = (int)((rgb[0] + 60) * 0.5);
-				    int g = (int)((rgb[1] + 60) * 0.5);
-				    int b = (int)((rgb[2] + 60) * 0.5);
-				    String bgColor = r + "/" + g + "/" + b;
-				    
-				    gameTO.setBgColor(bgColor);
-					
 				    // DB에 추가
 					gameMapper.gameInsert(gameTO);
 				}
@@ -134,6 +121,37 @@ public class BoardgameDAO {
 		} else {
 			gameMapper.hitUp(gameTO);
 			gameTO.setIsinDB(true);
+		}
+		
+		return gameTO;
+	}
+	
+	// 보드게임 배경색 계산
+	public BoardgameTO getBgColor(BoardgameTO gameTO) {
+		if(gameTO.getBgColor() == null) {
+			// 이미지에서 가장 많은 색 구하기
+			try {
+				BufferedImage image;
+				URL url = new URL(gameTO.getImageUrl());
+				image = ImageIO.read(url);
+				
+				int[] rgb = ColorThief.getColor(image);
+				
+				int r = (int)((rgb[0] + 60) * 0.5);
+				int g = (int)((rgb[1] + 60) * 0.5);
+				int b = (int)((rgb[2] + 60) * 0.5);
+				String bgColor = r + "/" + g + "/" + b;
+				
+				gameTO.setBgColor(bgColor);
+				
+				gameMapper.gameBgColorInsert(gameTO);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return gameTO;

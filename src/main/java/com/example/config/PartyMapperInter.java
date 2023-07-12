@@ -30,5 +30,4 @@ public interface PartyMapperInter {
 	
 	@Insert("insert into party values(0, #{boardSeq}, #{address}, #{detail}, #{location}, #{date}, #{desired}, 0, #{loccode}, #{latitude}, #{longitude})")
 	int registerPartyOk2(PartyTO to);
-	
 }

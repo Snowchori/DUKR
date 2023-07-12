@@ -80,7 +80,7 @@ if(preRecHtml == null || preRecHtml.toString().equals("")) {
 	cbtnHtml.append("if(data == 0) {");
 	cbtnHtml.append("Swal.fire({");
 	cbtnHtml.append("icon: 'success',");
-	cbtnHtml.append("title: '초기화 성공',");
+	cbtnHtml.append("title: '초기화 완료',");
 	cbtnHtml.append("confirmButtonText: '확인',");
 	cbtnHtml.append("willClose: () => {");
 	cbtnHtml.append("location.href='gameManage';");
@@ -212,7 +212,7 @@ if(seq != null && !seq.equals("")) {
 	mbtnHtml.append("if(data == 0) {");
 	mbtnHtml.append("Swal.fire({");
 	mbtnHtml.append("icon: 'success',");
-	mbtnHtml.append("title: '정보 수정 성공',");
+	mbtnHtml.append("title: '정보 수정 완료',");
 	mbtnHtml.append("confirmButtonText: '확인',");
 	mbtnHtml.append("willClose: () => {");
 	mbtnHtml.append("location.href='gameManage?seq=" + seq + "';");
@@ -270,7 +270,7 @@ if(seq != null && !seq.equals("")) {
 					  			if(data == 0) {
 						  			Swal.fire({
 							  			icon: 'success',
-							  			title: '등록 성공',
+							  			title: '등록 완료',
 							  			confirmButtonText: '확인',
 							  			willClose: () => {
 							  				location.href='gameManage';

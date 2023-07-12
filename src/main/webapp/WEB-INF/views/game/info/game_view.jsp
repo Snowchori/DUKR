@@ -65,6 +65,22 @@
 	// 해당 게임 태그에 맞는 게시글 리스트 
 	StringBuilder boardHtml = new StringBuilder();
 	
+	if(listTO.getBoardLists().size() > 9) {
+		boardHtml.append("<div class='d-flex flex-row-reverse'>");
+		boardHtml.append("<div class='col-lg-2 text-end'>");
+		boardHtml.append("<button type='button' class='btn btn-dark' onclick=\"location.href='freeBoardList?select=4&search=" + title + "'\">");
+		boardHtml.append("<i class='bi bi-plus-lg text-white'></i>더보기");
+		boardHtml.append("</button>");
+		boardHtml.append("</div>");
+		boardHtml.append("</div>");
+	} else if (listTO.getBoardLists().size() == 0) {
+		boardHtml.append("<div class='row text-center'>");
+		boardHtml.append("현재 관련글이 없습니다.");
+		boardHtml.append("</div>");
+	}
+	
+	boardHtml.append("<table class='table'>");
+	
 	for(BoardTO list: listTO.getBoardLists()) {
 		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
 		boardHtml.append("<td class='board-img'><i class='bi ");
@@ -84,6 +100,8 @@
 		boardHtml.append("</td>");
 		boardHtml.append("</tr>");
 	}
+	
+	boardHtml.append("</table>");
 	
 	// 보드게임 평가 리스트
 	StringBuilder evalHtml = new StringBuilder();
@@ -185,7 +203,7 @@
 					  			if(data == 0) {
 						  			Swal.fire({
 							  			icon: 'success',
-							  			title: '평가 등록 성공',
+							  			title: '평가 등록 완료',
 							  			confirmButtonText: '확인',
 							  			willClose: () => {
 							  				location.href='gameView?seq=<%= seq %>';
@@ -224,7 +242,7 @@
 				  			if(data == 0) {
 					  			Swal.fire({
 						  			icon: 'success',
-						  			title: '<%= strFav %> 성공',
+						  			title: '<%= strFav %> 완료',
 						  			confirmButtonText: '확인',
 						  			willClose: () => {
 						  				location.href='gameView?seq=<%= seq %>';
@@ -262,7 +280,7 @@
 				  			if(data == 0) {
 					  			Swal.fire({
 						  			icon: 'success',
-						  			title: '<%= strRec %> 성공',
+						  			title: '<%= strRec %> 완료',
 						  			confirmButtonText: '확인',
 						  			willClose: () => {
 						  				location.href='gameView?seq=<%= seq %>';
@@ -307,7 +325,7 @@
 				  			if(data == 0) {
 					  			Swal.fire({
 						  			icon: 'success',
-						  			title: strEvalRec + ' 성공',
+						  			title: strEvalRec + ' 완료',
 						  			confirmButtonText: '확인',
 						  			willClose: () => {
 						  				location.href='gameView?seq=' + seq;
@@ -344,7 +362,7 @@
 					  			if(data == 0) {
 						  			Swal.fire({
 							  			icon: 'success',
-							  			title: '삭제 성공',
+							  			title: '삭제 완료',
 							  			confirmButtonText: '확인',
 							  			willClose: () => {
 							  				location.href='gameView?seq=' + seq;
@@ -479,16 +497,7 @@
 							</div>
 							<!-- End Tab 2 Content -->
 							<div class="tab-pane fade show" id="tab3">
-								<div class="d-flex flex-row-reverse">
-									<div class="col-lg-2 text-end">
-										<button type='button' class='btn btn-dark' onclick="location.href='freeBoardList?select=4&search=<%= title %>'">
-											<i class="bi bi-plus-lg text-white"></i>더보기
-										</button>
-									</div>
-								</div>
-								<table class="table">
-									<%= boardHtml %>
-								</table>
+								<%= boardHtml %>
 							</div>
 							<!-- End Tab 3 Content -->
 							</div>

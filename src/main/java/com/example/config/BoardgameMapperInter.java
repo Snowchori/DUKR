@@ -22,6 +22,10 @@ public interface BoardgameMapperInter {
 			+ "0, 0, 0, #{theme}, #{genre}, #{isModi}, #{bgColor})")
 	public int gameInsert(BoardgameTO to);
 	
+	// 보드게임 배경색 삽입
+	@Update("update boardgame set bgColor = #{bgColor} where seq = #{seq}")
+	public int gameBgColorInsert(BoardgameTO to);
+	
 	// 보드게임 조회수 증가
 	@Update("update boardgame set hit = hit + 1 where seq = #{seq} ")
 	public int hitUp(BoardgameTO to);
