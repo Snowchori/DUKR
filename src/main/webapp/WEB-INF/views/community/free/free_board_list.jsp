@@ -159,7 +159,7 @@
 					</table>
 				</div>
 				<div class="col-12 p-2">
-					<button type='button' class='btn btn-dark float-end' onclick="location.href='freeBoardWrite'" <%= disable %>>글쓰기</button>
+					<button type='button' class='btn btn-dark float-end' onclick="location.href='freeBoardWrite?cpage=<%=cpage%>'">글쓰기</button>
 				</div>
 			</div>
 			<div class="modal fade" id="searchModal">
