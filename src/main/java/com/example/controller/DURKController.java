@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.board.BoardDAO;
@@ -343,6 +346,36 @@ public class DURKController {
 		modelAndView.setViewName("community/free/free_board_write");
 		
 		return modelAndView;
+	}
+	
+	// ck에디터 이미지 업로드하기@@
+	@PostMapping("/upload/freeboard")
+	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
+		//System.out.println("upload request");
+		Boolean uploadResult = false;
+		
+		String originalFileName = upload.getOriginalFilename();
+		String fileNamePrefix = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+		//System.out.println(fileNamePrefix);
+		String fileNameSuffix = originalFileName.substring(originalFileName.lastIndexOf("."));
+		//System.out.println(fileNameSuffix);
+		String curTime = "_" + System.currentTimeMillis();
+		
+		String newFileName = fileNamePrefix + curTime + fileNameSuffix;
+		
+		try {
+			upload.transferTo(new File(newFileName));
+			uploadResult = true;
+		} catch (IllegalStateException e) {
+			System.out.println("파일 업로드 오류 - " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("파일 업로드 오류 - " + e.getMessage());
+		}
+		
+		String url = "./upload/" + newFileName;
+		String result = "{\"url\": \"" + url + "\", \"uploaded\": \"" + uploadResult + "\"}";
+		
+		return result;
 	}
 	
 	// community/party
