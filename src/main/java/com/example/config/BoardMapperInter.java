@@ -3,6 +3,7 @@ package com.example.config;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 
 import com.example.model.board.BoardListTO;
@@ -44,4 +45,8 @@ public interface BoardMapperInter {
 	@Select("select b.seq seq, tag, subject, date_format(wdate, '%Y-%m-%d') wdate, hit, recCnt, cmtCnt, m.nickname writer, isDel "
 			+ "from boardrecommend r, member m, board b where not b.isDel and r.memSeq=#{keyWord} and r.boardSeq=b.Seq and b.memSeq=m.Seq order by b.seq desc limit #{skip}, #{recordPerPage}")
 	public ArrayList<BoardTO> myfavboard(BoardListTO listTO);
+	
+	// 글쓰기
+	@Insert("insert into board values(0, #{memSeq}, #{subject}, #{content}, #{wip}, now(), 0, 0, 0, 0, #{tag}, #{boardType})")
+	public int writeNew(BoardTO to);
 }

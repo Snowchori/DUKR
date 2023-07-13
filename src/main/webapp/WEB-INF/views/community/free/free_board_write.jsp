@@ -1,3 +1,4 @@
+<%@page import="ch.qos.logback.core.recovery.ResilientSyslogOutputStream"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -8,12 +9,21 @@
 		cpage = Integer.parseInt(request.getParameter("cpage"));
 	}
 %>
+
+<%
+	MemberTO user = (MemberTO)session.getAttribute("logged_in_user");
+	String memSeq = user.getSeq();
+	String writer = "'" + user.getNickname() + "'";
+	System.out.println(memSeq + writer);
+%>
     
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <!doctype html>
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
+		<!-- Jquery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<!-- Template Main CSS File -->
 		<link href="assets/css/style.css" rel="stylesheet">
 						
@@ -111,15 +121,18 @@
 						
 						default:							
 							$.ajax({
-						  		url:'freeBoardWriteOk',
+						  		url:'/freeBoardWriteOk',
 						  		type:'post',
 						  		data: {
 						  			subject: document.getElementById('subject').value.trim(),
-						  			content: document.getElementById('content').value.trim(),
+						  			content: editor.getData(),
+						  			memSeq: <%=memSeq %>,
+						  			writer: <%=writer %>,
+									boardType: 1,
 						  			tags: document.getElementById('tags').value.trim(),
 						  		},
 						  		success: function(data) {
-						  			if(data == 0) {
+						  			if(data == 1) {
 							  			Swal.fire({
 								  			icon: 'success',
 								  			title: '글쓰기 완료',
@@ -139,6 +152,11 @@
 							  });
 					} 
 				}
+				
+				document.getElementById("testbtn").onclick = function(){
+					const content = editor.getData();
+					console.log("데이터 : " + content);
+				};
 					
 			};
 		</script>
@@ -193,6 +211,11 @@
 							<div class="align_right">			
 								<input type="button" id="wbtn" class="btn btn-dark" value="글쓰기"/>			
 							</div>	
+							
+							<div class="align_right">			
+								<input type="button" id="testbtn" class="btn btn-dark" value="글쓰기 테스트"/>			
+							</div>
+							
 						</div>
 						
 					</form>

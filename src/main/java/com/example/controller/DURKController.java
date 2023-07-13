@@ -378,6 +378,38 @@ public class DURKController {
 		return result;
 	}
 	
+	// 글쓰기
+	@PostMapping("/freeBoardWriteOk")
+	public int writeOk(HttpServletRequest req){
+		int result = 0;
+		
+		String subject = req.getParameter("subject");
+		String content = req.getParameter("content");
+		String memSeq = req.getParameter("memSeq");
+		String writer = req.getParameter("writer");
+		String boardType = req.getParameter("boardType");
+		String wip = req.getRemoteAddr();
+		// 여러 태그들 구분자 합의필요, 임시로 공백사용
+		//String[] tags = req.getParameter("tags").split(" "); 
+		String tag = req.getParameter("tags");
+		
+		//System.out.println(content);
+		//System.out.println(memSeq + " / " + boardType);
+		
+		BoardTO to = new BoardTO();
+		to.setSubject(subject);
+		to.setContent(content);
+		to.setWriter(writer);
+		to.setMemSeq(memSeq);
+		to.setBoardType(boardType);
+		to.setTag(tag);
+		to.setWip(wip);
+		
+		result = boardDAO.writeNew(to);
+		
+		return result;
+	}
+	
 	// community/party
 	@RequestMapping("/partyBoardList")
 	public ModelAndView partyBoardList(HttpServletRequest request) {

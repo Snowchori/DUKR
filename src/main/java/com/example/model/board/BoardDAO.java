@@ -92,4 +92,11 @@ public class BoardDAO {
 		}
 		return listTO;
 	}
+	
+	// 글쓰기
+	public int writeNew(BoardTO to) {
+		int result = boardMapper.writeNew(to);
+		return result;
+	}
+	
 }
