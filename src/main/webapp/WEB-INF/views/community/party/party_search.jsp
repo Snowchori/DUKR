@@ -230,10 +230,12 @@
 					if(!bounds.isEmpty()){
 					    map.setBounds(bounds);
 					}else{
-						for (point of points) {
-							bounds.extend(point.pos);
+						if(points.length != 0){
+							for (point of points) {
+								bounds.extend(point.pos);
+							}
+							map.setBounds(bounds);
 						}
-						map.setBounds(bounds);
 						sisel.setAttribute('disabled', '');
 						dosel.options[0].selected = true;
 						sisel.options[0].selected = true;
