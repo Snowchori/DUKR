@@ -12,24 +12,6 @@
 		</script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
-			let rvlat = '';
-			let rvlng = '';
-			function setRoadviewPos(lat, lng){
-				rvlat = lat;
-				rvlng = lng;
-			}
-			const deepCopy = obj => {
-				if(obj === null || typeof obj !== 'object'){
-					return obj;
-				}
-				
-				let copy = {};
-				for(let key in obj){
-					copy[key] = deepCopy(obj[key]);
-				}
-				return copy;
-			}
-			
 			window.addEventListener('DOMContentLoaded', () => {
 				/* 초기 지도 설정 */
 				// 지도 생성
@@ -63,7 +45,7 @@
 				};
 				let mmap = new kakao.maps.Map(mcontainer, moptions);
 				
-				// 모달창 지도 로드뷰 버튼(로드뷰 오버레이 + 로드뷰 마커 활성화)
+				// 모달창 지도 로드뷰 버튼(로드뷰 오버레이 & 로드뷰 마커 활성화)
 				const mcontrol = document.getElementById('mroadviewControl');
 				
 				// 로드뷰 생성
@@ -102,6 +84,7 @@
 				let points = [];
 				let infoContents = [];
 				
+				let isloaded = false;
 				
 				const dosel = document.getElementById('dosel');
 				const sisel = document.getElementById('sisel');
@@ -109,8 +92,6 @@
 				
 				/* 맵을 그리는 함수 */
 				function drawMap(){
-					isloaded = false;
-					
 					for(let i in datas){
 						// 인포윈도우에 작성될 내용 미리 가공
 						const inner = datas[i].location + '('+ datas[i].date +')';
@@ -147,7 +128,8 @@
 							// 인포윈도우 작성될 정보(마커 인덱스, 내용) 배열로 저장
 							infoContents.push({
 								marker: markers.length-1,
-								content: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>'//&nbsp;<a href="#" class="roadview" onclick="return false"><i class="bi bi-eye"></i></a>
+								content: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>&nbsp;<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#myModal" class="roadview '+ (points.length-1) +'"><i class="bi bi-eye"></i></a>',
+								content2: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>'
 							});
 	
 						} else {
@@ -175,7 +157,19 @@
 	
 					// 검색한 지역에 데이터가 존재하지 않을 시 alert() 지도 중심 변경
 					if(datas.length == 0){
-						alert('예정된 모임이 없습니다.');
+			  			Swal.fire({
+				  			icon: 'warning',
+				  			title: '예정된 모임이 없습니다.',
+				  			showCancelButton: true,
+				  			reverseButtons: true,
+				  			cancelButtonText: '뒤로가기',
+				  			confirmButtonText: '확 인'
+			  			})
+			  			.then(result => {
+			  				if(result.isDismissed){
+			  					history.back();
+			  				}
+			  			});
 						map.setLevel(10);
 						map.setCenter(new kakao.maps.LatLng(37.566661, 126.978378));
 						
@@ -196,11 +190,11 @@
 					if(!isloaded){
 						for(let infoContent of infoContents){
 							const infowindow = new kakao.maps.InfoWindow({
-					 			content: infoContent.content + '</div>',
+					 			content: infoContent.content2 + '</div>',
 					 			removable: true
 							});
 							const rvinfowindow = new kakao.maps.InfoWindow({
-					 			content: infoContent.content + '</div>',
+					 			content: infoContent.content2 + '</div>',
 					 			removable: true
 							});
 							
@@ -259,15 +253,30 @@
 						sisel.setAttribute('disabled', '');
 						
 						drawMap();
+						rvEvent();
+						control.style.visibility = 'visible';
 					});
 				}
 				
 				document.getElementById('rbtn').onclick = function(){
+					control.style.visibility = 'hidden';
 					loadMeet();
 				}
 				
 				
 				/* 로드뷰 */
+				function rvEvent(){
+					const rvs = Array.from(document.getElementsByClassName('roadview'));
+					rvs.forEach(rv => {
+						rv.onclick = () => {
+							const index = rv.classList[1];
+							map.setLevel(3);
+							map.setCenter(markers[index].getPosition());
+							activeRoadview();
+						}
+						
+					});
+				}
 				
 				// 마커를 옮길때 로드뷰도 같이 이동
 				kakao.maps.event.addListener(rmarker, 'dragend', function(mouseEvent) {
@@ -346,6 +355,7 @@
 						mmap.addOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW);
 
 						rmarker.setMap(mmap);
+						rmarker.setPosition(mmap.getCenter());
 						
 						mcontrol.classList.add('active');
 						
@@ -371,6 +381,7 @@
 						
 						toggleOverlay(true);
 						toggleRoadview(map.getCenter());
+						
 						drawMmap();
 					}else{
 						toggleOverlay(false);
@@ -482,7 +493,11 @@
 						sisel.setAttribute('disabled', '');
 						dosel.options[0].selected = true;
 						sisel.options[0].selected = true;
-						alert('조건에 해당하는 모임이 없습니다.');
+			  			Swal.fire({
+				  			icon: 'error',
+				  			title: '조건에 해당하는 모임이 없습니다.',
+				  			confirmButtonText: '확인'
+			  			});
 					}
 				};
 			});
@@ -519,8 +534,12 @@
 			.bottombody{
 				max-width: 1920px;
 			}
+
+			.swal2-title {
+				font-size: 1.5em;
+			}
 			
-			#roadviewControl {position:absolute;top:90%;left:5px;width:42px;height:42px;z-index: 2;cursor: pointer; background: url(/assets/img/kakao/img_search.png) 0 -450px no-repeat;}
+			#roadviewControl {position:absolute;top:90%;left:5px;width:42px;height:42px;z-index: 2;cursor: pointer;visibility:hidden; background: url(/assets/img/kakao/img_search.png) 0 -450px no-repeat;}
 			#roadviewControl.active {background-position:0 -350px;}
 			#container {overflow:hidden;height:50em;position:relative;}
 			
@@ -531,7 +550,7 @@
 			
 			#rvWrapper {width:50%;height:100%;top:0;right:0;position:absolute;z-index:0;}
 			#close {position: absolute;padding: 4px;top: 5px;left: 5px;z-index: 3;cursor: pointer;background: #fff;border-radius: 4px;border: 1px solid #c8c8c8;box-shadow: 0px 1px #888;}
-			#close .img {display: block;background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/rv_close.png) no-repeat;width: 14px;height: 14px;}
+			#close .img {display: block;background: url(/assets/img/kakao/rv_close.png) no-repeat;width: 14px;height: 14px;}
 			
 			@media (min-width: 767px){
 				#map-side{
