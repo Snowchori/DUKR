@@ -4,6 +4,7 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
+	/* 선택 가능한 최소, 최대 날짜 계산 */
 	Calendar cal = Calendar.getInstance();
 	
 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -25,6 +26,8 @@
 		<!-- kakao Map API -->
 		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62a899b99d2f71a7e481ba3867c742b7&libraries=services,clusterer,drawing">
 		</script>
+		<!-- CKEditor5 -->
+		<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
 		<!-- SmartEditor2.0
 		<script src="/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 		 -->
@@ -126,6 +129,10 @@
 								
 								// 조합된 참고주소를 필드에 삽입
 								document.getElementById("extra").value = extraAddr;
+								
+								adr_ok = true;
+								address.classList.remove('is-invalid');
+								address.classList.add('is-valid');
 							});
 						},
 						
@@ -139,79 +146,136 @@
 					}).embed(element_layer);
 				}
 				
-				/* 데이터 무결성 검사 */
+				
+				/* 데이터 유효성 검사 */
+				// 제목
+				const subject = document.getElementById('subject');
+				// 날짜선택
+				const date = document.getElementById('date');
+				const sdate = new Date(date.getAttribute('min'));
+				const ldate = new Date(date.getAttribute('max'));
+				// 모임 장소
+				const address = document.getElementById('address');
+				// 상세 주소
+				const detail = document.getElementById('detail');
+				// 장소 별칭
+				const location = document.getElementById('location');
+				
+				let subject_ok = false;
+				let date_ok = false;
+				let adr_ok = false;
+				let detail_ok = false;
+				let loc_ok = false;
+				
+				subject.addEventListener('input', () => {
+					if(subject.value.length >= 2){
+						subject_ok = true;
+						subject.classList.remove('is-invalid');
+						subject.classList.add('is-valid');
+					}else{
+						subject_ok = false;
+						subject.classList.remove('is-valid');
+						subject.classList.add('is-invalid');
+					}
+				});
+				date.addEventListener('input', () => {
+					const pdate = new Date(date.value);
+					if(date.value.length > 0){
+						if(sdate < pdate && pdate < ldate){
+							date_ok = true;
+							date.classList.remove('is-invalid');
+							date.classList.add('is-valid');
+						}else{
+							date_ok = false;
+							date.classList.remove('is-valid');
+							date.classList.add('is-invalid');
+						}
+					}else{
+						date_ok = false;
+						date.classList.remove('is-valid');
+						date.classList.add('is-invalid');
+					}
+				});
+				detail.addEventListener('input', () => {
+					if(detail.value.length >= 2){
+						detail_ok = true;
+						detail.classList.remove('is-invalid');
+						detail.classList.add('is-valid');
+					}else{
+						detail_ok = false;
+						detail.classList.remove('is-valid');
+						detail.classList.add('is-invalid');
+					}
+				});
+				location.addEventListener('input', () => {
+					if(location.value.length >= 2){
+						loc_ok = true;
+						location.classList.remove('is-invalid');
+						location.classList.add('is-valid');
+					}else{
+						loc_ok = false;
+						location.classList.remove('is-valid');
+						location.classList.add('is-invalid');
+					}
+				});
+				
 				document.getElementById('rbtn').onclick = () => {
-					//alert('등록');
-					const subject = document.getElementById('subject');
-					let date = document.getElementById('date');
-					const address = document.getElementById('address');
-					const detail = document.getElementById('detail');
-					const location = document.getElementById('location');
-					const desired = document.getElementById('desired');
-					const content = document.getElementById('content');
-					
-					const min = date.getAttribute('min').replace('T', ' ');
-					const max = date.getAttribute('max').replace('T', ' ');
-					const sdate = new Date(min);
-					const ldate = new Date(max);
-					
-					switch(0){
-						case subject.value.trim().length:
-							alert('제목을 입력하세요');
-							break;
-						case date.value.length:
-							alert('날짜를 선택하세요');
-							break;
-						case address.value.length:
-							alert('주소를 선택하세요');
-							break;
-						case detail.value.trim().length:
-							alert('상세주소를 입력하세요');
-							break;
-						case location.value.trim().length:
-							alert('장소 별칭을 입력하세요');
-							break;
-						default:
-							date = new Date(date.value);
-							if(sdate <= date && date <= ldate){
+					switch(false){
+						case subject_ok: 
+							subject.classList.remove('is-valid');
+							subject.classList.add('is-invalid');
+						case date_ok: 
+							date.classList.remove('is-valid');
+							date.classList.add('is-invalid');
+						case adr_ok: 
+							address.classList.remove('is-valid');
+							address.classList.add('is-invalid');
+						case detail_ok: 
+							detail.classList.remove('is-valid');
+							detail.classList.add('is-invalid');
+						case loc_ok: 
+							location.classList.remove('is-valid');
+							location.classList.add('is-invalid');
+						default: 
+							if(subject_ok && date_ok && adr_ok && detail_ok && loc_ok){
 								$.ajax({
-						  			url:'partyBoardRegisterOk',
-						  			type:'post',
-						  			data: {
-						  				subject: document.getElementById('subject').value.trim(),
-						  				content: document.getElementById('content').value.trim(),
-						  				tag: document.getElementById('tag').value.trim(),
-						  				address: document.getElementById('address').value.trim(),
-						  				extra: document.getElementById('extra').value.trim(),
-						  				detail: document.getElementById('detail').value.trim(),
-						  				location: document.getElementById('location').value.trim(),
-						  				date: document.getElementById('date').value.trim(),
-						  				desired: document.getElementById('desired').value.trim(),
-						  				loccode: document.getElementById('loccode').value.trim(),
-						  				latitude: document.getElementById('latitude').value.trim(),
-						  				longitude: document.getElementById('longitude').value.trim()
-						  			},
-						  			success: function(data) {
-							  			if(data == 0) {
-								  			Swal.fire({
-									  			icon: 'success',
-									  			title: '글쓰기 완료',
-									  			confirmButtonText: '확인',
-									  			willClose: () => {
-									  				document.location.href='partyBoardList';
-								  				}
-							  				})
-							  			} else {
-								  			Swal.fire({
-									  			icon: 'error',
-									  			title: '글쓰기 실패',
-									  			confirmButtonText: '확인'
-								  			})
-							  			}
-							  		}
-							  	});
-							} else {
-								alert('모임 날짜는 명일로부터 한달이내로 설정 가능합니다.\n(' + min + ' ~ ' + max + ')');
+									url:'partyBoardRegisterOk',
+									type:'post',
+									data: {
+										subject: document.getElementById('subject').value.trim(),
+										content: document.getElementById('content').value.trim(),
+										tag: document.getElementById('tag').value.trim(),
+										address: document.getElementById('address').value.trim(),
+										extra: document.getElementById('extra').value.trim(),
+										detail: document.getElementById('detail').value.trim(),
+										location: document.getElementById('location').value.trim(),
+										date: document.getElementById('date').value.trim(),
+										desired: document.getElementById('desired').value.trim(),
+										loccode: document.getElementById('loccode').value.trim(),
+										latitude: document.getElementById('latitude').value.trim(),
+										longitude: document.getElementById('longitude').value.trim()
+									},
+									success: function(data) {
+										if(data == 0) {
+											Swal.fire({
+												icon: 'success',
+												title: '글쓰기 완료',
+												confirmButtonText: '확인',
+												willClose: () => {
+													document.location.href='partyBoardList';
+												}
+											});
+										} else {
+											Swal.fire({
+												icon: 'error',
+												title: '글쓰기 실패',
+												confirmButtonText: '확인'
+											});
+										}
+									}
+								});
+							}else{
+								document.location.href='#subject';
 							}
 					}
 				}
@@ -295,20 +359,24 @@
 						<div class="col-md-6 mb-3">
 							<label for="subject" class="form-label">제목</label>
 							<input type="text" class="form-control" placeholder="제목을 입력하세요" name="subject" id="subject"/>
+							<div class="invalid-feedback">제목은 2자 이상 입력하셔야 합니다.</div>
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="date" class="form-label">날짜 선택</label>
 							<input type="datetime-local" min="<%=sdate%>" max="<%=ldate%>" class="form-control" id="date" name="date"/>
+							<div class="invalid-feedback">날짜를 선택하셔야 합니다. (<%= sdate.replace("T", " ") %> ~ <%= ldate.replace("T", " ") %>)</div>
 						</div>
 						<div class="col-12 mb-3">
 							<label for="address" class="form-label">모임 장소</label>
-							<div class="input-group">
+							<div class="input-group has-validation">
 								<input type="text" class="form-control" id="address" name="address" placeholder="주소" readonly>
 								<input type="button" id="zbtn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal" value="우편번호 찾기"/>
+								<div class="invalid-feedback">주소를 선택하셔야 합니다.</div>
 							</div>
 						</div>
 						<div class="col-md-6 mb-3">
 							<input type="text" class="form-control" id="detail" name="detail" placeholder="상세주소">
+							<div class="invalid-feedback">상세주소는 2자 이상 입력하셔야 합니다.</div>
 						</div>
 						<div class="col-md-6 mb-3">
 							<input type="text" class="form-control" id="extra" name="extra" placeholder="(동, 건물명)" readonly>
@@ -316,6 +384,7 @@
 						<div class="col-md-6 mb-3">
 							<label for="location" class="form-label">장소 별칭</label>
 							<input type="text" class="form-control" id="location" name="location" placeholder="별칭">
+							<div class="invalid-feedback">장소 별칭은 2자 이상 입력하셔야 합니다.</div>
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="desired" class="form-label">희망인원 수</label>
