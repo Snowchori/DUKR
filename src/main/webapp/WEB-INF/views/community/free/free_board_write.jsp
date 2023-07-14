@@ -22,8 +22,6 @@
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
-		<!-- Jquery -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<!-- Template Main CSS File -->
 		<link href="assets/css/style.css" rel="stylesheet">
 						
@@ -102,27 +100,10 @@
 							uploadUrl : '/upload/freeboard'
 						}
 					})
-					.then( editor => {
-        				editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
-            			// 파일 업로드시 이벤트 처리를 수행하는 부분
-            			return {
-                			upload: () => {
-                    			return loader.file
-                        			.then( file => {
-                            			// 파일 업로드가 성공적으로 완료된 후 수행
-                            			console.log( '파일 업로드 성공');
-                            			console.log(file);
-                            			console.log(file.name);
-                            			console.log(file.size);
-                        			} )
-                        			.catch( error => {
-                            			// 파일 업로드 중 오류발생
-                            			console.error( '파일 업로드 오류:', error );
-                        			} );
-                				}
-            				};
-        				};
-    				} )
+					.then(editor => {
+						console.log('Editor was initialized');
+						window.editor = editor;
+					})
 					.catch(error => {
 						console.error(error);
 					});
