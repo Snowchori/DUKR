@@ -54,4 +54,8 @@ public interface BoardMapperInter {
 	@Select("select * from board where seq=#{seq}")
 	public BoardTO boardView(BoardTO to);
 	
+	// 게시글의 파일 포함여부 검사
+	@Select("select count(*) from board where content like '%<img src=\"%' and seq=#{seq};")
+	public int hasFile(BoardTO to);
+	
 }

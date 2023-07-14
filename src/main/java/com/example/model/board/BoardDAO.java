@@ -41,11 +41,24 @@ public class BoardDAO {
 		listTO.setEndBlock();
 		
 		// 파일 가지고있는지
+		/*
 		for(BoardTO list: listTO.getBoardLists()) {
 			ArrayList<String> files = boardMapper.boardFile(list.getSeq());
 			if(files.size() != 0) {
 				list.setHasFile(true);
 			} else {
+				list.setHasFile(false);
+			}
+		}
+		*/
+		// file테이블 사용하지 않는방식
+		System.out.println("boardList 호출");
+		for(BoardTO list : listTO.getBoardLists()) {
+			int hasFile = boardMapper.hasFile(list);
+			System.out.println(hasFile);
+			if(hasFile == 1) {
+				list.setHasFile(true);
+			}else {
 				list.setHasFile(false);
 			}
 		}
