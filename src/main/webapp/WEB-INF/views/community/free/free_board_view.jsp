@@ -4,6 +4,9 @@
 
 <%
 	BoardTO to = (BoardTO)request.getAttribute("to");
+	
+	String subject = to.getSubject();
+	String writer = to.getWriter();
 	String content = to.getContent();
 %>
 <!doctype html>
@@ -16,7 +19,17 @@
 		<script type="text/javascript" >
 		</script>
 		<style>
+  			table img {
+    			max-width: 50%;
+  			}
+  			table {
+   				border-collapse: collapse;
+  			}
+  			table tr, table th, table td {
+    			border: 1px solid black;
+  			}
 		</style>
+
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
@@ -29,15 +42,26 @@
 			</div>
 		</header>
 		<main>
-			자유게시판 글 내용
-			
-			<hr>
-			<div class="container">
-				<div class="md-8" id="content">
-					<%=content %>
+
+			<div class="container" >
+  				<hr class="my-4">
+			</div>
+			<div class="container text-left" style="margin-top: -10px; font-size: 20px;">
+				<b><%=subject %></b>
+			</div>
+			<div class="container" style="margin-top: -10px;">
+  				<hr class="my-4">
+			</div>
+			<div class="container text-left">
+				<div class="row">
+					<div class="col-md-6">
+						<%=content %>	
+					</div>		
 				</div>
 			</div>
-			<hr>
+			<div class="container">
+  				<hr class="my-4">
+			</div>
 			
 		</main>
 		<footer>
