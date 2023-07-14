@@ -9,11 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import com.example.model.board.BoardListTO;
 import com.example.model.board.BoardTO;
 
-public interface BoardMapperInter {	
-	// 게시판 파일이름 가져오기
-	@Select("select filename from file where boardSeq = #{seq}")
-	public ArrayList<String> boardFile(String seq);
-	
+public interface BoardMapperInter {		
 	// 공지글 최근 2개 가져오기
 	@Select("select b.seq seq, tag, subject, date_format(wdate, '%Y-%m-%d') wdate, hit, recCnt, cmtCnt, m.nickname writer, isDel "
 			+ "from board b, member m where boardType = 0 and not b.isDel and b.memSeq=m.seq order by seq desc limit 2")

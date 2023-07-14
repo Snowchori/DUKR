@@ -92,11 +92,6 @@
 		pageHtml.append("</a>");
 		pageHtml.append("</li>");
 	}
-	
-	String disable = "";
-	if(userSeq == null) {
-		disable = "disabled";
-	}
 %>
 <!doctype html>
 <html>
@@ -118,19 +113,6 @@
 					} else {
 						document.sfrm.submit();
 					}
-				}
-			}
-			
-			function boardWrite() {
-				if(<%= userSeq %> == null || <%= userSeq %> == "") {
-					Swal.fire({
-						icon: 'error',
-						title: '로그인이 필요합니다.',
-						showConfirmButton: false,
-						timer: 1500
-					})
-				} else {
-					location.href='freeBoardWrite?cpage=' + <%=cpage%>;
 				}
 			}
 		</script>
@@ -172,7 +154,7 @@
 					</table>
 				</div>
 				<div class="col-12 p-2">
-					<button type='button' class='btn btn-dark float-end' onclick="boardWrite()">글쓰기</button>
+					<button type='button' class='btn btn-dark float-end' onclick="location.href='freeBoardWrite?cpage=<%=cpage%>'">글쓰기</button>
 				</div>
 			</div>
 			<div class="modal fade" id="searchModal">

@@ -19,9 +19,9 @@ public class BoardDAO {
 	public ArrayList<BoardTO> announceListTwo() {
 		ArrayList<BoardTO> lists = boardMapper.announceListTwo();
 		
-		for(BoardTO list: lists) {
-			ArrayList<String> files = boardMapper.boardFile(list.getSeq());
-			if(files.size() != 0) {
+		for(BoardTO list : lists) {
+			int hasFile = boardMapper.hasFile(list);
+			if(hasFile == 1) {
 				list.setHasFile(true);
 			} else {
 				list.setHasFile(false);
@@ -31,7 +31,7 @@ public class BoardDAO {
 		return lists;
 	}
 	
-	// 보드게임 목록 가져오기
+	// 게시글 목록 가져오기
 	public BoardListTO boardList(BoardListTO listTO) {
 		listTO.setTotalRecord(boardMapper.boardListTotal(listTO));
 		listTO.setSkip();
@@ -52,10 +52,8 @@ public class BoardDAO {
 		}
 		*/
 		// file테이블 사용하지 않는방식
-		System.out.println("boardList 호출");
 		for(BoardTO list : listTO.getBoardLists()) {
 			int hasFile = boardMapper.hasFile(list);
-			System.out.println(hasFile);
 			if(hasFile == 1) {
 				list.setHasFile(true);
 			}else {
@@ -75,14 +73,15 @@ public class BoardDAO {
 		listTO.setStartBlock();
 		listTO.setEndBlock();
 		
-		for(BoardTO list: listTO.getBoardLists()) {
-			ArrayList<String> files = boardMapper.boardFile(list.getSeq());
-			if(files.size() != 0) {
+		for(BoardTO list : listTO.getBoardLists()) {
+			int hasFile = boardMapper.hasFile(list);
+			if(hasFile == 1) {
 				list.setHasFile(true);
 			} else {
 				list.setHasFile(false);
 			}
 		}
+		
 		return listTO;
 	}
 	
@@ -95,14 +94,17 @@ public class BoardDAO {
 		listTO.setStartBlock();
 		listTO.setEndBlock();
 		
-		for(BoardTO list: listTO.getBoardLists()) {
-			ArrayList<String> files = boardMapper.boardFile(list.getSeq());
-			if(files.size() != 0) {
+		
+		
+		for(BoardTO list : listTO.getBoardLists()) {
+			int hasFile = boardMapper.hasFile(list);
+			if(hasFile == 1) {
 				list.setHasFile(true);
 			} else {
 				list.setHasFile(false);
 			}
 		}
+		
 		return listTO;
 	}
 	

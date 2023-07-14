@@ -250,6 +250,17 @@ public class DURKController {
 	
 	@RequestMapping("/announceBoardWrite")
 	public ModelAndView announceBoardWrite(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+			
+			return modelAndView;
+		}
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/announce/announce_board_write");
 		
@@ -337,16 +348,19 @@ public class DURKController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("/freeBoardWriteOk")
-	public ModelAndView freeBoardWriteOk(HttpServletRequest request) {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("community/free/free_board_write_ok");
-		
-		return modelAndView;
-	}
-	
 	@RequestMapping("/freeBoardWrite")
 	public ModelAndView freeBoardWrite(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+			
+			return modelAndView;
+		}
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/free/free_board_write");
 		
