@@ -150,7 +150,7 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body class="bg-light">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
@@ -160,7 +160,7 @@
 				</div>
 			</div>
 		</header>
-		<main class="container-fluid d-flex justify-content-center bg-light">
+		<main class="container-fluid d-flex justify-content-center">
 			<div class="container d-flex justify-content-center row bottombody">
 				<div class="col-12 mt-3 p-2">
 					총 <%= totalRecord %>건
