@@ -14,7 +14,7 @@
 	MemberTO user = (MemberTO)session.getAttribute("logged_in_user");
 	String memSeq = user.getSeq();
 	String writer = "'" + user.getNickname() + "'";
-	System.out.println(memSeq + writer);
+	//System.out.println(memSeq + writer);
 %>
     
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
@@ -102,10 +102,27 @@
 							uploadUrl : '/upload/freeboard'
 						}
 					})
-					.then(editor => {
-						console.log('Editor was initialized');
-						window.editor = editor;
-					})
+					.then( editor => {
+        				editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
+            			// 파일 업로드시 이벤트 처리를 수행하는 부분
+            			return {
+                			upload: () => {
+                    			return loader.file
+                        			.then( file => {
+                            			// 파일 업로드가 성공적으로 완료된 후 수행
+                            			console.log( '파일 업로드 성공');
+                            			console.log(file);
+                            			console.log(file.name);
+                            			console.log(file.size);
+                        			} )
+                        			.catch( error => {
+                            			// 파일 업로드 중 오류발생
+                            			console.error( '파일 업로드 오류:', error );
+                        			} );
+                				}
+            				};
+        				};
+    				} )
 					.catch(error => {
 						console.error(error);
 					});
@@ -149,16 +166,10 @@
 							  			})
 						  			}
 							  	}
-							  });
-					} 
-				}
-				
-				document.getElementById("testbtn").onclick = function(){
-					const content = editor.getData();
-					console.log("데이터 : " + content);
+							});
+						} 
+					}	
 				};
-					
-			};
 		</script>
 	
 	</head>
@@ -210,12 +221,7 @@
 							</div>
 							<div class="align_right">			
 								<input type="button" id="wbtn" class="btn btn-dark" value="글쓰기"/>			
-							</div>	
-							
-							<div class="align_right">			
-								<input type="button" id="testbtn" class="btn btn-dark" value="글쓰기 테스트"/>			
-							</div>
-							
+							</div>								
 						</div>
 						
 					</form>

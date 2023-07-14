@@ -49,4 +49,9 @@ public interface BoardMapperInter {
 	// 글쓰기
 	@Insert("insert into board values(0, #{memSeq}, #{subject}, #{content}, #{wip}, now(), 0, 0, 0, 0, #{tag}, #{boardType})")
 	public int writeNew(BoardTO to);
+	
+	// seq로 글정보 가저오기
+	@Select("select * from board where seq=#{seq}")
+	public BoardTO boardView(BoardTO to);
+	
 }

@@ -328,6 +328,11 @@ public class DURKController {
 	public ModelAndView freeBoardView(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/free/free_board_view");
+
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardView(to);
+		modelAndView.addObject("to", to);
 		
 		return modelAndView;
 	}

@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+
+<%
+	BoardTO to = (BoardTO)request.getAttribute("to");
+	String content = to.getContent();
+%>
 <!doctype html>
 <html>
 	<head>
@@ -25,6 +30,13 @@
 		</header>
 		<main>
 			자유게시판 글 내용
+			
+			<hr>
+			<div id="content">
+				<%=content %>
+			</div>
+			<hr>
+			
 		</main>
 		<footer>
 		</footer>

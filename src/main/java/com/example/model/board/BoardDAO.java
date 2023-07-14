@@ -99,4 +99,10 @@ public class BoardDAO {
 		return result;
 	}
 	
+	// board view
+	public BoardTO boardView(BoardTO to) {
+		to = boardMapper.boardView(to);
+		return to;
+	}
+	
 }
