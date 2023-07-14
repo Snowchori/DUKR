@@ -218,67 +218,90 @@
 						location.classList.add('is-invalid');
 					}
 				});
-				
+
+				let ckeditor;
 				document.getElementById('rbtn').onclick = () => {
+					console.log(ckeditor.getData());
 					switch(false){
 						case subject_ok: 
 							subject.classList.remove('is-valid');
 							subject.classList.add('is-invalid');
+							document.location.href='#subject';
+							break;
 						case date_ok: 
 							date.classList.remove('is-valid');
 							date.classList.add('is-invalid');
+							document.location.href='#date';
+							break;
 						case adr_ok: 
 							address.classList.remove('is-valid');
 							address.classList.add('is-invalid');
+							document.location.href='#address';
+							break;
 						case detail_ok: 
 							detail.classList.remove('is-valid');
 							detail.classList.add('is-invalid');
+							document.location.href='#detail';
+							break;
 						case loc_ok: 
 							location.classList.remove('is-valid');
 							location.classList.add('is-invalid');
+							document.location.href='#location';
+							break;
 						default: 
-							if(subject_ok && date_ok && adr_ok && detail_ok && loc_ok){
-								$.ajax({
-									url:'partyBoardRegisterOk',
-									type:'post',
-									data: {
-										subject: document.getElementById('subject').value.trim(),
-										content: document.getElementById('content').value.trim(),
-										tag: document.getElementById('tag').value.trim(),
-										address: document.getElementById('address').value.trim(),
-										extra: document.getElementById('extra').value.trim(),
-										detail: document.getElementById('detail').value.trim(),
-										location: document.getElementById('location').value.trim(),
-										date: document.getElementById('date').value.trim(),
-										desired: document.getElementById('desired').value.trim(),
-										loccode: document.getElementById('loccode').value.trim(),
-										latitude: document.getElementById('latitude').value.trim(),
-										longitude: document.getElementById('longitude').value.trim()
-									},
-									success: function(data) {
-										if(data == 0) {
-											Swal.fire({
-												icon: 'success',
-												title: '글쓰기 완료',
-												confirmButtonText: '확인',
-												willClose: () => {
-													document.location.href='partyBoardList';
-												}
-											});
-										} else {
-											Swal.fire({
-												icon: 'error',
-												title: '글쓰기 실패',
-												confirmButtonText: '확인'
-											});
-										}
+							$.ajax({
+								url:'partyBoardRegisterOk',
+								type:'post',
+								data: {
+									subject: document.getElementById('subject').value.trim(),
+									content: document.getElementById('content').value.trim(),
+									tag: document.getElementById('tag').value.trim(),
+									address: document.getElementById('address').value.trim(),
+									extra: document.getElementById('extra').value.trim(),
+									detail: document.getElementById('detail').value.trim(),
+									location: document.getElementById('location').value.trim(),
+									date: document.getElementById('date').value.trim(),
+									desired: document.getElementById('desired').value.trim(),
+									loccode: document.getElementById('loccode').value.trim(),
+									latitude: document.getElementById('latitude').value.trim(),
+									longitude: document.getElementById('longitude').value.trim()
+								},
+								success: function(data) {
+									if(data == 0) {
+										Swal.fire({
+											icon: 'success',
+											title: '글쓰기 완료',
+											confirmButtonText: '확인',
+											willClose: () => {
+												document.location.href='partyBoardList';
+											}
+										});
+									} else {
+										Swal.fire({
+											icon: 'error',
+											title: '글쓰기 실패',
+											confirmButtonText: '확인'
+										});
 									}
-								});
-							}else{
-								document.location.href='#subject';
-							}
+								}
+							});
 					}
 				}
+	
+				/* CKEditor5 설정 */
+				ClassicEditor.create(document.getElementById('content'),{
+					language: "ko",
+					ckfinder: {
+						uploadUrl : '/upload/freeboard'
+					}
+				})
+				.then(editor => {
+					console.log('Editor was initialized');
+					ckeditor = editor;
+				})
+				.catch(error => {
+					console.error(error);
+				});
 			});
 		</script>
 		<!-- 개별 CSS -->
@@ -309,6 +332,12 @@
 			.bottombody{
 				max-width: 1920px;
 			}
+		
+			.essential{
+				color: red;
+			}
+		
+			.ck-editor__editable { height: 400px; }
 			
 			@media (max-width: 575px){
 				.formframe{
@@ -350,24 +379,24 @@
 		<main class="d-flex justify-content-center">
 			<!-- 메인 요소 -->
 			<div class="container-fluid d-flex justify-content-center bottombody">
-				<div class="container d-flex justify-content-around formframe">
+				<div class="container formframe">
 					<form action="partyBoardRegisterOk" class="row" id="rfrm" name="rfrm" method="post">
 						<input type="hidden" id="tag" name="tag"/>
 						<input type="hidden" id="latitude" name="latitude"/>
 						<input type="hidden" id="longitude" name="longitude"/>
 						<input type="hidden" id="loccode" name="loccode"/>
 						<div class="col-md-6 mb-3">
-							<label for="subject" class="form-label">제목</label>
+							<label for="subject" class="form-label">제목 <span class="essential">*</span></label>
 							<input type="text" class="form-control" placeholder="제목을 입력하세요" name="subject" id="subject"/>
-							<div class="invalid-feedback">제목은 2자 이상 입력하셔야 합니다.</div>
+							<div class="invalid-feedback">제목을 2자 이상 입력하셔야 합니다.</div>
 						</div>
 						<div class="col-md-6 mb-3">
-							<label for="date" class="form-label">날짜 선택</label>
+							<label for="date" class="form-label">날짜 선택 <span class="essential">*</span></label>
 							<input type="datetime-local" min="<%=sdate%>" max="<%=ldate%>" class="form-control" id="date" name="date"/>
 							<div class="invalid-feedback">날짜를 선택하셔야 합니다. (<%= sdate.replace("T", " ") %> ~ <%= ldate.replace("T", " ") %>)</div>
 						</div>
 						<div class="col-12 mb-3">
-							<label for="address" class="form-label">모임 장소</label>
+							<label for="address" class="form-label">모임 장소 <span class="essential">*</span></label>
 							<div class="input-group has-validation">
 								<input type="text" class="form-control" id="address" name="address" placeholder="주소" readonly>
 								<input type="button" id="zbtn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal" value="우편번호 찾기"/>
@@ -376,18 +405,18 @@
 						</div>
 						<div class="col-md-6 mb-3">
 							<input type="text" class="form-control" id="detail" name="detail" placeholder="상세주소">
-							<div class="invalid-feedback">상세주소는 2자 이상 입력하셔야 합니다.</div>
+							<div class="invalid-feedback">상세주소를 2자 이상 입력하셔야 합니다.</div>
 						</div>
 						<div class="col-md-6 mb-3">
 							<input type="text" class="form-control" id="extra" name="extra" placeholder="(동, 건물명)" readonly>
 						</div>
 						<div class="col-md-6 mb-3">
-							<label for="location" class="form-label">장소 별칭</label>
+							<label for="location" class="form-label">장소 별칭 <span class="essential">*</span></label>
 							<input type="text" class="form-control" id="location" name="location" placeholder="별칭">
-							<div class="invalid-feedback">장소 별칭은 2자 이상 입력하셔야 합니다.</div>
+							<div class="invalid-feedback">장소 별칭을 2자 이상 입력하셔야 합니다.</div>
 						</div>
 						<div class="col-md-6 mb-3">
-							<label for="desired" class="form-label">희망인원 수</label>
+							<label for="desired" class="form-label">희망인원 수 <span class="essential">*</span></label>
 							<select class="form-select" id="desired" name="desired">
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -401,12 +430,9 @@
 						<div class="col-12 mb-3">
 							<label for="content" class="form-label">내용</label>
 							<textarea
-								class="form-control"
 								name="content"
 								id="content"
-								rows="15"
 								placeholder="내용을 입력하세요"
-								style="resize: none;"
 							></textarea>
 						</div>
 						<div class="col-12 mb-3 d-flex justify-content-end">
