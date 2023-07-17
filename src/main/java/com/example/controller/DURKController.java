@@ -128,6 +128,24 @@ public class DURKController {
 	}
 	
 	// admin
+	@RequestMapping("/banUserManage")
+	public ModelAndView banUserManage(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		boolean isAdmin = (userInfo != null) ? userInfo.isAdmin() : false;
+		if(!isAdmin) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("admin/not_admin");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/ban_user_manage");
+		
+		return modelAndView;
+	}
+	
 	@RequestMapping("/gameManage")
 	public ModelAndView gameManage(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -180,6 +198,81 @@ public class DURKController {
 		int flag = gameDAO.gameRecClear();
 		
 		return flag;
+	}
+	
+	@RequestMapping("/inquiryManage")
+	public ModelAndView inquiryManage(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		boolean isAdmin = (userInfo != null) ? userInfo.isAdmin() : false;
+		if(!isAdmin) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("admin/not_admin");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/inquiry_manage");
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/noteSendAll")
+	public ModelAndView noteSendAll(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		boolean isAdmin = (userInfo != null) ? userInfo.isAdmin() : false;
+		if(!isAdmin) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("admin/not_admin");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/note_send_all");
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/reportList")
+	public ModelAndView reportList(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		boolean isAdmin = (userInfo != null) ? userInfo.isAdmin() : false;
+		if(!isAdmin) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("admin/not_admin");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/report_list");
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/userList")
+	public ModelAndView userList(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		boolean isAdmin = (userInfo != null) ? userInfo.isAdmin() : false;
+		if(!isAdmin) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("admin/not_admin");
+			
+			return modelAndView;
+		}
+		
+		ArrayList<MemberTO> user_list = memberDAO.memberList();
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/user_list");
+		modelAndView.addObject("user_list", user_list);
+		
+		return modelAndView;
 	}
 	
 	// community/announce
@@ -720,7 +813,6 @@ public class DURKController {
 		to.setHintSeq("0");
 		to.setPassword("");
 		to.setAnswer("");
-		to.setCertification(true);
 		to.setRate(30);
 		
 		to = memberDAO.trySocialLogin(to);
@@ -871,7 +963,6 @@ public class DURKController {
 		to.setEmail(req.getParameter("email"));
 		to.setHintSeq(req.getParameter("hintSeq"));
 		to.setAnswer(req.getParameter("answer"));
-		to.setCertification(false);
 		to.setRate(30);
 		
 		int result = memberDAO.addMember(to);

@@ -1,5 +1,6 @@
 package com.example.config;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
@@ -84,4 +85,8 @@ public interface MemberMapperInter {
 	// 소셜인증하기(uuid 추가)
 	@Update("update member set uuid=#{uuid} where seq=#{seq}")
 	public abstract int socialCertificationOk(MemberTO to);
+	
+	// 회원 목록
+	@Select("select seq, hintSeq, id, nickname, email, answer, rate, isAdmin, uuid from member")
+	public ArrayList<MemberTO> memberList();
 }

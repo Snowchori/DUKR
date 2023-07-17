@@ -13,7 +13,6 @@ public class MemberTO {
 	private String nickname;
 	private String email;
 	private String answer;
-	private boolean certification;
 	private int rate;
 	private boolean isAdmin;
 	private String uuid;
