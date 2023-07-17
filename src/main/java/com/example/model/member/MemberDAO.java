@@ -1,5 +1,6 @@
 package com.example.model.member;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.Map;
@@ -148,5 +149,12 @@ public class MemberDAO {
 	public int socialCertificationOk(MemberTO to) {
 		int result = memberMapper.socialCertificationOk(to);
 		return result;
+	}
+	
+	// 회원 목록
+	public ArrayList<MemberTO> memberList() {
+		ArrayList<MemberTO> lists = memberMapper.memberList();
+		
+		return lists;
 	}
 }

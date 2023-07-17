@@ -124,16 +124,17 @@
 							mmarkers.push(mmarker);
 							rvmarkers.push(rvmarker);
 							
-							
+							let rvshortcut = '&nbsp;<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#myModal" class="rvshortcut '+ (points.length-1) +'"><i class="bi bi-eye"></i></a>';
 							// 인포윈도우 작성될 정보(마커 인덱스, 내용) 배열로 저장
 							infoContents.push({
 								marker: markers.length-1,
-								content: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>&nbsp;<a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#myModal" class="roadview '+ (points.length-1) +'"><i class="bi bi-eye"></i></a>',
-								content2: '<div style="width:180px;text-align:center;"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>'
+								content: '<div class="mapinfo"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>' + rvshortcut,
+								content2: '<div class="mapinfo"><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>'
 							});
 	
 						} else {
 							infoContents[infoContents.length-1].content = infoContents[infoContents.length-1].content + '<br/><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>';
+							infoContents[infoContents.length-1].content2 = infoContents[infoContents.length-1].content2 + '<br/><a href="partyBoardView?seq=' + datas[i].boardSeq + '" class="meet">' + inner + '</a>';
 						}
 					}
 					
@@ -266,7 +267,7 @@
 				
 				/* 로드뷰 */
 				function rvEvent(){
-					const rvs = Array.from(document.getElementsByClassName('roadview'));
+					const rvs = Array.from(document.getElementsByClassName('rvshortcut'));
 					rvs.forEach(rv => {
 						rv.onclick = () => {
 							const index = rv.classList[1];
@@ -288,17 +289,17 @@
 				
 				// 로드뷰를 통해서 이동할때 마커도 같이 이동
 				kakao.maps.event.addListener(rv, 'position_changed', function() {
-				    // 현재 로드뷰의 위치 좌표 
-				    let rvPosition = rv.getPosition();
-
-				    // 지도 중심을 현재 로드뷰 위치로 설정
-				    mmap.setCenter(rvPosition);
-
-				    // 지도 위에 로드뷰 도로 오버레이가 추가된 상태일때
-				    if(overlayOn) {
-				        // 마커 위치 현재 로드뷰의 위치로 설정
-				        rmarker.setPosition(rvPosition);
-				    }
+					// 현재 로드뷰의 위치 좌표 
+					let rvPosition = rv.getPosition();
+					
+					// 지도 중심을 현재 로드뷰 위치로 설정
+					mmap.setCenter(rvPosition);
+					
+					// 지도 위에 로드뷰 도로 오버레이가 추가된 상태일때
+					if(overlayOn) {
+						// 마커 위치 현재 로드뷰의 위치로 설정
+						rmarker.setPosition(rvPosition);
+					}
 				});
 				
 				kakao.maps.event.addListener(mmap, 'click', function(mouseEvent){
@@ -524,7 +525,6 @@
 				text-decoration: none;
 			}.meet{
 				color: black;
-				text-decoration: underline;
 			}
 			
 			label{
@@ -535,6 +535,11 @@
 				max-width: 1920px;
 			}
 
+			.mapinfo{
+				width:180px;
+				text-align:center;
+			}
+			
 			.swal2-title {
 				font-size: 1.5em;
 			}
