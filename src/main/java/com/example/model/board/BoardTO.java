@@ -15,7 +15,7 @@ public class BoardTO {
 	private String hit;
 	private String recCnt;
 	private String cmtCnt;
-	private boolean isDel;
+	private boolean isDel; 
 	private String tag;
 	private String boardType;
 	private boolean hasFile;

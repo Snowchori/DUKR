@@ -157,4 +157,10 @@ public class MemberDAO {
 		
 		return lists;
 	}
+	
+	// 게시글 작성자 닉네임 가져오기
+	public String writerNickname(String seq) {
+		String nickname = memberMapper.writerNickname(seq);
+		return nickname;
+	}
 }

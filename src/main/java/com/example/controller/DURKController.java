@@ -436,6 +436,8 @@ public class DURKController {
 		BoardTO to = new BoardTO();
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
+		to.setWriter(memberDAO.writerNickname(to.getMemSeq()));
+		
 		modelAndView.addObject("to", to);
 		
 		return modelAndView;

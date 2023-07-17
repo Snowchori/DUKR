@@ -8,6 +8,9 @@
 	String subject = to.getSubject();
 	String writer = to.getWriter();
 	String content = to.getContent();
+	String wdate = to.getWdate();
+	String wip = to.getWip();
+	String hit = to.getHit();
 %>
 <!doctype html>
 <html>
@@ -48,6 +51,10 @@
 			</div>
 			<div class="container text-left" style="margin-top: -10px; font-size: 20px;">
 				<b><%=subject %></b>
+				<div style="text-align: left; font-size: 16px; margin-top: 5px;">
+					<b><%=writer %></b>&nbsp;
+					<%=wdate %>
+				</div>
 			</div>
 			<div class="container" style="margin-top: -10px;">
   				<hr class="my-4">
