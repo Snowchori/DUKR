@@ -432,8 +432,59 @@ public class DURKController {
 	// community/party
 	@RequestMapping("/partyBoardList")
 	public ModelAndView partyBoardList(HttpServletRequest request) {
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String select = request.getParameter("select");
+		String search =	request.getParameter("search");
+		
+		ArrayList<BoardTO> announceList = boardDAO.announceListTwo();
+		BoardListTO listTO = new BoardListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setKeyWord("%" + search + "%");
+		listTO.setBoardType("2");
+		
+		if(select == null) {
+			listTO.setQuery("");
+		} else if(select.equals("0")) {
+			// 전체 검색
+			listTO.setQuery("(subject like #{keyWord} or content like #{keyWord} or m.nickname like #{keyWord} or tag like #{keyWord}) and");
+		} else if(select.equals("1")) {
+			// 제목 검색
+			listTO.setQuery("subject like #{keyWord} and");
+		} else if(select.equals("2")) {
+			// 제목 + 내용 검색
+			listTO.setQuery("(subject like #{keyWord} or content like #{keyWord}) and");
+		} else if(select.equals("3")) {
+			// 작성자 검색
+			listTO.setQuery("m.nickname like #{keyWord} and");
+		} else if(select.equals("4")) {
+			// 태그 검색
+			listTO.setQuery("tag like #{keyWord} and");
+		} else {
+			// 전체 검색
+			listTO.setQuery("");
+		}
+		
+		listTO = boardDAO.boardList(listTO);
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/party/party_board_list");
+		modelAndView.addObject("announceList", announceList);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}

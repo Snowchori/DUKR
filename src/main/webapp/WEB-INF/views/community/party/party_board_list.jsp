@@ -1,6 +1,97 @@
+<%@page import="com.example.model.board.BoardListTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf"%>
+<%
+	ArrayList<BoardTO> announceList = (ArrayList<BoardTO>)request.getAttribute("announceList");
+	BoardListTO listTO = (BoardListTO)request.getAttribute("listTO");
+	
+	String search = (request.getParameter("search") != null) ? request.getParameter("search") : "";
+	String select = (request.getParameter("select") != null) ? request.getParameter("select") : "0";
+	
+	int cpage = listTO.getCpage();
+	int totalRecode = listTO.getTotalRecord();
+	int recordPerPage = listTO.getRecordPerPage();
+	int totalRecord = listTO.getTotalRecord();
+
+	int totalPage = listTO.getTotalPage();
+
+	int blockPerPage = listTO.getBlockPerPage();
+	int startBlock = listTO.getStartBlock();
+	int endBlock = listTO.getEndBlock();
+
+	//해당 게임 태그에 맞는 게시글 리스트 
+	StringBuilder boardHtml = new StringBuilder();
+	
+	for(BoardTO list: announceList) {
+		boardHtml.append("<tr onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "\"'>");
+		boardHtml.append("<td class='board-img'><i class='bi bi-megaphone h1 icon'></i></td>");
+		boardHtml.append("<td><span class='badge bg-secondary'>");
+		boardHtml.append(list.getTag());
+		boardHtml.append("</span>&nbsp;");
+		boardHtml.append(list.getSubject() + " [" + list.getCmtCnt() + "]<br>");
+		boardHtml.append("<small>" + list.getWriter() + "&nbsp;" + list.getWdate() + "&nbsp;");
+		boardHtml.append("<i class='bi bi-eye-fill icon'></i>" + list.getHit() + "&nbsp;");
+		boardHtml.append("<i class='bi bi-hand-thumbs-up-fill icon'></i>" + list.getRecCnt() + "</small>");
+		boardHtml.append("</td>");
+		boardHtml.append("</tr>");
+	}
+	
+	for(BoardTO list: listTO.getBoardLists()) {
+		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
+		boardHtml.append("<td class='board-img'><i class='bi ");
+		if(!list.isHasFile()) {
+			boardHtml.append("bi-file-earmark-excel");
+		} else {
+			boardHtml.append("bi-card-image");
+		}
+		boardHtml.append(" h1 icon'></i></td>");
+		boardHtml.append("<td><span class='badge bg-secondary'>");
+		boardHtml.append(list.getTag());
+		boardHtml.append("</span>&nbsp;");
+		boardHtml.append(list.getSubject() + " [" + list.getCmtCnt() + "]<br>");
+		boardHtml.append("<small>" + list.getWriter() + "&nbsp;" + list.getWdate() + "&nbsp;");
+		boardHtml.append("<i class='bi bi-eye-fill icon'></i>" + list.getHit() + "&nbsp;");
+		boardHtml.append("<i class='bi bi-hand-thumbs-up-fill icon'></i>" + list.getRecCnt() + "</small>");
+		boardHtml.append("</td>");
+		boardHtml.append("</tr>");
+	}
+	
+	StringBuilder pageHtml = new StringBuilder();
+	
+	if (startBlock != 1) {
+		pageHtml.append("<li class='page-item'>");
+		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append(startBlock - blockPerPage);
+		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
+		pageHtml.append("class='page-link' aria-label='Previous'>");
+		pageHtml.append("<span aria-hidden='true'>«</span>");
+		pageHtml.append("</a>");
+		pageHtml.append("</li>");
+	}
+	
+	for(int i=startBlock; i<=endBlock; i++) {
+		if(i == cpage) {
+			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
+		} else {
+			pageHtml.append("<li class='page-item'><a class='page-link' href='");
+			pageHtml.append("freeBoardList?select=" + select + "&search=" + search + "&cpage=" + i);
+			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
+			pageHtml.append(">" + i + "</a></li>");
+		}
+	}
+	
+	if(endBlock != totalPage) {
+		pageHtml.append("<li class='page-item'>");
+		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append(startBlock + blockPerPage);
+		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
+		pageHtml.append("class='page-link' aria-label='Next'>");
+		pageHtml.append("<span aria-hidden='true'>»</span>");
+		pageHtml.append("</a>");
+		pageHtml.append("</li>");
+	}
+%>
 <!doctype html>
 <html>
 	<head>
@@ -52,19 +143,12 @@
 		<main class="container-fluid d-flex justify-content-center">
 			<div class="container d-flex justify-content-center row bottombody">
 				<div class="col-12 mt-3 p-2">
-						총 0건
-						<button type='button' class='btn btn-dark float-end' data-bs-toggle="modal" data-bs-target="#searchModal" id="wbtn"><i class="bi bi-search"></i></button>
-					</div>
+					총 <%= totalRecord %>건
+					<button type='button' class='btn btn-dark float-end' data-bs-toggle="modal" data-bs-target="#searchModal" id="wbtn"><i class="bi bi-search"></i></button>
+				</div>
 				<div class="col-12 mt-3 p-2 row boardlist">
 					<table class="table">
-						<tr onclick='location.href="#"'>
-							<td class='board-img'><i class='bi bi-card-image h1 icon'></i></td>
-							<td><span class='badge bg-secondary'>카탄</span>&nbsp; 제목 [1]<br>
-								<small>작성자&nbsp;2023.07.05&nbsp; <i
-									class='bi bi-eye-fill icon'></i>3&nbsp; <i
-									class='bi bi-hand-thumbs-up-fill icon'></i>5
-							</small></td>
-						</tr>
+						<%= boardHtml %>
 					</table>
 				</div>
 				<div class="col-12 p-2">
@@ -78,19 +162,17 @@
 							<div class="modalHead text-center">
 								<h4><i class="bi bi-search"></i> Search</h4>
 							</div>
-							<form action="" id="sfrm" name="sfrm" method="get" class="form mt-3">
-								<!-- 게시판 타입 hidden 입력 -->
-								<input type="hidden" name="btype" value="">
-								<select name="stype" id="stype" class="form-select mb-3">
+							<form action="freeBoardList" id="sfrm" name="sfrm" method="get" class="form mt-3">
+								<select name="select" id="select" class="form-select mb-3">
 									<option value="1">제목</option>
 									<option value="2">내용</option>
 									<option value="3">제목+내용</option>
 									<option value="4">작성자</option>
 									<option value="5">태그</option>
 								</select>
-								<input type="text" name="sword" id="sword" class="form-control mb-3" maxlength="20" placeholder="검색어">
+								<input type="text" name="search" id="search" class="form-control mb-3" maxlength="20" placeholder="검색어">
 								<div class="col-12 btn-group btn-group ">
-									<button type="submit" class="btn btn-danger"><i class="bi bi-check"></i></button>
+									<button type="button" class="btn btn-danger"><i class="bi bi-check"></i></button>
 									<button type="button" class="btn btn-dark" data-bs-dismiss="modal"><i class="bi bi-x"></i></button>
 								</div>
 							</form>
@@ -103,17 +185,7 @@
 			<div class="container demo p-2 pb-5">
 				<nav class="pagination-outer" aria-label="Page navigation">
 					<ul class="pagination">
-						<li class="page-item"><a href="#" class="page-link"
-							aria-label="Previous"> <span aria-hidden="true">«</span>
-						</a></li>
-						<li class="page-item"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item active"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">4</a></li>
-						<li class="page-item"><a class="page-link" href="#">5</a></li>
-						<li class="page-item"><a href="#" class="page-link"
-							aria-label="Next"> <span aria-hidden="true">»</span>
-						</a></li>
+						<%= pageHtml %>
 					</ul>
 				</nav>
 			</div>
