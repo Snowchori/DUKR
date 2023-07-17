@@ -581,6 +581,19 @@ public class DURKController {
 		
 		return modelAndView;
 	}
+	
+	@RequestMapping("/partyBoardView")
+	public ModelAndView partyBoardView(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("community/party/party_board_view");
+
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardView(to);
+		modelAndView.addObject("to", to);
+		
+		return modelAndView;
+	}
 
 	@RequestMapping("/partyBoardRegister")
 	public ModelAndView partyBoardRegister(HttpServletRequest request) {

@@ -38,7 +38,7 @@
 	}
 	
 	for(BoardTO list: listTO.getBoardLists()) {
-		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
+		boardHtml.append("<tr onclick='location.href=\"partyBoardView?seq=" + list.getSeq() + "\"'>");
 		boardHtml.append("<td class='board-img'><i class='bi ");
 		if(!list.isHasFile()) {
 			boardHtml.append("bi-file-earmark-excel");
