@@ -116,6 +116,9 @@ public class BoardDAO {
 	
 	// board view
 	public BoardTO boardView(BoardTO to) {
+		String seq = to.getSeq();
+		boardMapper.hitPlus(seq);
+		
 		to = boardMapper.boardView(to);
 		return to;
 	}

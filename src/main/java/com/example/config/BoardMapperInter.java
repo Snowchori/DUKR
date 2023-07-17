@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.example.model.board.BoardListTO;
 import com.example.model.board.BoardTO;
@@ -54,5 +55,9 @@ public interface BoardMapperInter {
 	// 게시글의 파일 포함여부 검사
 	@Select("select count(*) from board where content like '%<img src=\"%' and seq=#{seq};")
 	public int hasFile(BoardTO to);
+	
+	// 뷰 진입시 추천수 +1
+	@Update("update board set hit=hit+1 where seq=#{seq}")
+	public int hitPlus(String seq);
 	
 }
