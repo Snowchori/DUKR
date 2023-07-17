@@ -58,10 +58,11 @@
 	}
 	
 	StringBuilder pageHtml = new StringBuilder();
+	String searchCondition = !select.equals("0") ? "select=" + select + "&search=" + search + "&" : "";
 	
 	if (startBlock != 1) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='partyBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='partyBoardList?" + searchCondition + "cpage=");
 		pageHtml.append(startBlock - blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Previous'>");
@@ -75,7 +76,7 @@
 			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
 		} else {
 			pageHtml.append("<li class='page-item'><a class='page-link' href='");
-			pageHtml.append("partyBoardList?select=" + select + "&search=" + search + "&cpage=" + i);
+			pageHtml.append("partyBoardList?" + searchCondition + "cpage=" + i);
 			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 			pageHtml.append(">" + i + "</a></li>");
 		}
@@ -83,7 +84,7 @@
 	
 	if(endBlock != totalPage) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='partyBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='partyBoardList?" + searchCondition + "cpage=");
 		pageHtml.append(startBlock + blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Next'>");
@@ -133,10 +134,12 @@
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf"%>
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
-				<div class="text-center text-white">
-					<h1 class="title">모임게시판</h1>
-					<p class="lead fw-normal text-white-50">Parties Board</p>
-				</div>
+				<a href="partyBoardList">
+					<div class="text-center text-white">
+						<h1 class="title">모임게시판</h1>
+						<p class="lead fw-normal text-white-50">Parties Board</p>
+					</div>
+				</a>
 			</div>
 		</header>
 	

@@ -1,9 +1,9 @@
 package com.example.config;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import com.example.model.board.BoardListTO;
@@ -44,6 +44,7 @@ public interface BoardMapperInter {
 	
 	// 글쓰기
 	@Insert("insert into board values(0, #{memSeq}, #{subject}, #{content}, #{wip}, now(), 0, 0, 0, 0, #{tag}, #{boardType})")
+	@Options(useGeneratedKeys = true, keyProperty = "seq")
 	public int writeNew(BoardTO to);
 	
 	// seq로 글정보 가저오기

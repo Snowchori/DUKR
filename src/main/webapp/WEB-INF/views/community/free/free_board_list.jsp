@@ -59,10 +59,11 @@
 	}
 	
 	StringBuilder pageHtml = new StringBuilder();
+	String searchCondition = !select.equals("0") ? "select=" + select + "&search=" + search + "&" : "";
 	
 	if (startBlock != 1) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='freeBoardList?" + searchCondition + "cpage=");
 		pageHtml.append(startBlock - blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Previous'>");
@@ -76,7 +77,7 @@
 			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
 		} else {
 			pageHtml.append("<li class='page-item'><a class='page-link' href='");
-			pageHtml.append("freeBoardList?select=" + select + "&search=" + search + "&cpage=" + i);
+			pageHtml.append("freeBoardList?" + searchCondition + "cpage=" + i);
 			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 			pageHtml.append(">" + i + "</a></li>");
 		}
@@ -84,7 +85,7 @@
 	
 	if(endBlock != totalPage) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='freeBoardList?" + searchCondition + "cpage=");
 		pageHtml.append(startBlock + blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Next'>");

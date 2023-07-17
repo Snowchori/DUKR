@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.config.BoardMapperInter;
 import com.example.config.PartyMapperInter;
 import com.example.model.board.BoardTO;
 
@@ -12,6 +13,8 @@ import com.example.model.board.BoardTO;
 public class PartyDAO {
 	@Autowired
 	private PartyMapperInter partyMapper;
+	@Autowired
+	private BoardMapperInter boardMapper;
 	
 	/* 모임 정보 반환 */
 	public ArrayList<ApiPartyTO> getParties(String loccode) {
@@ -33,10 +36,10 @@ public class PartyDAO {
 	public int registerPartyOk(BoardTO bto, PartyTO mto) {
 		int flag = 1;
 		
-		int result = partyMapper.registerPartyOk(bto);
+		int result = boardMapper.writeNew(bto);
 		if(result == 1) {
 			mto.setBoardSeq(bto.getSeq());
-			int result2 = partyMapper.registerPartyOk2(mto);
+			int result2 = partyMapper.registerPartyOk(mto);
 			if(result2 == 1) {
 				flag = 0;
 			}

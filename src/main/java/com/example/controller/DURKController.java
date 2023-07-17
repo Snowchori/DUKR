@@ -622,6 +622,7 @@ public class DURKController {
 			}
 			bto.setWip(request.getRemoteAddr());
 			bto.setTag(request.getParameter("tag"));
+			bto.setBoardType("2");
 			
 			// 모임 위치, 시간 정보 등
 			PartyTO pto = new PartyTO();

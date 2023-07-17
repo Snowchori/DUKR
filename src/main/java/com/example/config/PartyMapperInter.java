@@ -24,10 +24,6 @@ public interface PartyMapperInter {
 	ArrayList<ApiPartyTO> getPartiesByDo(String doval);
 	
 	/* 모임 등록 */
-	@Insert("insert into board values(0, 1, #{subject}, #{content}, #{wip}, now(), 0, 0, 0, 0, #{tag}, 2)")
-	@Options(useGeneratedKeys = true, keyProperty = "seq")
-	int registerPartyOk(BoardTO to);
-	
 	@Insert("insert into party values(0, #{boardSeq}, #{address}, #{detail}, #{location}, #{date}, #{desired}, 0, #{loccode}, #{latitude}, #{longitude})")
-	int registerPartyOk2(PartyTO to);
+	int registerPartyOk(PartyTO to);
 }
