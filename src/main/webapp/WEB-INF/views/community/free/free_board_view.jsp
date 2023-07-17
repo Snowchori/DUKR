@@ -11,6 +11,8 @@
 	String wdate = to.getWdate();
 	String wip = to.getWip();
 	String hit = to.getHit();
+	String recCnt = to.getRecCnt();
+	String cmtCnt = to.getCmtCnt();
 %>
 <!doctype html>
 <html>
@@ -22,14 +24,8 @@
 		<script type="text/javascript" >
 		</script>
 		<style>
-  			table img {
-    			max-width: 50%;
-  			}
-  			table {
-   				border-collapse: collapse;
-  			}
-  			table tr, table th, table td {
-    			border: 1px solid black;
+  			img {
+  				width: 100%;
   			}
 		</style>
 
@@ -47,29 +43,35 @@
 		<main>
 
 			<div class="container" >
-  				<hr class="my-4">
-			</div>
-			<div class="container text-left" style="margin-top: -10px; font-size: 20px;">
-				<b><%=subject %></b>
-				<div style="text-align: left; font-size: 16px; margin-top: 5px;">
-					<b><%=writer %></b>&nbsp;
-					<%=wdate %>
-				</div>
-			</div>
-			<div class="container" style="margin-top: -10px;">
-  				<hr class="my-4">
-			</div>
-			<div class="container text-left">
-				<div class="row">
-					<div class="col-md-6">
-						<%=content %>	
-					</div>		
-				</div>
-			</div>
-			<div class="container">
-  				<hr class="my-4">
-			</div>
 			
+  				<hr class="my-4">
+  				
+				<div class="container text-left" style="margin-top: -10px; font-size: 20px;">
+					<b><%=subject %></b>
+					<div style="text-align: left; font-size: 16px; margin-top: 5px; color: #888888;">
+						<b><%=writer %></b>&nbsp;&nbsp;
+						<%=wdate %>&nbsp;&nbsp;
+						<i class="fas fa-eye"></i>&nbsp;<%=hit %>&nbsp;&nbsp;
+						<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt %>&nbsp;&nbsp;
+						<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt %>
+					</div>
+				</div>
+				
+				<div class="container" style="margin-top: -10px;">
+  					<hr class="my-4">
+				</div>
+				
+				<div class="container text-left">
+					<div class="row">
+						<div class="col-md-6">
+							<%=content %>	
+						</div>		
+					</div>
+				</div>
+				
+  				<hr class="my-4">
+  				
+			</div>
 		</main>
 		<footer>
 		</footer>
