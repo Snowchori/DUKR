@@ -221,7 +221,6 @@
 
 				let ckeditor;
 				document.getElementById('rbtn').onclick = () => {
-					console.log(ckeditor.getData());
 					switch(false){
 						case subject_ok: 
 							subject.classList.remove('is-valid');
@@ -254,7 +253,7 @@
 								type:'post',
 								data: {
 									subject: document.getElementById('subject').value.trim(),
-									content: document.getElementById('content').value.trim(),
+									content: ckeditor.getData(),
 									tag: document.getElementById('tag').value.trim(),
 									address: document.getElementById('address').value.trim(),
 									extra: document.getElementById('extra').value.trim(),
@@ -296,7 +295,6 @@
 					}
 				})
 				.then(editor => {
-					console.log('Editor was initialized');
 					ckeditor = editor;
 				})
 				.catch(error => {

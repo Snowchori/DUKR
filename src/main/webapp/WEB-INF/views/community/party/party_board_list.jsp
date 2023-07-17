@@ -61,7 +61,7 @@
 	
 	if (startBlock != 1) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='partyBoardList?select=" + select + "&search=" + search + "&cpage=");
 		pageHtml.append(startBlock - blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Previous'>");
@@ -75,7 +75,7 @@
 			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
 		} else {
 			pageHtml.append("<li class='page-item'><a class='page-link' href='");
-			pageHtml.append("freeBoardList?select=" + select + "&search=" + search + "&cpage=" + i);
+			pageHtml.append("partyBoardList?select=" + select + "&search=" + search + "&cpage=" + i);
 			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 			pageHtml.append(">" + i + "</a></li>");
 		}
@@ -83,7 +83,7 @@
 	
 	if(endBlock != totalPage) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='partyBoardList?select=" + select + "&search=" + search + "&cpage=");
 		pageHtml.append(startBlock + blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Next'>");
@@ -162,7 +162,7 @@
 							<div class="modalHead text-center">
 								<h4><i class="bi bi-search"></i> Search</h4>
 							</div>
-							<form action="freeBoardList" id="sfrm" name="sfrm" method="get" class="form mt-3">
+							<form action="partyBoardList" id="sfrm" name="sfrm" method="get" class="form mt-3">
 								<select name="select" id="select" class="form-select mb-3">
 									<option value="1">제목</option>
 									<option value="2">내용</option>
@@ -170,9 +170,9 @@
 									<option value="4">작성자</option>
 									<option value="5">태그</option>
 								</select>
-								<input type="text" name="search" id="search" class="form-control mb-3" maxlength="20" placeholder="검색어">
-								<div class="col-12 btn-group btn-group ">
-									<button type="button" class="btn btn-danger"><i class="bi bi-check"></i></button>
+								<input type="text" name="search" id="search" class="form-control mb-3" maxlength="20" placeholder="검색어" required>
+								<div class="col-12 btn-group btn-group">
+									<button type="submit" class="btn btn-danger"><i class="bi bi-check"></i></button>
 									<button type="button" class="btn btn-dark" data-bs-dismiss="modal"><i class="bi bi-x"></i></button>
 								</div>
 							</form>
