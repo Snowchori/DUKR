@@ -1,3 +1,5 @@
+<%@page import="com.example.model.comment.CommentListTO"%>
+<%@page import="com.example.model.comment.CommentTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
@@ -15,6 +17,35 @@
 	String hit = to.getHit();
 	String recCnt = to.getRecCnt();
 	String cmtCnt = to.getCmtCnt();
+%>
+<%
+	CommentListTO commentListTo = new CommentListTO();
+	commentListTo = (CommentListTO)request.getAttribute("commentListTo");
+
+	StringBuilder sbComments = new StringBuilder();
+	for(CommentTO comment : commentListTo.getCommentList()){
+		String cWriter = comment.getWriter();
+		String cWdate = comment.getWdate();
+		int cRecCnt = comment.getRecCnt();
+		String cContent = comment.getContent();
+		
+		sbComments.append("<b>" + cWriter + "</b>&nbsp;");		        
+		sbComments.append("<span style='color:#888888;'>" + cWdate + "</span>");	
+		sbComments.append("<button class='btn' style='font-size:14px; color: #4db2b2;'>");	
+		sbComments.append("<i class='fas fa-thumbs-up'></i>");		
+		sbComments.append(cRecCnt);		
+		sbComments.append("</button>");	
+		sbComments.append("<br>");	
+		sbComments.append(cContent);	
+		sbComments.append("<hr class='my-2'>");	
+	}
+%>
+<%
+	String memSeq = "null";
+	if(session.getAttribute("logged_in_user") != null){
+		MemberTO logged_in_user = (MemberTO)session.getAttribute("logged_in_user");
+		memSeq = "'" + logged_in_user.getSeq() + "'";
+	}
 %>
 <!doctype html>
 <html>
@@ -35,6 +66,27 @@
 			  			success: function(res){
 			  				alert(res);
 			  			}
+					});
+				};
+				
+				document.getElementById("cmtWbtn").onclick = function(){
+					//alert("ajax실행");
+					$.ajax({
+						url:'/freeboardCommentWrite',
+						type:'post',
+						data: {
+							boardSeq: <%=boardSeq %>,
+							memSeq: <%=memSeq %>,
+							content: document.getElementById("cContent").value,
+						},
+						success: function(res){
+							if(res == 1){
+								alert("성공");
+							}else{
+								alert("로그인해야됨");
+								console.log(res);
+							}
+						}
 					});
 				};
 			};
@@ -110,36 +162,19 @@
 						<b style="font-size: 20px;">댓글</b>
   						<hr class="my-2">
   				
+  						<!-- 댓글영역 -->
   						<div name="cmtArea">
   							<div>
-  								<b>testwriter</b>&nbsp; 
-  								<span style="color:#888888;">2023-07-18</span>
-  								<button class="btn" style="font-size:14px; color: #4db2b2;">
-  									<i class="fas fa-thumbs-up"></i>
-  									10
-  								</button>
-  								<br>
-  								test comment1
-  								<hr class="my-2">
-  					
-  								<b>testwriter</b>&nbsp; 
-  								<span style="color:#888888;">2023-07-18</span>
-  								<button class="btn" style="font-size:14px; color: #4db2b2;">
-  									<i class="fas fa-thumbs-up"></i>
-  									10
-  								</button>
-  								<br>
-  								test comment1
-  								<hr class="my-2">
+  								<%=sbComments %>
   							</div>
   				
-  							<form action="" method="post" name="cmtWriteFrm">
-  								<textarea id="comment" name="comment" class="form-control" rows="3" placeholder="댓글">
-  								</textarea>
-  								<div class="text-lg-end" style="margin-top:10px;">
-  									<button class="btn btn-secondary float-right">댓글쓰기</button>
-  								</div>
-  							</form>	
+  							
+  							<textarea id="cContent" name="cContent" class="form-control" rows="3">
+  							</textarea>
+  							<div class="text-lg-end" style="margin-top:10px;">
+  								<button id="cmtWbtn" class="btn btn-secondary float-right">댓글쓰기</button>
+  							</div>
+  						
   					
   						</div>
   				

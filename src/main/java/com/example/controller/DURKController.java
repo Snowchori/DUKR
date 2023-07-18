@@ -31,6 +31,7 @@ import com.example.model.boardgame.BoardgameTO;
 import com.example.model.boardgame.SearchFilterTO;
 import com.example.model.comment.CommentDAO;
 import com.example.model.comment.CommentListTO;
+import com.example.model.comment.CommentTO;
 import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.member.MemberDAO;
@@ -444,6 +445,7 @@ public class DURKController {
 	
 	@RequestMapping("/freeBoardView")
 	public ModelAndView freeBoardView(HttpServletRequest request) {
+		System.out.println("dddddddddddddddddd");
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/free/free_board_view");
 
@@ -452,7 +454,11 @@ public class DURKController {
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
 		
+		CommentListTO commentListTo = new CommentListTO();
+		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
+
 		modelAndView.addObject("to", to);
+		modelAndView.addObject("commentListTo", commentListTo);
 		
 		return modelAndView;
 	}
@@ -474,6 +480,26 @@ public class DURKController {
 		modelAndView.setViewName("community/free/free_board_write");
 		
 		return modelAndView;
+	}
+	
+	// 댓글쓰기
+	@PostMapping("/freeboardCommentWrite")
+	public int freeboardCommentWrite(HttpServletRequest req){
+		int result = 0;
+		
+		CommentTO to = new CommentTO();
+		to.setBoardSeq(req.getParameter("boardSeq"));
+		to.setMemSeq(req.getParameter("memSeq"));
+		to.setContent(req.getParameter("content"));
+		to.setWip(req.getRemoteAddr());
+		
+		System.out.println(to.getBoardSeq() + "/" + to.getMemSeq() + "/" + to.getContent() + "/" + to.getWip());
+		
+		if(!to.getMemSeq().equals("")) {
+			 result = commentDAO.boardCommentWrite(to);
+		}
+
+		return result;
 	}
 	
 	// ck에디터 이미지 업로드하기@@
