@@ -437,6 +437,7 @@ public class DURKController {
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
 		to.setWriter(memberDAO.writerNickname(to.getMemSeq()));
+		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
 		
 		modelAndView.addObject("to", to);
 		
@@ -522,6 +523,31 @@ public class DURKController {
 		result = boardDAO.writeNew(to);
 		
 		return result;
+	}
+	
+	// 글 추천
+	@PostMapping("/rec")
+	public String recommend(HttpServletRequest req) {
+		String responseText = "";
+		
+		String boardSeq = req.getParameter("boardSeq");
+		MemberTO logged_in_user = (MemberTO)req.getSession().getAttribute("logged_in_user");
+		
+		if(logged_in_user == null) {
+			responseText = "먼저 로그인을 해야합니다";
+		}else {
+			String memSeq = logged_in_user.getSeq();
+			int recCheck = boardDAO.recCheck(memSeq, boardSeq);
+			
+			if(recCheck == 1) {
+				responseText = "이미 추천한 게시글 입니다";
+			}else {
+				boardDAO.boardRecommend(memSeq, boardSeq);
+				responseText = "게시글을 추천했습니다";
+			}
+		}
+		
+		return responseText;
 	}
 	
 	// community/party

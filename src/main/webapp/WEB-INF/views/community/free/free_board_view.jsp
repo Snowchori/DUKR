@@ -4,7 +4,9 @@
 
 <%
 	BoardTO to = (BoardTO)request.getAttribute("to");
-	
+
+	String boardSeq = "'" + to.getSeq() + "'";
+
 	String subject = to.getSubject();
 	String writer = to.getWriter();
 	String content = to.getContent();
@@ -22,6 +24,20 @@
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
+			window.onload = function(){
+				document.getElementById("recBtn").onclick = function(){
+					$.ajax({
+						url:'/rec',
+			  			type:'post',
+			  			data: {
+			  				boardSeq: <%=boardSeq %>
+			  			},
+			  			success: function(res){
+			  				alert(res);
+			  			}
+					});
+				};
+			};
 		</script>
 		<style>
   			img {
@@ -48,8 +64,18 @@
   				
 				<div class="container text-left" style="margin-top: -10px; font-size: 20px;">
 					<b><%=subject %></b>
-					<div style="text-align: left; font-size: 16px; margin-top: 5px; color: #888888;">
-						<b><%=writer %></b>&nbsp;&nbsp;
+					<div style="text-align: left; font-size: 16px; margin-top: 8px; color: #888888;">
+						<b>
+							<span class="dropdown">
+  								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+    								<%=writer %>
+  								</a>
+  								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    								<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+    								<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
+  								</ul>
+							</span>
+						</b>&nbsp;
 						<%=wdate %>&nbsp;&nbsp;
 						<i class="fas fa-eye"></i>&nbsp;<%=hit %>&nbsp;&nbsp;
 						<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt %>&nbsp;&nbsp;
@@ -68,6 +94,14 @@
 						</div>		
 					</div>
 				</div>
+				
+  				<div class="row justify-content-center">
+    				<div class="col-md-6 text-center">
+      					<button id="recBtn" class="btn btn-primary">
+        					<i class="fas fa-thumbs-up"></i> 추천
+      					</button>
+    				</div>
+  				</div>
 				
   				<hr class="my-4">
   				

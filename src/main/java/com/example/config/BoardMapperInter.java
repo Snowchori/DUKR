@@ -56,8 +56,20 @@ public interface BoardMapperInter {
 	@Select("select count(*) from board where content like '%<img src=\"%' and seq=#{seq};")
 	public int hasFile(BoardTO to);
 	
-	// 뷰 진입시 추천수 +1
+	// 뷰 진입시 조회수 +1
 	@Update("update board set hit=hit+1 where seq=#{seq}")
 	public int hitPlus(String seq);
+	
+	// 게시글 추천하기
+	@Insert("insert into boardrecommend values(#{memSeq}, #{boardSeq})")
+	public int boardRecommend(String memSeq, String boardSeq);
+	
+	// 게시글 추천여부
+	@Select("select count(*) from boardrecommend where memSeq=#{memSeq} and boardSeq=#{boardSeq}")
+	public int recCheck(String memSeq, String boardSeq);
+	
+	// 게시글 추천수
+	@Select("select count(*) from boardrecommend where boardSeq=#{boardSeq}")
+	public int recCount(String boardSeq);
 	
 }

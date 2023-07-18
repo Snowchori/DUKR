@@ -38,7 +38,7 @@
 			  			data: {
 			  				id: document.login_frm.id.value.trim(),
 			  				password: document.login_frm.password.value.trim()
-			  			},
+			  			},																	
 			  			success: function(data) {
 				  			if(data == 0) {
 					  			Swal.fire({

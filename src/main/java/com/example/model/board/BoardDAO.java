@@ -40,27 +40,19 @@ public class BoardDAO {
 		listTO.setStartBlock();
 		listTO.setEndBlock();
 		
-		// 파일 가지고있는지
-		/*
-		for(BoardTO list: listTO.getBoardLists()) {
-			ArrayList<String> files = boardMapper.boardFile(list.getSeq());
-			if(files.size() != 0) {
-				list.setHasFile(true);
-			} else {
-				list.setHasFile(false);
-			}
-		}
-		*/
-		// file테이블 사용하지 않는방식
+
 		for(BoardTO list : listTO.getBoardLists()) {
+			// 파일 포함 여부
 			int hasFile = boardMapper.hasFile(list);
 			if(hasFile == 1) {
 				list.setHasFile(true);
 			}else {
 				list.setHasFile(false);
 			}
+			// 추천수 기입
+			list.setRecCnt(boardMapper.recCount(list.getSeq()) + "");
 		}
-		
+
 		return listTO;
 	}
 	
@@ -123,4 +115,21 @@ public class BoardDAO {
 		return to;
 	}
 	
+	// 게시글 추천
+	public int boardRecommend(String memSeq, String boardSeq) {
+		int result = boardMapper.boardRecommend(memSeq, boardSeq);
+		return result;
+	}
+	
+	// 게시글 추천여부
+	public int recCheck(String memSeq, String boardSeq) {
+		int result = boardMapper.recCheck(memSeq, boardSeq);
+		return result;
+	}
+	
+	// 게시글 추천수
+	public int recCount(String boardSeq) {
+		int result = boardMapper.recCount(boardSeq);
+		return result;
+	}
 }
