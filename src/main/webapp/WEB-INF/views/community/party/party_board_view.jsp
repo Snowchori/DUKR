@@ -36,14 +36,22 @@
     			border: 1px solid black;
   			}
   			
-  			.blind{
-  				display: none;
+  			.slash{
+  				font-size: 15px;
   			}
   			
-  			.content_subject{
-  				font-size: 1em;
-  			}.subject{
-  				font-weight: bold;
+  			.dropdown{
+  				display: inline-block;
+  			}
+  			
+  			.disinherit{
+  				color: black;
+  			}
+  			
+  			.container.content{
+  				
+  				border-top: 1px black solid;
+  				border-bottom: 1px black solid;
   			}
 		</style>
 
@@ -60,34 +68,29 @@
 		</header>
 		<main>
 
-			<div class="container" >
-			
-  				<hr class="my-4">
-  				
-				<div class="container text-left" style="margin-top: -10px; font-size: 20px;">
+			<div class="container content mt-4" >
+				<div class="container text-left mt-4" style="font-size: 20px;">
 					<b><%=subject %></b>
 					<div style="text-align: left; font-size: 16px; margin-top: 8px; color: #888888;">
-						<b>
-							<span class="dropdown">
-  								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-    								<%=writer %>
-  								</a>
-  								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    								<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
-    								<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
-  								</ul>
-							</span>
-						</b>&nbsp;
-						<%=wdate %>&nbsp;&nbsp;
+						<div class="dropdown">
+							<a href="#" class="disinherit" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+ 								<%=writer %>
+							</a>
+							<span>(<%= wip %>)</span>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+  								<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+  								<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
+							</ul>
+						</div>
+						<span class="slash">|</span>
+						<span class="disinherit"><%=wdate %></span>&nbsp;&nbsp;
 						<i class="fas fa-eye"></i>&nbsp;<%=hit %>&nbsp;&nbsp;
 						<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt %>&nbsp;&nbsp;
 						<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt %>
 					</div>
 				</div>
 				
-				<div class="container" style="margin-top: -10px;">
   					<hr class="my-4">
-				</div>
 				
 				<div class="container text-left">
 					<div class="row">
@@ -104,11 +107,8 @@
       					</button>
     				</div>
   				</div>
-				
-  				<hr class="my-4">
-  				
+  					<hr class="my-4">
 			</div>
-		</main>
 		</main>
 		<footer>
 		</footer>

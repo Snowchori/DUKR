@@ -89,8 +89,4 @@ public interface MemberMapperInter {
 	// 회원 목록
 	@Select("select seq, hintSeq, id, nickname, email, answer, rate, isAdmin, uuid from member")
 	public ArrayList<MemberTO> memberList();
-	
-	// 게시글 - memSeq로 작성자 닉네임 가져오기
-	@Select("select nickname from member where seq=#{seq}")
-	public String writerNickname(String seq);
 }
