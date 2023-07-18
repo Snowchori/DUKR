@@ -87,6 +87,6 @@ public interface MemberMapperInter {
 	public abstract int socialCertificationOk(MemberTO to);
 	
 	// 회원 목록
-	@Select("select seq, hintSeq, id, nickname, email, answer, rate, isAdmin, uuid from member")
+	@Select("select seq, id, nickname, email, rate, isAdmin from member")
 	public ArrayList<MemberTO> memberList();
 }

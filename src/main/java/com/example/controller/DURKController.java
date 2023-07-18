@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.model.board.BanTO;
 import com.example.model.board.BoardDAO;
 import com.example.model.board.BoardListTO;
 import com.example.model.board.BoardTO;
@@ -30,6 +31,7 @@ import com.example.model.boardgame.BoardgameTO;
 import com.example.model.boardgame.SearchFilterTO;
 import com.example.model.comment.CommentDAO;
 import com.example.model.comment.CommentListTO;
+import com.example.model.comment.CommentTO;
 import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.member.MemberDAO;
@@ -140,10 +142,23 @@ public class DURKController {
 			return modelAndView;
 		}
 		
+		ArrayList<BanTO> ban_list = boardDAO.banIp();
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/ban_user_manage");
+		modelAndView.addObject("ban_list", ban_list);
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/banDeleteOk")
+	public int banDeleteOk(HttpServletRequest request) {
+		BanTO to = new BanTO();
+		to.setSeq(request.getParameter("seq"));
+		
+		int flag = boardDAO.banIpDeleteOk(to);
+		
+		return flag;
 	}
 	
 	@RequestMapping("/gameManage")
@@ -430,6 +445,7 @@ public class DURKController {
 	
 	@RequestMapping("/freeBoardView")
 	public ModelAndView freeBoardView(HttpServletRequest request) {
+		System.out.println("dddddddddddddddddd");
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/free/free_board_view");
 
@@ -438,7 +454,11 @@ public class DURKController {
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
 		
+		CommentListTO commentListTo = new CommentListTO();
+		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
+
 		modelAndView.addObject("to", to);
+		modelAndView.addObject("commentListTo", commentListTo);
 		
 		return modelAndView;
 	}
@@ -460,6 +480,26 @@ public class DURKController {
 		modelAndView.setViewName("community/free/free_board_write");
 		
 		return modelAndView;
+	}
+	
+	// 댓글쓰기
+	@PostMapping("/freeboardCommentWrite")
+	public int freeboardCommentWrite(HttpServletRequest req){
+		int result = 0;
+		
+		CommentTO to = new CommentTO();
+		to.setBoardSeq(req.getParameter("boardSeq"));
+		to.setMemSeq(req.getParameter("memSeq"));
+		to.setContent(req.getParameter("content"));
+		to.setWip(req.getRemoteAddr());
+		
+		System.out.println(to.getBoardSeq() + "/" + to.getMemSeq() + "/" + to.getContent() + "/" + to.getWip());
+		
+		if(!to.getMemSeq().equals("")) {
+			 result = commentDAO.boardCommentWrite(to);
+		}
+
+		return result;
 	}
 	
 	// ck에디터 이미지 업로드하기@@
@@ -506,10 +546,7 @@ public class DURKController {
 		// 여러 태그들 구분자 합의필요, 임시로 공백사용
 		//String[] tags = req.getParameter("tags").split(" "); 
 		String tag = req.getParameter("tags");
-		
-		//System.out.println(content);
-		//System.out.println(memSeq + " / " + boardType);
-		
+
 		BoardTO to = new BoardTO();
 		to.setSubject(subject);
 		to.setContent(content);

@@ -2,6 +2,7 @@ package com.example.config;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 
 import com.example.model.comment.CommentListTO;
@@ -17,4 +18,12 @@ public interface CommentMapperInter {
 	@Select("select boardSeq, content, date_format(wdate, '%Y-%m-%d') wdate, recCnt, wip, m.nickname writer, isDel "
 			+ "from comment c, member m where not c.isDel and m.nickname=#{keyWord} and c.memSeq=m.seq order by c.seq desc limit #{skip}, #{recordPerPage}")
 	public ArrayList<CommentTO> mycommentWrite(CommentListTO listTO);
+	
+	// 자유게시판 뷰 - 댓글목록 가져오기
+	@Select("select c.seq seq, boardSeq, memSeq, content, wdate, recCnt, wip, isDel, nickname writer from comment c inner join member m on c.memSeq=m.seq where boardSeq=#{boardSeq}")
+	public ArrayList<CommentTO> boardCommentList(String boardSeq);
+	
+	// 자유게시판 뷰 - 댓글쓰기
+	@Insert("insert into comment values(0, #{boardSeq}, #{memSeq}, #{content}, now(), 0, #{wip}, 0)")
+	public int boardCommentWrite(CommentTO to);
 }
