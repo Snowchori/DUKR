@@ -507,10 +507,7 @@ public class DURKController {
 		// 여러 태그들 구분자 합의필요, 임시로 공백사용
 		//String[] tags = req.getParameter("tags").split(" "); 
 		String tag = req.getParameter("tags");
-		
-		//System.out.println(content);
-		//System.out.println(memSeq + " / " + boardType);
-		
+
 		BoardTO to = new BoardTO();
 		to.setSubject(subject);
 		to.setContent(content);
