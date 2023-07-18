@@ -62,7 +62,7 @@
 			
   				<hr class="my-4">
   				
-				<div class="container text-left" style="margin-top: -10px; font-size: 20px;">
+				<div class="container text-left"  font-size: 20px;">
 					<b><%=subject %></b>
 					<div style="text-align: left; font-size: 16px; margin-top: 8px; color: #888888;">
 						<b>
@@ -95,6 +95,7 @@
 					</div>
 				</div>
 				
+				<br>
   				<div class="row justify-content-center">
     				<div class="col-md-6 text-center">
       					<button id="recBtn" class="btn btn-primary">
@@ -103,7 +104,38 @@
     				</div>
   				</div>
 				
-  				<hr class="my-4">
+				<br>
+				<b style="font-size: 20px;">댓글</b>
+  				<hr class="my-2">
+  				
+  				<div name="cmtArea">
+  					<div>
+  						<b>testwriter</b> <br>
+  						test comment1
+  						<hr class="my-2">
+  					
+  						<b>testwriter</b> <br>
+  						test comment2
+  						<hr class="my-2">
+  					
+  						<b>testwriter</b> <br>
+  						test comment1
+  						<hr class="my-2">
+  						
+  						<b>testwriter</b> <br>
+  						test comment1
+  						<hr class="my-2">
+  					</div>
+  				
+  					<form action="" method="post" name="cmtWriteFrm">
+  						<textarea id="comment" name="comment" class="form-control" rows="4" placeholder="댓글">
+  						</textarea>
+  						<div class="text-lg-end" style="margin-top:10px;">
+  							<button class="btn btn-secondary float-right">댓글쓰기</button>
+  						</div>
+  					</form>	
+  					
+  				</div>
   				
 			</div>
 		</main>
