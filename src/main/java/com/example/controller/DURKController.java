@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.model.board.BanTO;
 import com.example.model.board.BoardDAO;
 import com.example.model.board.BoardListTO;
 import com.example.model.board.BoardTO;
@@ -140,10 +141,23 @@ public class DURKController {
 			return modelAndView;
 		}
 		
+		ArrayList<BanTO> ban_list = boardDAO.banIp();
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/ban_user_manage");
+		modelAndView.addObject("ban_list", ban_list);
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/banDeleteOk")
+	public int banDeleteOk(HttpServletRequest request) {
+		BanTO to = new BanTO();
+		to.setSeq(request.getParameter("seq"));
+		
+		int flag = boardDAO.banIpDeleteOk(to);
+		
+		return flag;
 	}
 	
 	@RequestMapping("/gameManage")

@@ -132,4 +132,23 @@ public class BoardDAO {
 		int result = boardMapper.recCount(boardSeq);
 		return result;
 	}
+	
+	// 밴 ip 목록
+	public ArrayList<BanTO> banIp() {
+		ArrayList<BanTO> lists = boardMapper.banIp();
+				
+		return lists;
+	}
+	
+	// 밴 ip 해제
+	public int banIpDeleteOk(BanTO to) {
+		int flag = 1;
+		int result = boardMapper.banIpDeleteOk(to);
+		
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
 }
