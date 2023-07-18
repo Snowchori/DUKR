@@ -2,11 +2,13 @@ package com.example.config;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.example.model.board.BanTO;
 import com.example.model.board.BoardListTO;
 import com.example.model.board.BoardTO;
 
@@ -72,4 +74,11 @@ public interface BoardMapperInter {
 	@Select("select count(*) from boardrecommend where boardSeq=#{boardSeq}")
 	public int recCount(String boardSeq);
 	
+	// 밴 ip 목록
+	@Select("select seq, bip, bdate from ipban")
+	public ArrayList<BanTO> banIp();
+	
+	// 밴 ip 해제
+	@Delete("delete from ipban where seq = #{seq}")
+	public int banIpDeleteOk(BanTO to);
 }

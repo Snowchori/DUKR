@@ -1,8 +1,43 @@
+<%@page import="com.example.model.board.BanTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
+	ArrayList<BanTO> ban_list = (ArrayList)request.getAttribute("ban_list");
 
+	StringBuilder bHtml = new StringBuilder();
+
+	if(ban_list.size() > 0) {
+		bHtml.append("<div class='row p-3 justify-content-between'>");
+		bHtml.append("<div class='col-3'>");
+		bHtml.append("<h3>밴 IP</h3>");
+		bHtml.append("</div>");
+		bHtml.append("<div class='col-3'>");
+		bHtml.append("<h3>밴 날짜</h3>");
+		bHtml.append("</div>");
+		bHtml.append("<div class='col-3'>");
+		bHtml.append("</div>");
+		bHtml.append("</div>");
+		for(BanTO to: ban_list) {
+			bHtml.append("<div class='row p-3 justify-content-between'>");
+			bHtml.append("<div class='col-3'>");
+			bHtml.append(to.getBip());
+			bHtml.append("</div>");
+			bHtml.append("<div class='col-3'>");
+			bHtml.append(to.getBdate());
+			bHtml.append("</div>");
+			bHtml.append("<div class='col-3'>");
+			bHtml.append("<button type='button' class='btn btn-dark' onclick='deleteBan(");
+			bHtml.append(to.getSeq());
+			bHtml.append(")'>해제</button>");
+			bHtml.append("</div>");
+			bHtml.append("</div>");
+		}
+	} else {
+		bHtml.append("<div class='col'>");
+		bHtml.append("현재 밴 IP가 없습니다.");
+		bHtml.append("</div>");
+	}
 %>
 <!doctype html>
 <html>
@@ -13,7 +48,42 @@
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
-
+			function deleteBan(seq) {
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					showDenyButton: true,
+					confirmButtonText: '네',
+					denyButtonText: `아니오`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+				  			url:'banDeleteOk',
+				  			type:'post',
+				  			data: {
+				  				seq: seq
+				  			},
+				  			success: function(data) {
+					  			if(data == 0) {
+						  			Swal.fire({
+							  			icon: 'success',
+							  			title: '해제 완료',
+							  			confirmButtonText: '확인',
+							  			willClose: () => {
+							  				location.href='banUserManage';
+						  				}
+					  				});
+					  			} else {
+						  			Swal.fire({
+							  			icon: 'error',
+							  			title: '해제 실패',
+							  			confirmButtonText: '확인'
+						  			});
+					  			}
+					  		}
+					  	});
+					}
+				})
+			}
 		</script>
 		<style>
 		
@@ -32,8 +102,8 @@
 		<main>
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="row m-3 p-4 bg-white text-black">
-					
+				<div class="row m-3 p-4 bg-white text-black ">
+					<%= bHtml %>
 				</div>
 			</section>
 			<!-- End gameInfo Section -->

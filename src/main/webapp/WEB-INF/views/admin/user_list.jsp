@@ -4,6 +4,48 @@
 <%
 	ArrayList<MemberTO> user_list = (ArrayList)request.getAttribute("user_list");
 	
+	StringBuilder userHtml = new StringBuilder();
+	
+	if(user_list.size() > 0) {
+		userHtml.append("<div class='accordion accordion-flush' id='accordionFlushExample'>");
+		for(MemberTO to: user_list) { 
+			userHtml.append("<div class='accordion-item'>");
+			userHtml.append("<h2 class='accordion-header' id='flush-heading" + to.getSeq() + "'>");
+			userHtml.append("<button class='accordion-button collapsed' type='button' ");
+			userHtml.append("data-bs-toggle='collapse' data-bs-target='#flush-collapse" + to.getSeq());
+			userHtml.append("' aria-expanded='false' aria-controls='flush-collapse" + to.getSeq() + "'>");
+			userHtml.append(to.getNickname());
+			userHtml.append("</button>");
+			userHtml.append("</h2>");
+			userHtml.append("<div id='flush-collapse" + to.getSeq() + "' class='accordion-collapse collapse' ");
+			userHtml.append("aria-labelledby='flush-heading" + to.getSeq() + "' data-bs-parent='#accordionFlushExample'>");
+			userHtml.append("<div class='accordion-body'>");
+			userHtml.append("<div class='row'>");
+			userHtml.append("<div class='col-3'>");
+			userHtml.append("번호 : " + to.getSeq());
+			userHtml.append("</div>");
+			userHtml.append("<div class='col-3'>");
+			userHtml.append("아이디 : " + to.getId());
+			userHtml.append("</div>");
+			userHtml.append("</div>");
+			userHtml.append("<div class='row'>");
+			userHtml.append("<div class='col-3'>");
+			userHtml.append("이메일 : " + to.getEmail());
+			userHtml.append("</div>");
+			userHtml.append("<div class='col-3'>");
+			userHtml.append("점수 : " + to.getRate());
+			userHtml.append("</div>");
+			userHtml.append("</div>");
+			userHtml.append("</div>");
+			userHtml.append("</div>");
+			userHtml.append("</div>");
+		}
+		userHtml.append("</div>");
+	} else {
+		userHtml.append("<div class='col'>");
+		userHtml.append("현재 회원이 없습니다.");
+		userHtml.append("</div>");
+	}
 %>
 <!doctype html>
 <html>
@@ -34,7 +76,7 @@
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
 				<div class="row m-3 p-4 bg-white text-black">
-					
+					<%= userHtml %>
 				</div>
 			</section>
 			<!-- End gameInfo Section -->
