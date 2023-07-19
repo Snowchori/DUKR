@@ -127,7 +127,7 @@
 						  			content: editor.getData(),
 						  			memSeq: <%=memSeq %>,
 						  			writer: <%=writer %>,
-									boardType: 1,
+									boardType: 0,
 						  			tags: document.getElementById('tags').value.trim(),
 						  		},
 						  		success: function(data) {
@@ -215,6 +215,7 @@
 			
 				</section>
 			</aside>
+		</main>
 		<footer>
 		</footer>
 	</body>
