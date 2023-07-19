@@ -24,69 +24,18 @@
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 		<!-- Template Main CSS File -->
 		<link href="assets/css/style.css" rel="stylesheet">
-						
-		<style>
-		main {
-		    position: relative;
-		    display: flex;
-		    align-items: flex-start;
-		    justify-content: center;
-		    width: 100%;
-		}
-		
-		aside {
-			display: flex;
-		    flex-direction: column;
-		    align-items: center;
-		    justify-content: center;
-		    width: 200px;
-		    min-width: 200px;
-		    margin: 10px;
-		
-		    position: sticky;
-		    top: 10px;
-		}
-		
-		.article {
-		    display: flex;
-		    flex-direction: column;
-		    align-items: center;
-		    justify-content: flex-start;
-		}
-		
-		.article .subject {
-		    display: flex;
-		    width: 100%;
-		    margin: 25px 0px;
-		}
-		
-		.article .content .textareaContainer {
-		    width: 100%;
-		}
-		
-		.article .content .textareaContainer .wordCount {
-		    display: flex;
-		    align-items: center;
-		    justify-content: end;
-		    margin: 10px 0px;
-		}
-		
-		.ck-editor__editable { height: 400px; }
-  		.ck-content { font-size: 12px; }
-  		
-  		.article .tags {
-		    display: flex;
-		    width: 100%;
-		    margin: 10px 0px;
-		}
-  		
-  		.align_left { float: left; }
-		.align_right { float: right; }
-		
-		</style>
-		
 		<!-- CKEditor5 -->
 		<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+						
+		<style>
+			.bottombody{
+				max-width: 992px;
+				padding: 0 0 0 0;
+			}
+			.ck-editor__editable { height: 400px; }
+	  		.ck-content { font-size: 12px; }
+			}
+		</style>
 		
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
@@ -94,7 +43,7 @@
 	
 				/* CKEditor5 설정 */
 				ClassicEditor
-					.create(document.querySelector('#editor'),{
+					.create(document.getElementById('editor'),{
 						language: "ko",
 						ckfinder: {
 							uploadUrl : '/upload/freeboard'
@@ -164,61 +113,39 @@
 				</div>
 			</div>
 		</header>
-		<main style="height: auto !important;">
-			
-			<aside class="left">
-				<section id="adsense" class="leftWing">
-				
-				</section>
-			</aside>
-				
-			<div class="container-fluid article" data-article-id="">
-<!-- 			<form action="/write/new" method="POST" enctype="multipart/form-data" onsubmit="onSubmit(this); return false;">		
- -->			<div class="container">	
+		<main>
+		
+			<div class="container-fluid my-4">
+				<div class="container-fluid bottombody">	
 	 				<form action="/write/new" method="POST" enctype="multipart/form-data">
-						<div class="subject">
-							<input type="text" name="subject" id="subject" value="" class="form-control input-sm" placeholder="제목" maxlength="100">
-						</div>
+	 					<div class="row">
+							<div class="subject col-sm-8 mb-3">
+								<input type="text" name="subject" id="subject" value="" class="form-control input-sm" placeholder="제목" maxlength="100">
+							</div>
+							<div class="tags col-sm-4 mb-3">
+								<input type="text" name="tags" id="tags" value="" class="form-control input-sm" placeholder="태그" maxlength="100">
+							</div>
+	 					</div>
 						
-						<div class="content">
-							<div class="textareaContainer">
-								<textarea name="content" id="editor" maxlength="10000"></textarea>
-								
-								<div class="wordCount">
+						<div class="content mb-3">
+								<textarea name="content" id="editor" maxlength="10000" style="display: none;"></textarea>
+								<div class="wordCount mt-2 d-flex justify-content-end">
 									내용&nbsp;:&nbsp;
 									<span id="count">0</span>
 									/10000
-								</div>						
-							</div>
+								</div>			
 						</div>
 						
-						<div class="tags">
-							<input type="text" name="tags" id="tags" value="" class="form-control input-sm" placeholder="태그" maxlength="100">
+						<div class="btn_area">			
+							<button type="button" class="btn btn-dark" onclick="location.href='freeBoardList?cpage=<%= cpage%>'" >목록</button>
+							<input type="button" id="wbtn" class="btn btn-dark float-end" value="글쓰기"/>
 						</div>
-						
-						<div class="btn_area">
-							<div class="align_left">			
-								<button type="button" class="btn btn-dark" onclick="location.href='freeBoardList?cpage=<%= cpage%>'" >목록</button>
-							</div>
-							<div class="align_right">			
-								<input type="button" id="wbtn" class="btn btn-dark" value="글쓰기"/>			
-							</div>								
-						</div>
-						
 					</form>
 				</div>
 				
 			</div>
 			
-			<aside class="right">
-				<section id="adsense" class="rightWing">
-			
-				</section>
-			</aside>
-			
-			
 		</main>
-		
 		<footer>
 		</footer>
 	</body>

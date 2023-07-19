@@ -43,8 +43,13 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 	sbComments.append("</button>");
 	sbComments.append("<br>");
 	sbComments.append(cContent);
+<<<<<<< HEAD
 	sbComments.append("<hr class='my-2'>");
 	/*
+=======
+	sbComments.append("<hr class='mt-3 mb-2'>");
+	
+>>>>>>> 9245891976e1e6469e07c8d7b195e56f342c2185
 	sbScript.append("document.getElementById('cmtRecBtn" + cSeq + "').onclick = function(){");
 	sbScript.append("$.ajax({");
 	sbScript.append("url: '/commentRec',");
@@ -123,8 +128,8 @@ if(!memSeq.equals(userSeq)){
 						url : '/freeboardCommentWrite',
 						type : 'post',
 						data : {
-							boardSeq : <%=boardSeq %>,
-							memSeq : <%=userSeq %>,
+							boardSeq : bseq,
+							memSeq : useq,
 							content : document.getElementById("cContent").value,
 						},
 						success : function(res) {
@@ -237,6 +242,13 @@ if(!memSeq.equals(userSeq)){
 			max-width: 992px;
 		}
 		
+		.subject_info{
+			display: flex;
+		}
+		.main_info{
+			margin-right: auto;
+		}
+		
 		.slash {
 			font-size: 15px;
 		}
@@ -252,6 +264,7 @@ if(!memSeq.equals(userSeq)){
 		img {
 			max-width: 100%;
 		}
+		
 		.image{
 			display: flex;
 			justify-content: center;
@@ -262,8 +275,14 @@ if(!memSeq.equals(userSeq)){
 		}
 		
 		@media (max-width: 575px){
-			.phone{
-				display: inline;
+			.subject_info{
+				font-size: 14px;
+			}
+		}
+		
+		@media (min-width: 576px){
+			.subject_info{
+				font-size: 16px;
 			}
 		}
 	</style>
@@ -285,21 +304,24 @@ if(!memSeq.equals(userSeq)){
 
 				<div class="subject">
 					<b><%=subject%></b>
-					<div class="mt-2" style="font-size: 16px; color: #888888;">
-						<div class="dropdown">
-							<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
-							</a>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-								<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
-								<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
-							</ul>
+					<div class="subject_info mt-2" style="color: #888888;">
+						<div class="main_info">
+							<div class="dropdown">
+								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+									<li><a class="dropdown-item" href="/partyBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+									<li><a class="dropdown-item" href="/partyBoardList?">댓글 보기</a></li>
+								</ul>
+							</div>
+							<span class="slash">|</span>
+							<%=wdate%>
 						</div>
-						<span class="slash">|</span>
-						<%=wdate%>&nbsp;&nbsp;
-						<br class="phone" style="display: none;">
-						<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
-						<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
-						<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
+						<div class="extra_info">
+							<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
+							<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
+							<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
+						</div>
 					</div>
 				</div>
 
@@ -320,14 +342,19 @@ if(!memSeq.equals(userSeq)){
 				<hr class="my-2">
 
 				<!-- 댓글영역 -->
+<<<<<<< HEAD
 				<div id="cmtArea">
 					<div id='comments'>
+=======
+				<div class="mb-3" id="cmtArea">
+					<div>
+>>>>>>> 9245891976e1e6469e07c8d7b195e56f342c2185
 						<%=sbComments%>
 					</div>
 					
 					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>
-					<div class="text-lg-end" style="margin-top: 10px;">
-						<button id="cmtWbtn" class="btn btn-secondary float-right">댓글쓰기</button>
+					<div class="d-flex" style="margin-top: 10px;">
+						<button id="cmtWbtn" class="btn btn-secondary" style="margin-left: auto;">댓글쓰기</button>
 					</div>
 				</div>
 			</div>
