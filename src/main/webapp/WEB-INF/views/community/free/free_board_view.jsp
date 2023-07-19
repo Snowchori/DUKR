@@ -34,6 +34,7 @@
 	
 	for(CommentTO comment : commentListTo.getCommentList()){
 		String cSeq = comment.getSeq();
+		String writerSeq = comment.getMemSeq();
 		String cWriter = comment.getWriter();
 		String cWdate = comment.getWdate();
 		int cRecCnt = comment.getRecCnt();
@@ -62,6 +63,7 @@
 		sbScript.append("url: '/commentRec',");
 		sbScript.append("type: 'post',");
 		sbScript.append("data: {");
+		sbScript.append("writerSeq: " + writerSeq + ",");
 		sbScript.append("memSeq: " + memSeq + ",");
 		sbScript.append("cmtSeq: " + cSeq + ",");
 		sbScript.append("},");
@@ -70,8 +72,10 @@
 		sbScript.append("alert('먼저 로그인을 해야합니다');");
 		sbScript.append("}else if(res == 1) {");
 		sbScript.append("location.href='/freeBoardView?seq=" + boardSeq + "';");
-		sbScript.append("}else {");
+		sbScript.append("}else if(res == 2){");
 		sbScript.append("alert('이미 추천한 댓글입니다');");
+		sbScript.append("}else{");
+		sbScript.append("alert('자신의 댓글은 추천 불가능합니다');");
 		sbScript.append("}");
 		sbScript.append("}");
 		sbScript.append("});");

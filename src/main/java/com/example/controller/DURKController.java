@@ -552,13 +552,17 @@ public class DURKController {
 		if(memSeq.equals("")) {
 			response = 0;
 		}else {
-			int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
-			
-			if(recCheck == 0) {
-				commentDAO.commentRec(memSeq, cmtSeq);
-				response = 1;
+			if(req.getParameter("writerSeq").equals(memSeq)) {
+				response = 3;
 			}else {
-				response = 2;
+				int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
+			
+				if(recCheck == 0) {
+					commentDAO.commentRec(memSeq, cmtSeq);
+					response = 1;
+				}else {
+					response = 2;
+				}
 			}
 		}
 		
