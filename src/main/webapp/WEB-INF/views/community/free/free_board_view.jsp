@@ -49,37 +49,13 @@
 		sbComments.append("</ul>");	
 		sbComments.append("</span>&nbsp;");	
 		sbComments.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-		sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", " + memSeq + ", \"" + cSeq + "\")'>");	
+		sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + userSeq + "\", \"" + cSeq + "\")'>");
 		sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 		sbComments.append(cRecCnt);		
 		sbComments.append("</button>");	
 		sbComments.append("<br>");	
 		sbComments.append(cContent);	
 		sbComments.append("<hr class='my-2'>");	
-		/*
-		sbScript.append("document.getElementById('cmtRecBtn" + cSeq + "').onclick = function(){");
-		sbScript.append("$.ajax({");
-		sbScript.append("url: '/commentRec',");
-		sbScript.append("type: 'post',");
-		sbScript.append("data: {");
-		sbScript.append("writerSeq: " + writerSeq + ",");
-		sbScript.append("memSeq: " + memSeq + ",");
-		sbScript.append("cmtSeq: " + cSeq + ",");
-		sbScript.append("},");
-		sbScript.append("success: function(res){");
-		sbScript.append("if(res == 0){");
-		sbScript.append("alert('먼저 로그인을 해야합니다');");
-		sbScript.append("}else if(res == 1) {");
-		sbScript.append("location.href='/freeBoardView?seq=" + boardSeq + "';");
-		sbScript.append("}else if(res == 2){");
-		sbScript.append("alert('이미 추천한 댓글입니다');");
-		sbScript.append("}else{");
-		sbScript.append("alert('자신의 댓글은 추천 불가능합니다');");
-		sbScript.append("}");
-		sbScript.append("}");
-		sbScript.append("});");
-		sbScript.append("};");
-		*/
 	}
 %>
 
@@ -126,6 +102,7 @@
 						success: function(res){
 							if(res != ""){
 								$('#comments').html(res);
+								$('#cContent').val('');
 							}else{
 								alert("먼저 로그인을 해야합니다");
 								console.log(res);
