@@ -36,6 +36,8 @@ import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
+import com.example.model.note.NoteDAO;
+import com.example.model.note.NoteTO;
 import com.example.model.party.ApiPartyTO;
 import com.example.model.party.PartyDAO;
 import com.example.model.party.PartyTO;
@@ -60,6 +62,9 @@ public class DURKController {
 	
 	@Autowired
 	private CommentDAO commentDAO;
+	
+	@Autowired
+	private NoteDAO noteDAO;
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -306,11 +311,23 @@ public class DURKController {
 	
 	@RequestMapping("/nicknameChangeOk")
 	public int nicknameChangeOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		MemberTO to = new MemberTO();
 		to.setSeq(request.getParameter("seq"));
 		to.setNickname(request.getParameter("nickname"));
 		
 		int flag = memberDAO.nicknameChangeOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(to.getSeq());
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("강제 닉네임 변경 안내");
+			noteTO.setContent("관리자에 의하여 '" + to.getNickname() + "'으로 닉네임이 강제변경 되었습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
 		
 		return flag;
 	}

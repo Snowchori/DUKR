@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.config.MemberMapperInter;
+import com.example.config.NoteMapperInter;
 import com.example.model.member.MemberTO;
 
 @Repository
