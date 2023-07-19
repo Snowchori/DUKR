@@ -42,9 +42,9 @@
 		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
 		boardHtml.append("<td class='board-img'>");
 		if(!list.isHasFile()) {
-			boardHtml.append("<i class='bi bi-file-earmark-excel h1 icon'></i>");
+			boardHtml.append("<i class='bi bi-file-earmark-text h2 thumbnail'></i>");
 		} else {
-			boardHtml.append(list.getThumbnail());
+			boardHtml.append("<div class='thumbnail'>" + list.getThumbnail() + "</div>");
 		}
 		boardHtml.append("</td>");
 		boardHtml.append("<td><span class='badge bg-secondary'>");
@@ -131,9 +131,13 @@
 			main, footer {
 				max-width: 1920px;
 			}
+			.thumbnail{
+				width: 2em;
+			}
 			
 			img {
 				width: 100%;
+				border: 0.05em gray solid;
 			}
 		</style>
 	</head>
