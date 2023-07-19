@@ -276,8 +276,8 @@ if(!memSeq.equals(userSeq)){
 								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-									<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
-									<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
+									<li><a class="dropdown-item" href="/partyBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+									<li><a class="dropdown-item" href="/partyBoardList?">댓글 보기</a></li>
 								</ul>
 							</div>
 							<span class="slash">|</span>
