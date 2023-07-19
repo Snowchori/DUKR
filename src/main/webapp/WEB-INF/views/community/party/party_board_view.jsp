@@ -25,21 +25,48 @@ CommentListTO commentListTo = new CommentListTO();
 commentListTo = (CommentListTO) request.getAttribute("commentListTo");
 
 StringBuilder sbComments = new StringBuilder();
+StringBuilder sbScript = new StringBuilder();
+
 for (CommentTO comment : commentListTo.getCommentList()) {
 	String cWriter = comment.getWriter();
 	String cWdate = comment.getWdate();
 	int cRecCnt = comment.getRecCnt();
 	String cContent = comment.getContent();
+	String cSeq = comment.getSeq();
+	String writerSeq = comment.getMemSeq();
 
 	sbComments.append("<b>" + cWriter + "</b>&nbsp;");
 	sbComments.append("<span style='color:#888888;'>" + cWdate + "</span>");
-	sbComments.append("<button class='btn' style='font-size:14px; color: #4db2b2;'>");
+	sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;'>");
 	sbComments.append("<i class='fas fa-thumbs-up'></i>");
 	sbComments.append(cRecCnt);
 	sbComments.append("</button>");
 	sbComments.append("<br>");
 	sbComments.append(cContent);
 	sbComments.append("<hr class='my-2'>");
+	
+	sbScript.append("document.getElementById('cmtRecBtn" + cSeq + "').onclick = function(){");
+	sbScript.append("$.ajax({");
+	sbScript.append("url: '/commentRec',");
+	sbScript.append("type: 'post',");
+	sbScript.append("data: {");
+	sbScript.append("writerSeq: " + writerSeq + ",");
+	sbScript.append("memSeq: " + userSeq + ",");
+	sbScript.append("cmtSeq: " + cSeq + ",");
+	sbScript.append("},");
+	sbScript.append("success: function(res){");
+	sbScript.append("if(res == 0){");
+	sbScript.append("alert('먼저 로그인을 해야합니다');");
+	sbScript.append("}else if(res == 1) {");
+	sbScript.append("location.href='/freeBoardView?seq=" + boardSeq + "';");
+	sbScript.append("}else if(res == 2){");
+	sbScript.append("alert('이미 추천한 댓글입니다');");
+	sbScript.append("}else{");
+	sbScript.append("alert('자신의 댓글은 추천 불가능합니다');");
+	sbScript.append("}");
+	sbScript.append("}");
+	sbScript.append("});");
+	sbScript.append("};");
 }
 %>
 <%
@@ -91,20 +118,19 @@ if(!memSeq.equals(userSeq)){
 				};
 		
 				document.getElementById("cmtWbtn").onclick = function() {
-					//alert("ajax실행");
 					$.ajax({
 						url : '/freeboardCommentWrite',
 						type : 'post',
 						data : {
-							boardSeq : bseq,
-							memSeq : mseq,
+							boardSeq : <%=boardSeq %>,
+							memSeq : <%=userSeq %>,
 							content : document.getElementById("cContent").value,
 						},
 						success : function(res) {
 							if (res == 1) {
-								alert("성공");
+								location.href = "/partyBoardView?seq=" + <%=boardSeq %>;
 							} else {
-								alert("로그인해야됨");
+								alert("먼저 로그인 해야합니다");
 								console.log(res);
 							}
 						}
@@ -174,6 +200,7 @@ if(!memSeq.equals(userSeq)){
 					
 				}
 				
+				<%=sbScript %>
 			};
 		</script>
 	<style>
