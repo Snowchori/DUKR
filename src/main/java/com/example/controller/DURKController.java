@@ -400,13 +400,13 @@ public class DURKController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("/announceBoardWriteOk")
-	public ModelAndView announceBoardWriteOk(HttpServletRequest request) {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("community/announce/announce_board_write_ok");
-		
-		return modelAndView;
-	}
+//	@RequestMapping("/announceBoardWriteOk")
+//	public ModelAndView announceBoardWriteOk(HttpServletRequest request) {
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("community/announce/announce_board_write_ok");
+//		
+//		return modelAndView;
+//	}
 	
 	// community/free
 	@RequestMapping("/freeBoardList")
@@ -528,7 +528,7 @@ public class DURKController {
 	}
 	
 	// ck에디터 이미지 업로드하기@@
-	@PostMapping("/upload/freeboard")
+	@PostMapping( value= { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
 		//System.out.println("upload request");
 		Boolean uploadResult = false;
@@ -558,7 +558,7 @@ public class DURKController {
 	}
 	
 	// 글쓰기
-	@PostMapping("/freeBoardWriteOk")
+	@PostMapping( value = { "/freeBoardWriteOk", "/announceBoardWriteOk" } )
 	public int writeOk(HttpServletRequest req){
 		int result = 0;
 		
