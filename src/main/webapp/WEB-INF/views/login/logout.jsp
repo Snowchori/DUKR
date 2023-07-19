@@ -26,7 +26,7 @@
 			Kakao.Auth.logout();
 			console.log("social logout");
 			
-			location.href = "/";
+			location.href = document.referrer;
 		</script>
 	</head>
 	<body>

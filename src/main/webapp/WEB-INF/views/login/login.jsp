@@ -46,7 +46,7 @@
 						  			title: '로그인 완료',
 						  			confirmButtonText: '확인',
 						  			willClose: () => {
-						  				location.href='/';
+						  				location.href=document.referrer;
 					  				}
 				  				});
 				  			} else {

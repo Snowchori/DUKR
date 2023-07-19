@@ -47,4 +47,40 @@ public class PartyDAO {
 		
 		return flag;
 	}
+	
+	/* 모임 신청 여부 */
+	public int isApplied(ApplyTO ato) {
+		int status = 0;
+		
+		Integer result = partyMapper.isApplied(ato);
+		if(result != null) {
+			status = result.intValue();
+		}
+		
+		return status;
+	}
+	
+	/* 모임 신청 */
+	public int applyPartyOk(ApplyTO ato) {
+		int flag = 1;
+		
+		int result = partyMapper.applyPartyOK(ato);
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
+	/* 모임 신청 | 취소*/
+	public int togglePartyOk(ApplyTO ato) {
+		int flag = 1;
+		
+		int result = partyMapper.togglePartyOK(ato);
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
 }
