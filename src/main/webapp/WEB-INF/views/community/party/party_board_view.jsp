@@ -43,7 +43,7 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 	sbComments.append("</button>");
 	sbComments.append("<br>");
 	sbComments.append(cContent);
-	sbComments.append("<hr class='my-2'>");
+	sbComments.append("<hr class='mt-3 mb-2'>");
 	
 	sbScript.append("document.getElementById('cmtRecBtn" + cSeq + "').onclick = function(){");
 	sbScript.append("$.ajax({");
@@ -122,8 +122,8 @@ if(!memSeq.equals(userSeq)){
 						url : '/freeboardCommentWrite',
 						type : 'post',
 						data : {
-							boardSeq : <%=boardSeq %>,
-							memSeq : <%=userSeq %>,
+							boardSeq : bseq,
+							memSeq : useq,
 							content : document.getElementById("cContent").value,
 						},
 						success : function(res) {
@@ -210,7 +210,6 @@ if(!memSeq.equals(userSeq)){
 		
 		.subject_info{
 			display: flex;
-			justify-content: start;
 		}
 		.main_info{
 			margin-right: auto;
@@ -231,6 +230,7 @@ if(!memSeq.equals(userSeq)){
 		img {
 			max-width: 100%;
 		}
+		
 		.image{
 			display: flex;
 			justify-content: center;
@@ -308,14 +308,14 @@ if(!memSeq.equals(userSeq)){
 				<hr class="my-2">
 
 				<!-- 댓글영역 -->
-				<div id="cmtArea">
+				<div class="mb-3" id="cmtArea">
 					<div>
 						<%=sbComments%>
 					</div>
 					
 					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>
-					<div class="text-lg-end" style="margin-top: 10px;">
-						<button id="cmtWbtn" class="btn btn-secondary float-right">댓글쓰기</button>
+					<div class="d-flex" style="margin-top: 10px;">
+						<button id="cmtWbtn" class="btn btn-secondary" style="margin-left: auto;">댓글쓰기</button>
 					</div>
 				</div>
 			</div>
