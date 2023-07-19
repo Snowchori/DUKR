@@ -177,16 +177,8 @@ if(!memSeq.equals(userSeq)){
 			};
 		</script>
 	<style>
-		table img {
-			max-width: 50%;
-		}
-		
-		table {
-			border-collapse: collapse;
-		}
-		
-		table tr, table th, table td {
-			border: 1px solid black;
+		.bottombody{
+			max-width: 992px;
 		}
 		
 		.slash {
@@ -199,6 +191,24 @@ if(!memSeq.equals(userSeq)){
 		
 		.disinherit {
 			color: black;
+		}
+		
+		img {
+			max-width: 100%;
+		}
+		.image{
+			display: flex;
+			justify-content: center;
+		}
+		.image.image-style-side{
+			display: flex;
+			justify-content: flex-end;
+		}
+		
+		@media (max-width: 575px){
+			.phone{
+				display: inline;
+			}
 		}
 	</style>
 	
@@ -214,65 +224,54 @@ if(!memSeq.equals(userSeq)){
 			</div>
 		</header>
 		<main>
-	
-			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col-lg-8">
-	
-						<hr class="my-4">
-	
-						<div class="container text-left">
-							<b><%=subject%></b>
-							<div
-								style="text-align: left; font-size: 16px; margin-top: 8px; color: #888888;">
-								<div class="dropdown">
-									<a href="#" role="button" id="dropdownMenuLink"
-										data-bs-toggle="dropdown" aria-expanded="false"> <b><%=writer%></b>
-									</a>
-									<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-										<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
-										<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
-									</ul>
-								</div>
-								<span class="slash">|</span>
-								<%=wdate%>&nbsp;&nbsp;
-								<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
-								<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
-								<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
-							</div>
+			<div class="container-fluid bottombody">
+				<hr class="my-4">
+
+				<div class="subject">
+					<b><%=subject%></b>
+					<div class="mt-2" style="font-size: 16px; color: #888888;">
+						<div class="dropdown">
+							<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+								<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+								<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
+							</ul>
 						</div>
-	
-						<div class="container" style="margin-top: -10px;">
-							<hr class="my-4">
-						</div>
-	
-						<div class="container text-left">
-							<%=content%>
-						</div>
-						
-						<div class="mt-5 pt-5 d-flex justify-content-center">
-							<button id="recBtn" class="btn btn-primary">
-								<i class="fas fa-thumbs-up"></i> 추천
-							</button>
-							<%= strApply %>
-						</div>
-	
-						<b style="font-size: 20px;">댓글</b>
-						<hr class="my-2">
-	
-						<!-- 댓글영역 -->
-						<div id="cmtArea">
-							<div>
-								<%=sbComments%>
-							</div>
-	
-	
-							<textarea id="cContent" name="cContent" class="form-control" rows="3"></textarea>
-							<div class="text-lg-end" style="margin-top: 10px;">
-								<button id="cmtWbtn" class="btn btn-secondary float-right">댓글쓰기</button>
-							</div>
-						</div>
-	
+						<span class="slash">|</span>
+						<%=wdate%>&nbsp;&nbsp;
+						<br class="phone" style="display: none;">
+						<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
+						<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
+						<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
+					</div>
+				</div>
+
+				<hr class="my-4">
+
+				<div class="content">
+					<%=content%>
+				</div>
+				
+				<div class="mt-5 pt-5 d-flex justify-content-center">
+					<button id="recBtn" class="btn btn-primary">
+						<i class="fas fa-thumbs-up"></i> 추천
+					</button>
+					<%= strApply %>
+				</div>
+
+				<b style="font-size: 20px;">댓글</b>
+				<hr class="my-2">
+
+				<!-- 댓글영역 -->
+				<div id="cmtArea">
+					<div>
+						<%=sbComments%>
+					</div>
+					
+					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>
+					<div class="text-lg-end" style="margin-top: 10px;">
+						<button id="cmtWbtn" class="btn btn-secondary float-right">댓글쓰기</button>
 					</div>
 				</div>
 			</div>
