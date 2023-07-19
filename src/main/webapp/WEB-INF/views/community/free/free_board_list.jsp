@@ -42,7 +42,7 @@
 		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
 		boardHtml.append("<td class='board-img'>");
 		if(!list.isHasFile()) {
-			boardHtml.append("<i class='bi bi-file-earmark-text h2 thumbnail'></i>");
+			boardHtml.append("<i class='bi bi-file-earmark-text h1'></i>");
 		} else {
 			boardHtml.append("<div class='thumbnail'>" + list.getThumbnail() + "</div>");
 		}
@@ -132,13 +132,26 @@
 				max-width: 1920px;
 			}
 			.thumbnail{
-				width: 2em;
+				width: 3em;
+				height: 2.5em;
+				
+				display: flex;
+				justify-content: center;
+
+				border: 0.05em gray solid;
+				border-radius: 0.5em;
+				
+				overflow: hidden;
 			}
 			
 			img {
-				width: 100%;
-				border: 0.05em gray solid;
+				height: 100%;
 			}
+			
+			tr:hover {
+				cursor: pointer;
+			}
+}
 		</style>
 	</head>
 	<body class="bg-light">

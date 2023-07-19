@@ -139,7 +139,15 @@
 		</script>
 		<style>
   			img {
-  				width: 100%;
+  				max-width: 100%;
+  			}
+  			.image{
+  				display: flex;
+  				justify-content: center;
+  			}
+  			.image.image-style-side{
+  				display: flex;
+  				justify-content: flex-end;
   			}
 		</style>
 
@@ -187,12 +195,8 @@
   							<hr class="my-4">
 						</div>
 				
-						<div class="container text-left">
-							<div class="row">
-								<div class="col-md-6">
-									<%=content %>	
-								</div>		
-							</div>
+						<div class="container">
+							<%=content %>
 						</div>
 				
 						<br>
