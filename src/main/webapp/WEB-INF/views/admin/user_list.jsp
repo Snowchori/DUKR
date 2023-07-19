@@ -20,20 +20,30 @@
 			userHtml.append("<div id='flush-collapse" + to.getSeq() + "' class='accordion-collapse collapse' ");
 			userHtml.append("aria-labelledby='flush-heading" + to.getSeq() + "' data-bs-parent='#accordionFlushExample'>");
 			userHtml.append("<div class='accordion-body'>");
-			userHtml.append("<div class='row'>");
+			userHtml.append("<div class='row py-2'>");
 			userHtml.append("<div class='col-3'>");
 			userHtml.append("번호 : " + to.getSeq());
 			userHtml.append("</div>");
 			userHtml.append("<div class='col-3'>");
 			userHtml.append("아이디 : " + to.getId());
 			userHtml.append("</div>");
+			userHtml.append("<div class='col-3'>");
+			userHtml.append("<button type='button' class='btn btn-dark' onclick='changeNickname(");
+			userHtml.append(to.getSeq() + ", \"" + to.getNickname() + "\"");
+			userHtml.append(")'>닉네임 강제변경</button>");
 			userHtml.append("</div>");
-			userHtml.append("<div class='row'>");
+			userHtml.append("</div>");
+			userHtml.append("<div class='row py-2'>");
 			userHtml.append("<div class='col-3'>");
 			userHtml.append("이메일 : " + to.getEmail());
 			userHtml.append("</div>");
 			userHtml.append("<div class='col-3'>");
 			userHtml.append("점수 : " + to.getRate());
+			userHtml.append("</div>");
+			userHtml.append("<div class='col-3'>");
+			userHtml.append("<button type='button' class='btn btn-dark' onclick='deleteUser(");
+			userHtml.append(to.getSeq());
+			userHtml.append(")'>강제 회원탈퇴</button>");
 			userHtml.append("</div>");
 			userHtml.append("</div>");
 			userHtml.append("</div>");
@@ -56,7 +66,94 @@
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
-
+			function changeNickname(seq, nickname) {
+				(async () => {
+					const {value: getName} = await Swal.fire({
+						title: '닉네임 변경',
+						text: '현재 닉네임 : ' + nickname,
+						input: 'text',
+						inputAttributes: {
+							autocapitalize: 'off'
+						},
+						inputPlaceholder: '새로운 닉네임',
+						showDenyButton: true,
+						confirmButtonText: '변경',
+						denyButtonText: `취소`
+					})
+					
+					if(getName) {
+						$.ajax({
+				  			url:'nicknameChangeOk',
+				  			type:'post',
+				  			data: {
+				  				seq: seq,
+				  				nickname: getName
+				  			},
+				  			success: function(data) {
+					  			if(data == 0) {
+						  			Swal.fire({
+							  			icon: 'success',
+							  			title: '변경 완료',
+							  			confirmButtonText: '확인',
+							  			willClose: () => {
+							  				location.href='userList';
+						  				}
+					  				});
+					  			} else if (data == -1){
+						  			Swal.fire({
+							  			icon: 'error',
+							  			title: '이미 존재하는 닉네임입니다.',
+							  			confirmButtonText: '확인'
+						  			});
+					  			} else {
+						  			Swal.fire({
+							  			icon: 'error',
+							  			title: '변경 실패',
+							  			confirmButtonText: '확인'
+						  			});
+					  			}
+					  		}
+					  	});
+					}
+				})()
+			}
+			
+			function deleteUser(seq) {
+				Swal.fire({
+					title: '강제탈퇴하시겠습니까?',
+					showDenyButton: true,
+					confirmButtonText: '네',
+					denyButtonText: `아니오`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+				  			url:'userDeleteOk',
+				  			type:'post',
+				  			data: {
+				  				seq: seq
+				  			},
+				  			success: function(data) {
+					  			if(data == 0) {
+						  			Swal.fire({
+							  			icon: 'success',
+							  			title: '강제탈퇴 완료',
+							  			confirmButtonText: '확인',
+							  			willClose: () => {
+							  				location.href='userList';
+						  				}
+					  				});
+					  			} else {
+						  			Swal.fire({
+							  			icon: 'error',
+							  			title: '강제탈퇴 실패',
+							  			confirmButtonText: '확인'
+						  			});
+					  			}
+					  		}
+					  	});
+					}
+				})
+			}
 		</script>
 		<style>
 		

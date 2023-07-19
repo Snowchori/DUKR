@@ -290,6 +290,31 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/userDeleteOk")
+	public int userDeleteOk(HttpServletRequest request) {
+		MemberTO to = new MemberTO();
+		to.setSeq(request.getParameter("seq"));
+		
+		int flag = memberDAO.userDeleteOk(to);
+		
+		if(flag == 0) {
+			boardDAO.boardDeleteAll(to.getSeq());
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/nicknameChangeOk")
+	public int nicknameChangeOk(HttpServletRequest request) {
+		MemberTO to = new MemberTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setNickname(request.getParameter("nickname"));
+		
+		int flag = memberDAO.nicknameChangeOk(to);
+		
+		return flag;
+	}
+	
 	// community/announce
 	@RequestMapping("/announceBoardList")
 	public ModelAndView announceBoardList(HttpServletRequest request) {

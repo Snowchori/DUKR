@@ -3,6 +3,7 @@ package com.example.config;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -89,4 +90,12 @@ public interface MemberMapperInter {
 	// 회원 목록
 	@Select("select seq, id, nickname, email, rate, isAdmin from member")
 	public ArrayList<MemberTO> memberList();
+	
+	// 회원 탈퇴
+	@Delete("delete from member where seq = #{seq}")
+	public int userDeleteOk(MemberTO to);
+	
+	// 닉네임 변경
+	@Update("update member set nickname=#{nickname} where seq=#{seq}")
+	public int nicknameChangeOk(MemberTO to);
 }
