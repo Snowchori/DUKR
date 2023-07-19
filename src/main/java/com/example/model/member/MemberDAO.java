@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.config.MemberMapperInter;
+import com.example.config.NoteMapperInter;
 import com.example.model.member.MemberTO;
 
 @Repository
@@ -156,5 +157,36 @@ public class MemberDAO {
 		ArrayList<MemberTO> lists = memberMapper.memberList();
 		
 		return lists;
+	}
+	
+	// 회원 탈퇴
+	public int userDeleteOk(MemberTO to) {
+		int flag = 1;
+		int result = memberMapper.userDeleteOk(to);
+		
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
+	// 닉네임 변경
+	public int nicknameChangeOk(MemberTO to) {
+		int flag = 1;
+		
+		int count = memberMapper.nicknameDuplCheck(to.getNickname());
+		
+		if(count > 0) {
+			flag = -1;
+		} else {
+			int result = memberMapper.nicknameChangeOk(to);
+			
+			if(result == 1) {
+				flag = 0;
+			}
+		}
+		
+		return flag;
 	}
 }
