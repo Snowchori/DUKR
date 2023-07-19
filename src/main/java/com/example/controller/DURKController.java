@@ -259,6 +259,27 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/noteSendAllOk")
+	public int noteSendAllOk(HttpServletRequest request) {
+		NoteTO to = new NoteTO();
+		to.setSenderSeq(request.getParameter("seq"));
+		to.setSubject(request.getParameter("subject"));
+		to.setContent(request.getParameter("content"));
+		
+		int flag = 0;
+		
+		ArrayList<MemberTO> lists = memberDAO.memberList();
+		
+		for(MemberTO mto: lists) {
+			if(!request.getParameter("seq").equals(mto.getSeq())) {
+				to.setReceiverSeq(mto.getSeq());
+				flag += noteDAO.noteSend(to);
+			}
+		}
+		
+		return flag;
+	}
+	
 	@RequestMapping("/reportList")
 	public ModelAndView reportList(HttpServletRequest request) {
 		HttpSession session = request.getSession();

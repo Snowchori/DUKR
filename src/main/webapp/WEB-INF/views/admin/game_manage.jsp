@@ -376,7 +376,7 @@ if(seq != null && !seq.equals("")) {
 		<main>
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="row m-3 p-4 bg-white text-black">
+				<div class="row m-3 p-4 bg-white text-black rounded-5">
 					<h2>게임 정보 관리</h2>
 					<ul id="myUL">
 			  			<li><span class="caret">보드게임 목록</span>
@@ -396,10 +396,10 @@ if(seq != null && !seq.equals("")) {
 					</ul>
 				</div>
 				<!-- gameInfo -->
-				<div class="row m-3 p-4 bg-white text-black">
+				<div class="row m-3 p-4 bg-white text-black rounded-5">
 					<%= infoHtml %>
 				</div>
-				<div class="row m-3 p-4 bg-white text-black">
+				<div class="row m-3 p-4 bg-white text-black rounded-5">
 					<h2>게임 추천 관리</h2>
 					<h5>현재 추천 게임</h5>
 					<div class="row my-3 align-items-center">

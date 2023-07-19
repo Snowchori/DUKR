@@ -32,7 +32,7 @@
 		<main>
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="row m-3 p-4 bg-white text-black">
+				<div class="row m-3 p-4 bg-white text-black rounded-5">
 					
 				</div>
 			</section>
