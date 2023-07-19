@@ -36,4 +36,17 @@ public class CommentDAO {
 		int result = commentMapperInter.boardCommentWrite(to);
 		return result;
 	}
+	
+	// 댓글 추천여부 검사
+	public int commentRecCheck(String memSeq, String cmtSeq) {
+		int result = commentMapperInter.commentRecCheck(memSeq, cmtSeq);
+		return result;
+	}
+	
+	// 댓글 추천하기
+	public int commentRec(String memSeq, String cmtSeq) {
+		int result = commentMapperInter.commentRec(memSeq, cmtSeq);
+		commentMapperInter.recCntPlus(cmtSeq);
+		return result;
+	}
 }

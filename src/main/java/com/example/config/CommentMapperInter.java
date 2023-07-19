@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.example.model.comment.CommentListTO;
 import com.example.model.comment.CommentTO;
@@ -26,4 +27,16 @@ public interface CommentMapperInter {
 	// 자유게시판 뷰 - 댓글쓰기
 	@Insert("insert into comment values(0, #{boardSeq}, #{memSeq}, #{content}, now(), 0, #{wip}, 0)")
 	public int boardCommentWrite(CommentTO to);
+	
+	// 댓글 추천여부 검사
+	@Select("select count(*) from commentrecommend where memSeq=#{memSeq} and cmtSeq=#{cmtSeq}")
+	public int commentRecCheck(String memSeq, String cmtSeq);
+	
+	// 댓글 추천하기
+	@Insert("insert into commentrecommend values(#{memSeq}, #{cmtSeq})")
+	public int commentRec(String memSeq, String cmtSeq);
+	
+	// 댓글 추천카운트 +1
+	@Update("update comment set recCnt=recCnt+1 where seq=#{seq}")
+	public int recCntPlus(String seq);
 }

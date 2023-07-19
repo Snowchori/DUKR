@@ -445,7 +445,6 @@ public class DURKController {
 	
 	@RequestMapping("/freeBoardView")
 	public ModelAndView freeBoardView(HttpServletRequest request) {
-		System.out.println("dddddddddddddddddd");
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/free/free_board_view");
 
@@ -492,14 +491,36 @@ public class DURKController {
 		to.setMemSeq(req.getParameter("memSeq"));
 		to.setContent(req.getParameter("content"));
 		to.setWip(req.getRemoteAddr());
-		
-		System.out.println(to.getBoardSeq() + "/" + to.getMemSeq() + "/" + to.getContent() + "/" + to.getWip());
-		
+
 		if(!to.getMemSeq().equals("")) {
 			 result = commentDAO.boardCommentWrite(to);
 		}
 
 		return result;
+	}
+	
+	// 댓글 추천
+	@PostMapping("/commentRec")
+	public int commentRec(HttpServletRequest req) {
+		int response;
+		
+		String cmtSeq = req.getParameter("cmtSeq");
+		String memSeq = req.getParameter("memSeq");
+
+		if(memSeq.equals("")) {
+			response = 0;
+		}else {
+			int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
+			
+			if(recCheck == 0) {
+				commentDAO.commentRec(memSeq, cmtSeq);
+				response = 1;
+			}else {
+				response = 2;
+			}
+		}
+		
+		return response;
 	}
 	
 	// ck에디터 이미지 업로드하기@@
