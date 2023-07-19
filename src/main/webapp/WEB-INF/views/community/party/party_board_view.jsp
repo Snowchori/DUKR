@@ -181,6 +181,14 @@ if(!memSeq.equals(userSeq)){
 			max-width: 992px;
 		}
 		
+		.subject_info{
+			display: flex;
+			justify-content: start;
+		}
+		.main_info{
+			margin-right: auto;
+		}
+		
 		.slash {
 			font-size: 15px;
 		}
@@ -206,8 +214,14 @@ if(!memSeq.equals(userSeq)){
 		}
 		
 		@media (max-width: 575px){
-			.phone{
-				display: inline;
+			.subject_info{
+				font-size: 14px;
+			}
+		}
+		
+		@media (min-width: 576px){
+			.subject_info{
+				font-size: 16px;
 			}
 		}
 	</style>
@@ -229,21 +243,24 @@ if(!memSeq.equals(userSeq)){
 
 				<div class="subject">
 					<b><%=subject%></b>
-					<div class="mt-2" style="font-size: 16px; color: #888888;">
-						<div class="dropdown">
-							<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
-							</a>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-								<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
-								<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
-							</ul>
+					<div class="subject_info mt-2" style="color: #888888;">
+						<div class="main_info">
+							<div class="dropdown">
+								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+									<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+									<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
+								</ul>
+							</div>
+							<span class="slash">|</span>
+							<%=wdate%>
 						</div>
-						<span class="slash">|</span>
-						<%=wdate%>&nbsp;&nbsp;
-						<br class="phone" style="display: none;">
-						<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
-						<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
-						<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
+						<div class="extra_info">
+							<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
+							<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
+							<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
+						</div>
 					</div>
 				</div>
 
