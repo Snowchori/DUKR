@@ -577,9 +577,7 @@ public class DURKController {
 		
 		String originalFileName = upload.getOriginalFilename();
 		String fileNamePrefix = originalFileName.substring(0, originalFileName.lastIndexOf("."));
-		//System.out.println(fileNamePrefix);
 		String fileNameSuffix = originalFileName.substring(originalFileName.lastIndexOf("."));
-		//System.out.println(fileNameSuffix);
 		String curTime = "_" + System.currentTimeMillis();
 		
 		String newFileName = fileNamePrefix + curTime + fileNameSuffix;

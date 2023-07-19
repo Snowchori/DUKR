@@ -66,6 +66,10 @@ public interface BoardMapperInter {
 	@Insert("insert into boardrecommend values(#{memSeq}, #{boardSeq})")
 	public int boardRecommend(String memSeq, String boardSeq);
 	
+	// 게시글 추천후 recCnt +1
+	@Update("update board set recCnt=recCnt+1 where seq=#{seq}")
+	public int boardRecCntPlus(String seq);
+	
 	// 게시글 추천여부
 	@Select("select count(*) from boardrecommend where memSeq=#{memSeq} and boardSeq=#{boardSeq}")
 	public int recCheck(String memSeq, String boardSeq);

@@ -34,6 +34,7 @@ public class CommentDAO {
 	// 자유게시판 뷰 - 댓글쓰기
 	public int boardCommentWrite(CommentTO to) {
 		int result = commentMapperInter.boardCommentWrite(to);
+		commentMapperInter.boardCmtCntPlus(to.getBoardSeq());
 		return result;
 	}
 	

@@ -28,6 +28,10 @@ public interface CommentMapperInter {
 	@Insert("insert into comment values(0, #{boardSeq}, #{memSeq}, #{content}, now(), 0, #{wip}, 0)")
 	public int boardCommentWrite(CommentTO to);
 	
+	// 댓글쓰고 cmtCnt +1
+	@Update("update board set cmtCnt=cmtCnt+1 where seq=#{seq}")
+	public int boardCmtCntPlus(String seq);
+	
 	// 댓글 추천여부 검사
 	@Select("select count(*) from commentrecommend where memSeq=#{memSeq} and cmtSeq=#{cmtSeq}")
 	public int commentRecCheck(String memSeq, String cmtSeq);

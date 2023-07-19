@@ -92,6 +92,7 @@
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
 			window.onload = function(){
+				// 추천하기
 				document.getElementById("recBtn").onclick = function(){
 					$.ajax({
 						url:'/rec',
@@ -100,11 +101,19 @@
 			  				boardSeq: <%=boardSeq %>
 			  			},
 			  			success: function(res){
-			  				alert(res);
+			  				Swal.fire({
+					  			icon: '',
+					  			title: res,
+					  			confirmButtonText: '확인',
+					  			willClose: () => {
+					  				location.href='/freeBoardView?seq=<%=boardSeq %>';
+				  				}
+			  				});
 			  			}
 					});
 				};
 				
+				// 댓글쓰기
 				document.getElementById("cmtWbtn").onclick = function(){
 					$.ajax({
 						url:'/freeboardCommentWrite',
@@ -169,7 +178,7 @@
 								</b>&nbsp;
 								<%=wdate %>&nbsp;&nbsp;
 								<i class="fas fa-eye"></i>&nbsp;<%=hit %>&nbsp;&nbsp;
-								<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt %>&nbsp;&nbsp;
+								<i class="fas fa-comment"></i>&nbsp;<%=commentListTo.getCommentList().size() %>&nbsp;&nbsp;
 								<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt %>
 							</div>
 						</div>
@@ -204,15 +213,13 @@
   							<div>
   								<%=sbComments %>
   							</div>
-  				
-  							
+  										
   							<textarea id="cContent" name="cContent" class="form-control" rows="3">
   							</textarea>
   							<div class="text-lg-end" style="margin-top:10px;">
   								<button id="cmtWbtn" class="btn btn-secondary float-right">댓글쓰기</button>
   							</div>
   						
-  					
   						</div>
   				
   					</div>

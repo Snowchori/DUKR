@@ -118,6 +118,7 @@ public class BoardDAO {
 	// 게시글 추천
 	public int boardRecommend(String memSeq, String boardSeq) {
 		int result = boardMapper.boardRecommend(memSeq, boardSeq);
+		boardMapper.boardRecCntPlus(boardSeq);
 		return result;
 	}
 	
