@@ -204,7 +204,7 @@
 				</div>
 			</div>
 		</main>
-		<footer>
+		<footer class="container-fluid">
 		</footer>
 		
 	</body>

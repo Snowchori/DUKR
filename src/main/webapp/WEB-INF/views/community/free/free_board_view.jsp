@@ -167,53 +167,17 @@
 			
 		</script>
 		<style>
-		.bottombody{
-			max-width: 992px;
-		}
-		
-		.subject_info{
-			display: flex;
-		}
-		.main_info{
-			margin-right: auto;
-		}
-		
-		.slash {
-			font-size: 15px;
-		}
-		
-		.dropdown {
-			display: inline-block;
-		}
-		
-		.disinherit {
-			color: black;
-		}
-		
-		img {
-			max-width: 100%;
-		}
-		
-		.image{
-			display: flex;
-			justify-content: center;
-		}
-		.image.image-style-side{
-			display: flex;
-			justify-content: flex-end;
-		}
-		
-		@media (max-width: 575px){
-			.subject_info{
-				font-size: 14px;
-			}
-		}
-		
-		@media (min-width: 576px){
-			.subject_info{
-				font-size: 16px;
-			}
-		}
+			img {
+  				max-width: 100%;
+  			}
+  			.image{
+  				display: flex;
+  				justify-content: center;
+  			}
+  			.image.image-style-side{
+  				display: flex;
+  				justify-content: flex-end;
+  			}
 		</style>
 
 	</head>
@@ -229,39 +193,36 @@
 		</header>
 		<main>
 
-			<div class="container-fluid bottombody">
-				<hr class="my-4">
+			<div class="container">
+				<div class="row justify-content-center">
+    				<div class="col-lg-8">
 
-				<div class="subject">
-					<b><%=subject%></b>
-					<div class="subject_info mt-2" style="color: #888888;">
-						<div class="main_info">
-							<div class="dropdown">
-								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
-								</a>
-								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-									<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
-									<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
-								</ul>
+  						<hr class="my-4">
+
+						<div class="container text-left"> 
+							<b><%=subject %></b>
+							<div style="text-align: left; font-size: 16px; margin-top: 8px; color: #888888;">
+								<b>
+									<span class="dropdown">
+  										<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+    										<%=writer %>
+  										</a>
+  										<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    										<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+    										<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
+  										</ul>
+									</span>
+								</b>&nbsp;
+								<%=wdate %>&nbsp;&nbsp;
+								<i class="fas fa-eye"></i>&nbsp;<%=hit %>&nbsp;&nbsp;
+								<i class="fas fa-comment"></i>&nbsp;<%=commentListTo.getCommentList().size() %>&nbsp;&nbsp;
+								<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt %>
 							</div>
-							<span class="slash">|</span>
-							<%=wdate%>
+							<div class="container" style="margin-top: -10px;">
+  							<hr class="my-4">
 						</div>
-						<div class="extra_info">
-							<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
-							<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
-							<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
 						</div>
-					</div>
-				</div>
-
-				<hr class="my-4">
-
-				<div class="content">
-					<%=content%>
-				</div>
-				
-<<<<<<< HEAD
+					
 						<div class="container">
 							<%=content %>
 						</div>
@@ -295,28 +256,6 @@
   				
   					</div>
   				</div>
-=======
-				<div class="mt-5 pt-5 d-flex justify-content-center">
-					<button id="recBtn" class="btn btn-primary">
-						<i class="fas fa-thumbs-up"></i> 추천
-					</button>
-				</div>
-
-				<b style="font-size: 20px;">댓글</b>
-				<hr class="my-2">
-
-				<!-- 댓글영역 -->
-				<div class="mb-3" id="cmtArea">
-					<div>
-						<%=sbComments%>
-					</div>
-					
-					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>
-					<div class="d-flex" style="margin-top: 10px;">
-						<button id="cmtWbtn" class="btn btn-secondary" style="margin-left: auto;">댓글쓰기</button>
-					</div>
-				</div>
->>>>>>> 9245891976e1e6469e07c8d7b195e56f342c2185
 			</div>
 			
 		</main>
