@@ -36,11 +36,15 @@ public interface CommentMapperInter {
 	@Select("select count(*) from commentrecommend where memSeq=#{memSeq} and cmtSeq=#{cmtSeq}")
 	public int commentRecCheck(String memSeq, String cmtSeq);
 	
-	// 댓글 추천하기
+	// 댓글 추천하기 
 	@Insert("insert into commentrecommend values(#{memSeq}, #{cmtSeq})")
 	public int commentRec(String memSeq, String cmtSeq);
 	
 	// 댓글 추천카운트 +1
 	@Update("update comment set recCnt=recCnt+1 where seq=#{seq}")
 	public int recCntPlus(String seq);
+	
+	// ajax응답용 추천수 가져오기
+	@Select("select recCnt from comment where seq=#{seq}")
+	public int getRecCnt(String seq);
 }

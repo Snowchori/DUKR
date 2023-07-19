@@ -37,14 +37,14 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 
 	sbComments.append("<b>" + cWriter + "</b>&nbsp;");
 	sbComments.append("<span style='color:#888888;'>" + cWdate + "</span>");
-	sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;'>");
-	sbComments.append("<i class='fas fa-thumbs-up'></i>");
+	sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + userSeq + "\", \"" + cSeq + "\")'>");
+	sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");
 	sbComments.append(cRecCnt);
 	sbComments.append("</button>");
 	sbComments.append("<br>");
 	sbComments.append(cContent);
 	sbComments.append("<hr class='my-2'>");
-	
+	/*
 	sbScript.append("document.getElementById('cmtRecBtn" + cSeq + "').onclick = function(){");
 	sbScript.append("$.ajax({");
 	sbScript.append("url: '/commentRec',");
@@ -67,6 +67,7 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 	sbScript.append("}");
 	sbScript.append("});");
 	sbScript.append("};");
+	*/
 }
 %>
 <%
@@ -103,7 +104,6 @@ if(!memSeq.equals(userSeq)){
 					}
 				}
 				
-				
 				document.getElementById("recBtn").onclick = function() {
 					$.ajax({
 						url : '/rec',
@@ -117,6 +117,7 @@ if(!memSeq.equals(userSeq)){
 					});
 				};
 		
+				// 댓글쓰기
 				document.getElementById("cmtWbtn").onclick = function() {
 					$.ajax({
 						url : '/freeboardCommentWrite',
@@ -127,8 +128,8 @@ if(!memSeq.equals(userSeq)){
 							content : document.getElementById("cContent").value,
 						},
 						success : function(res) {
-							if (res == 1) {
-								location.href = "/partyBoardView?seq=" + <%=boardSeq %>;
+							if (res != "") {
+								$('#comments').html(res);
 							} else {
 								alert("먼저 로그인 해야합니다");
 								console.log(res);
@@ -199,9 +200,37 @@ if(!memSeq.equals(userSeq)){
 				}else{
 					
 				}
-				
-				<%=sbScript %>
+
 			};
+			
+			// 댓글 추천함수
+			function recommendComment(wSeq, mSeq, cSeq){
+				$.ajax({
+					url: '/commentRec',
+					type: 'POST',
+					data:{
+						writerSeq: wSeq,
+						memSeq: mSeq,
+						cmtSeq: cSeq,
+					},
+					success: function(res){
+						if(res == 0){
+							alert('먼저 로그인 해야합니다');
+						}else if(res == 1){
+							let btnId = 'cmtRecBtn' + cSeq;
+							let btnHtml = $('#' + btnId).html();
+							const curRec = btnHtml.replace('<i class="fas fa-thumbs-up" aria-hidden="true"></i>&nbsp;', '');
+							const newRec = parseInt(curRec) + 1;
+
+							$('#' + btnId).html('<i class="fas fa-thumbs-up" aria-hidden="true"></i>&nbsp;' + newRec);
+						}else if(res == 2){
+							alert('이미 추천한 댓글입니다');
+						}else if(res == 3){
+							alert('본인의 댓글은 추천할수 없습니다');
+						}
+					},
+				});
+			}
 		</script>
 	<style>
 		.bottombody{
@@ -292,7 +321,7 @@ if(!memSeq.equals(userSeq)){
 
 				<!-- 댓글영역 -->
 				<div id="cmtArea">
-					<div>
+					<div id='comments'>
 						<%=sbComments%>
 					</div>
 					

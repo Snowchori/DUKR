@@ -549,9 +549,9 @@ public class DURKController {
 	
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
-	public int freeboardCommentWrite(HttpServletRequest req){
-		int result = 0;
-		
+	public String freeboardCommentWrite(HttpServletRequest req){
+		StringBuilder sbResponseHtml = new StringBuilder();
+
 		CommentTO to = new CommentTO();
 		to.setBoardSeq(req.getParameter("boardSeq"));
 		to.setMemSeq(req.getParameter("memSeq"));
@@ -559,10 +559,40 @@ public class DURKController {
 		to.setWip(req.getRemoteAddr());
 
 		if(!to.getMemSeq().equals("")) {
-			 result = commentDAO.boardCommentWrite(to);
+			 commentDAO.boardCommentWrite(to);
+			 
+			 CommentListTO updatedComments = new CommentListTO();
+			 updatedComments.setCommentList(commentDAO.boardCommentList(req.getParameter("boardSeq")));
+			 
+			 for(CommentTO comment : updatedComments.getCommentList()) {
+				 String cWriter = comment.getWriter();
+				 String cWdate = comment.getWdate();
+				 int cRecCnt = comment.getRecCnt();
+				 String cContent = comment.getContent();	
+				 String cSeq = comment.getSeq();
+				 String writerSeq = comment.getMemSeq();
+
+				 sbResponseHtml.append("<span class='dropdown'>");	
+				 sbResponseHtml.append("<a href='#' role='button' id='dropdownMenuLinkc' data-bs-toggle='dropdown' aria-expanded='false'>");	
+				 sbResponseHtml.append(cWriter);	
+				 sbResponseHtml.append("</a>");
+				 sbResponseHtml.append("<ul class='dropdown-menu' aria-labelledby='dropdownMenuLinkc'>");
+				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
+				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
+				 sbResponseHtml.append("</ul>");	
+				 sbResponseHtml.append("</span>&nbsp;");	
+				 sbResponseHtml.append("<span style='color:#888888;'>" + cWdate + "</span>");	
+				 sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;'>");	
+				 sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
+				 sbResponseHtml.append(cRecCnt);		
+				 sbResponseHtml.append("</button>");	
+				 sbResponseHtml.append("<br>");	
+				 sbResponseHtml.append(cContent);	
+				 sbResponseHtml.append("<hr class='my-2'>");		 
+			 }
 		}
 
-		return result;
+		return sbResponseHtml.toString();
 	}
 	
 	// 댓글 추천
