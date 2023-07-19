@@ -20,4 +20,5 @@ public class BoardTO {
 	private String boardType;
 	private boolean hasFile;
 	private String writer;
+	private String thumbnail;
 }

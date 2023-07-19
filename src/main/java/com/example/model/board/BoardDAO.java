@@ -42,10 +42,17 @@ public class BoardDAO {
 		
 
 		for(BoardTO list : listTO.getBoardLists()) {
-			// 파일 포함 여부
+			// 파일 포함 여부, 썸네일 추가
 			int hasFile = boardMapper.hasFile(list);
 			if(hasFile == 1) {
 				list.setHasFile(true);
+				
+				String content = boardMapper.boardContent(list.getSeq());
+				String[] imgs =content.split("<img");
+				int imgEnd = imgs[1].indexOf("\">");
+				String thumbnail = "<img" + imgs[1].substring(0, imgEnd + 2);
+
+				list.setThumbnail(thumbnail);
 			}else {
 				list.setHasFile(false);
 			}
