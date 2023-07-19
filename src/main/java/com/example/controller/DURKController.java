@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,7 @@ import com.example.model.evaluation.EvaluationTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
 import com.example.model.party.ApiPartyTO;
+import com.example.model.party.ApplyTO;
 import com.example.model.party.PartyDAO;
 import com.example.model.party.PartyTO;
 
@@ -650,14 +653,55 @@ public class DURKController {
 	public ModelAndView partyBoardView(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/party/party_board_view");
-
+		
+		String seq = request.getParameter("seq");
+		
 		BoardTO to = new BoardTO();
-		to.setSeq(request.getParameter("seq"));
+		to.setSeq(seq);
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
+		
+		CommentListTO commentListTo = new CommentListTO();
+		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
+
+		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		
+		int status = 0;
+		if(userInfo != null) {
+			ApplyTO ato = new ApplyTO();
+			ato.setPartySeq(seq);
+			ato.setSenderSeq(userInfo.getSeq());
+			status = partyDAO.isApplied(ato);
+		}
+		
 		modelAndView.addObject("to", to);
+		modelAndView.addObject("commentListTo", commentListTo);
+		modelAndView.addObject("status", status);
 		
 		return modelAndView;
+	}
+	
+	@PostMapping("/partyApplyOk")
+	public int partyApplyOk(HttpServletRequest request) {
+		ApplyTO ato = new ApplyTO();
+		
+		ato.setSenderSeq(request.getParameter("memSeq"));
+		ato.setPartySeq(request.getParameter("boardSeq"));
+		
+		int flag = partyDAO.applyPartyOk(ato);
+		return flag;
+	}
+	
+	@PostMapping("/partyToggleOk")
+	public int partyCancelAppliedOk(HttpServletRequest request) {
+		ApplyTO ato = new ApplyTO();
+		
+		ato.setSenderSeq(request.getParameter("memSeq"));
+		ato.setPartySeq(request.getParameter("boardSeq"));
+		ato.setStatus(request.getParameter("status"));
+		
+		int flag = partyDAO.togglePartyOk(ato);
+		return flag;
 	}
 
 	@RequestMapping("/partyBoardRegister")
@@ -709,7 +753,7 @@ public class DURKController {
 		}
 		return flag;
 	}
-
+	
 	@RequestMapping("/partySearch")
 	public ModelAndView partySearch() {
 		ModelAndView model = new ModelAndView("community/party/party_search");
