@@ -28,9 +28,6 @@
 		</script>
 		<!-- CKEditor5 -->
 		<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
-		<!-- SmartEditor2.0
-		<script src="/smarteditor/js/service/HuskyEZCreator.js" charset="utf-8"></script>
-		 -->
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
 			window.addEventListener('DOMContentLoaded', () => {
@@ -328,43 +325,16 @@
 			}
 			
 			.bottombody{
-				max-width: 1920px;
+				max-width: 992px;
 			}
-		
 			.essential{
 				color: red;
 			}
 		
 			.ck-editor__editable { height: 400px; }
-			
-			@media (max-width: 575px){
-				.formframe{
-					margin: 0em 0em 5em 0em;
-					padding:5em 0em 5em 0em;
-				}
-			}
-			
-			@media (min-width: 576px){
-				.formframe{
-					margin: 0em 0em 5em 0em;
-					padding:5em 2em 5em 2em;
-				}
-			}
-			
-			@media (min-width: 768px){
-				.formframe{
-					margin: 0em 5em 5em 5em;
-				}
-			}
-			
-			@media (min-width: 1400px){
-				.formframe{
-					padding: 5em 5em 5em 5em;
-				}
-			}
 		</style>
 	</head>
-	<body class="bg-light">
+	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
@@ -374,86 +344,80 @@
 				</div>
 			</div>
 		</header>
-		<main class="d-flex justify-content-center">
+		<main>
 			<!-- 메인 요소 -->
-			<div class="container-fluid d-flex justify-content-center bottombody">
-				<div class="container formframe">
-					<form action="partyBoardRegisterOk" class="row" id="rfrm" name="rfrm" method="post">
-						<input type="hidden" id="tag" name="tag"/>
-						<input type="hidden" id="latitude" name="latitude"/>
-						<input type="hidden" id="longitude" name="longitude"/>
-						<input type="hidden" id="loccode" name="loccode"/>
-						<div class="col-md-6 mb-3">
-							<label for="subject" class="form-label">제목 <span class="essential">*</span></label>
-							<input type="text" class="form-control" placeholder="제목을 입력하세요" name="subject" id="subject"/>
-							<div class="invalid-feedback">제목을 2자 이상 입력하셔야 합니다.</div>
+			<div class="container-fluid my-4 bottombody">
+				<form action="partyBoardRegisterOk" class="row" id="rfrm" name="rfrm" method="post">
+					<input type="hidden" id="tag" name="tag"/>
+					<input type="hidden" id="latitude" name="latitude"/>
+					<input type="hidden" id="longitude" name="longitude"/>
+					<input type="hidden" id="loccode" name="loccode"/>
+					<div class="col-md-6 mb-3">
+						<label for="subject" class="form-label">제목 <span class="essential">*</span></label>
+						<input type="text" class="form-control" placeholder="제목" name="subject" id="subject"/>
+						<div class="invalid-feedback">제목을 2자 이상 입력하셔야 합니다.</div>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label for="date" class="form-label">날짜 선택 <span class="essential">*</span></label>
+						<input type="datetime-local" min="<%=sdate%>" max="<%=ldate%>" class="form-control" id="date" name="date"/>
+						<div class="invalid-feedback">날짜를 선택하셔야 합니다. (<%= sdate.replace("T", " ") %> ~ <%= ldate.replace("T", " ") %>)</div>
+					</div>
+					<div class="col-12 mb-3">
+						<label for="address" class="form-label">모임 장소 <span class="essential">*</span></label>
+						<div class="input-group has-validation">
+							<input type="text" class="form-control" id="address" name="address" placeholder="주소" readonly>
+							<input type="button" id="zbtn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal" value="우편번호 찾기"/>
+							<div class="invalid-feedback">주소를 선택하셔야 합니다.</div>
 						</div>
-						<div class="col-md-6 mb-3">
-							<label for="date" class="form-label">날짜 선택 <span class="essential">*</span></label>
-							<input type="datetime-local" min="<%=sdate%>" max="<%=ldate%>" class="form-control" id="date" name="date"/>
-							<div class="invalid-feedback">날짜를 선택하셔야 합니다. (<%= sdate.replace("T", " ") %> ~ <%= ldate.replace("T", " ") %>)</div>
+					</div>
+					<div class="col-md-6 mb-3">
+						<input type="text" class="form-control" id="detail" name="detail" placeholder="상세주소">
+						<div class="invalid-feedback">상세주소를 2자 이상 입력하셔야 합니다.</div>
+					</div>
+					<div class="col-md-6 mb-3">
+						<input type="text" class="form-control" id="extra" name="extra" placeholder="(동, 건물명)" readonly>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label for="location" class="form-label">장소 별칭 <span class="essential">*</span></label>
+						<input type="text" class="form-control" id="location" name="location" placeholder="별칭">
+						<div class="invalid-feedback">장소 별칭을 2자 이상 입력하셔야 합니다.</div>
+					</div>
+					<div class="col-md-6 mb-3">
+						<label for="desired" class="form-label">희망인원 수 <span class="essential">*</span></label>
+						<select class="form-select" id="desired" name="desired">
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+						</select>
+					</div> 
+					<div class="col-12 mb-3">
+						<label for="content" class="form-label">내용</label>
+						<textarea name="content" id="content" maxlength="10000" style="display: none;"></textarea>
+					</div>
+					<div class="col-12 mb-3 d-flex justify-content-end">
+						<input type="button" class="btn btn-dark mx-2" value="취소" onclick="history.back();"/>
+						<input type="button" class="btn btn-primary" id="rbtn" value="등록"/>
+					</div>
+				</form>
+			</div>
+			<!-- Modal Zipcode -->
+			<div class="modal" id="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+				<div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+					<div class="modal-content" style="">
+						<!-- Modal Header -->
+						<div class="modal-header">
+							<h6 class="modal-title">우편번호 선택</h6>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 						</div>
-						<div class="col-12 mb-3">
-							<label for="address" class="form-label">모임 장소 <span class="essential">*</span></label>
-							<div class="input-group has-validation">
-								<input type="text" class="form-control" id="address" name="address" placeholder="주소" readonly>
-								<input type="button" id="zbtn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal" value="우편번호 찾기"/>
-								<div class="invalid-feedback">주소를 선택하셔야 합니다.</div>
-							</div>
+						<!-- Modal body -->
+						<div id="mbody" class="modal-body">
 						</div>
-						<div class="col-md-6 mb-3">
-							<input type="text" class="form-control" id="detail" name="detail" placeholder="상세주소">
-							<div class="invalid-feedback">상세주소를 2자 이상 입력하셔야 합니다.</div>
-						</div>
-						<div class="col-md-6 mb-3">
-							<input type="text" class="form-control" id="extra" name="extra" placeholder="(동, 건물명)" readonly>
-						</div>
-						<div class="col-md-6 mb-3">
-							<label for="location" class="form-label">장소 별칭 <span class="essential">*</span></label>
-							<input type="text" class="form-control" id="location" name="location" placeholder="별칭">
-							<div class="invalid-feedback">장소 별칭을 2자 이상 입력하셔야 합니다.</div>
-						</div>
-						<div class="col-md-6 mb-3">
-							<label for="desired" class="form-label">희망인원 수 <span class="essential">*</span></label>
-							<select class="form-select" id="desired" name="desired">
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-							</select>
-						</div> 
-						<div class="col-12 mb-3">
-							<label for="content" class="form-label">내용</label>
-							<textarea
-								name="content"
-								id="content"
-								placeholder="내용을 입력하세요"
-							></textarea>
-						</div>
-						<div class="col-12 mb-3 d-flex justify-content-end">
-							<input type="button" class="btn btn-dark mx-2" value="취소" onclick="history.back();"/>
-							<input type="button" class="btn btn-primary" id="rbtn" value="등록"/>
-						</div>
-					</form>
-				</div>
-				<!-- Modal Zipcode -->
-				<div class="modal" id="modal" data-bs-backdrop="static" data-bs-keyboard="false">
-					<div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-						<div class="modal-content" style="">
-							<!-- Modal Header -->
-							<div class="modal-header">
-								<h6 class="modal-title">우편번호 선택</h6>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-							</div>
-							<!-- Modal body -->
-							<div id="mbody" class="modal-body">
-							</div>
-							<!-- Modal footer -->
-							<div class="modal-footer">
-							</div>
+						<!-- Modal footer -->
+						<div class="modal-footer">
 						</div>
 					</div>
 				</div>

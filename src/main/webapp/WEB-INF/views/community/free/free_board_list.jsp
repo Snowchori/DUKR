@@ -1,10 +1,9 @@
-<%@page import="ch.qos.logback.core.recovery.ResilientSyslogOutputStream"%>
 <%@page import="com.example.model.board.BoardListTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
-	ArrayList<BoardTO> announceList = (ArrayList)request.getAttribute("announceList");
+	ArrayList<BoardTO> announceList = (ArrayList<BoardTO>)request.getAttribute("announceList");
 	BoardListTO listTO = (BoardListTO)request.getAttribute("listTO");
 	
 	String search = (request.getParameter("search") != null) ? request.getParameter("search") : "";
@@ -128,9 +127,10 @@
 				float: left;
 			}
 			
-			main, footer {
-				max-width: 1920px;
+			.bottombody{
+				max-width: 992px;
 			}
+			
 			.thumbnail{
 				width: 3em;
 				height: 2.5em;
@@ -148,35 +148,42 @@
 				height: 100%;
 			}
 			
-			tr:hover {
+			.hover, tr:hover {
 				cursor: pointer;
 			}
 }
 		</style>
 	</head>
-	<body class="bg-light">
+	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
-					<h1 class="title">자유게시판</h1>
+					<h1 class="title"><span class="hover" onclick="location.href='freeBoardList'">자유게시판</span></h1>
 					<p class="lead fw-normal text-white-50 mb-0">Free Board</p>
 				</div>
 			</div>
 		</header>
-		<main class="container-fluid d-flex justify-content-center">
-			<div class="container d-flex justify-content-center row bottombody">
-				<div class="col-12 mt-3 p-2">
+		<main>
+			<div class="container-fluid bottombody">
+				<div class="mt-3 p-2">
 					총 <%= totalRecord %>건
 					<button type='button' class='btn btn-dark float-end' data-bs-toggle="modal" data-bs-target="#searchModal" id="wbtn"><i class="bi bi-search"></i></button>
 				</div>
-				<div class="col-12 p-2 row boardlist">
+				<div class="mt-3 p-2 row boardlist">
 					<table class="table">
 						<%= boardHtml %>
 					</table>
 				</div>
-				<div class="col-12 p-2">
-					<button type='button' class='btn btn-dark float-end' onclick="location.href='freeBoardWrite?cpage=<%=cpage%>'">글쓰기</button>
+				<div class="p-2 d-flex justify-content-end">
+					<button type='button' class='btn btn-dark' id="wbtn" onclick="location.href='partyBoardRegister'">글쓰기</button>
+				</div>
+				<div class="container p-2">
+					<nav class="pagination-outer" aria-label="Page navigation">
+						<ul class="pagination">
+							<%= pageHtml %>
+						</ul>
+					</nav>
 				</div>
 			</div>
 			<div class="modal fade" id="searchModal">
@@ -205,14 +212,7 @@
 				</div>
 			</div>
 		</main>
-		<footer class="container-fluid d-flex justify-content-center bg-light">
-			<div class="container demo mx-5 p-2">
-				<nav class="pagination-outer" aria-label="Page navigation">
-					<ul class="pagination">
-						<%= pageHtml %>
-					</ul>
-				</nav>
-			</div>
+		<footer class="container-fluid d-flex justify-content-center">
 		</footer>
 	</body>
 </html>

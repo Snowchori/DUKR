@@ -534,7 +534,10 @@
 			.bottombody{
 				max-width: 1920px;
 			}
-
+				
+			#map{
+				border-radius: 0.5em;
+			}
 			.mapinfo{
 				width:180px;
 				text-align:center;
@@ -557,9 +560,9 @@
 			#close {position: absolute;padding: 4px;top: 5px;left: 5px;z-index: 3;cursor: pointer;background: #fff;border-radius: 4px;border: 1px solid #c8c8c8;box-shadow: 0px 1px #888;}
 			#close .img {display: block;background: url(/assets/img/kakao/rv_close.png) no-repeat;width: 14px;height: 14px;}
 			
-			@media (min-width: 767px){
+			@media (min-width: 992px){
 				#map-side{
-					padding: 0em 3em 0em 3em;
+					padding: 0em 2em 0em 2em;
 				}
 			}
 			
@@ -570,7 +573,7 @@
 			}
 		</style>
 	</head>
-	<body class="bg-light">
+	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
@@ -580,11 +583,11 @@
 				</div>
 			</div>
 		</header>
-		<main class="d-flex justify-content-center">
+		<main>
 			<!-- 메인 요소 -->
-			<div class="container-fluid d-flex justify-content-center bottombody">
+			<div class="container-fluid d-flex justify-content-center">
 				<div class="row py-5 mapframe">
-					<div id="map" class="col mb-3 border border-5" style="width:1000px;height:600px;">
+					<div id="map" class="col mb-3 border border-3" style="width:1100px;height:600px;">
 						<div id="roadviewControl" data-bs-toggle="modal" data-bs-target="#myModal"></div>
 					</div>
 					<div id="map-side" class="col-lg-4 align-self-center">

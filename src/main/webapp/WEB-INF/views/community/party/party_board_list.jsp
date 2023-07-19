@@ -39,13 +39,13 @@
 	
 	for(BoardTO list: listTO.getBoardLists()) {
 		boardHtml.append("<tr onclick='location.href=\"partyBoardView?seq=" + list.getSeq() + "\"'>");
-		boardHtml.append("<td class='board-img'><i class='bi ");
+		boardHtml.append("<td class='board-img'>");
 		if(!list.isHasFile()) {
-			boardHtml.append("bi-file-earmark-excel");
+			boardHtml.append("<i class='bi bi-file-earmark-text h1'></i>");
 		} else {
-			boardHtml.append("bi-card-image");
+			boardHtml.append("<div class='thumbnail'>" + list.getThumbnail() + "</div>");
 		}
-		boardHtml.append(" h1 icon'></i></td>");
+		boardHtml.append("</td>");
 		boardHtml.append("<td><span class='badge bg-secondary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
@@ -105,15 +105,6 @@
 		</script>
 		
 		<style>
-			@font-face {
-				font-family: 'SBAggroB';
-				src:
-					url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff')
-					format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-			
 			.title {
 				font-family: SBAggroB;
 			}
@@ -122,40 +113,69 @@
 				text-decoration: none;
 			}
 			
-			main, footer {
-				max-width: 1920px;
+			.bottombody{
+				max-width: 992px;
 			}
+			
+			.thumbnail{
+				width: 3em;
+				height: 2.5em;
+				
+				display: flex;
+				justify-content: center;
+
+				border: 0.05em gray solid;
+				border-radius: 0.5em;
+				
+				overflow: hidden;
+			}
+			
+			img {
+				height: 100%;
+			}
+			
+			.hover, tr:hover {
+				cursor: pointer;
+			}
+}
 		</style>
 	
 	</head>
 	
-	<body class="bg-light">
+	<body>
 	
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf"%>
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
-				<a href="partyBoardList">
 					<div class="text-center text-white">
-						<h1 class="title">모임게시판</h1>
-						<p class="lead fw-normal text-white-50">Parties Board</p>
+						<h1 class="title">
+							<span class="hover" onclick="location.href='partyBoardList'">모임게시판</span>
+						</h1>
+						<p class="lead fw-normal text-white-50">Party Board</p>
 					</div>
-				</a>
 			</div>
 		</header>
 	
-		<main class="container-fluid d-flex justify-content-center">
-			<div class="container d-flex justify-content-center row bottombody">
-				<div class="col-12 mt-3 p-2">
+		<main>
+			<div class="container-fluid bottombody">
+				<div class="mt-3 p-2">
 					총 <%= totalRecord %>건
 					<button type='button' class='btn btn-dark float-end' data-bs-toggle="modal" data-bs-target="#searchModal" id="wbtn"><i class="bi bi-search"></i></button>
 				</div>
-				<div class="col-12 mt-3 p-2 row boardlist">
+				<div class="mt-3 p-2 row boardlist">
 					<table class="table">
 						<%= boardHtml %>
 					</table>
 				</div>
-				<div class="col-12 p-2">
-					<button type='button' class='btn btn-dark float-end' id="wbtn" onclick="location.href='partyBoardRegister'">글쓰기</button>
+				<div class="p-2 d-flex justify-content-end">
+					<button type='button' class='btn btn-dark' id="wbtn" onclick="location.href='partyBoardRegister'">글쓰기</button>
+				</div>
+				<div class="container p-2">
+					<nav class="pagination-outer" aria-label="Page navigation">
+						<ul class="pagination">
+							<%= pageHtml %>
+						</ul>
+					</nav>
 				</div>
 			</div>
 			<div class="modal fade" id="searchModal">
@@ -184,14 +204,7 @@
 				</div>
 			</div>
 		</main>
-		<footer class="container-fluid bg-light">
-			<div class="container demo p-2 pb-5">
-				<nav class="pagination-outer" aria-label="Page navigation">
-					<ul class="pagination">
-						<%= pageHtml %>
-					</ul>
-				</nav>
-			</div>
+		<footer class="container-fluid">
 		</footer>
 		
 	</body>
