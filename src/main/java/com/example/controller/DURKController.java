@@ -38,6 +38,8 @@ import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
+import com.example.model.note.NoteDAO;
+import com.example.model.note.NoteTO;
 import com.example.model.party.ApiPartyTO;
 import com.example.model.party.ApplyTO;
 import com.example.model.party.PartyDAO;
@@ -63,6 +65,9 @@ public class DURKController {
 	
 	@Autowired
 	private CommentDAO commentDAO;
+	
+	@Autowired
+	private NoteDAO noteDAO;
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -293,6 +298,43 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/userDeleteOk")
+	public int userDeleteOk(HttpServletRequest request) {
+		MemberTO to = new MemberTO();
+		to.setSeq(request.getParameter("seq"));
+		
+		int flag = memberDAO.userDeleteOk(to);
+		
+		if(flag == 0) {
+			boardDAO.boardDeleteAll(to.getSeq());
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/nicknameChangeOk")
+	public int nicknameChangeOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		MemberTO to = new MemberTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setNickname(request.getParameter("nickname"));
+		
+		int flag = memberDAO.nicknameChangeOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(to.getSeq());
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("강제 닉네임 변경 안내");
+			noteTO.setContent("관리자에 의하여 '" + to.getNickname() + "'으로 닉네임이 강제변경 되었습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
 	// community/announce
 	@RequestMapping("/announceBoardList")
 	public ModelAndView announceBoardList(HttpServletRequest request) {
@@ -378,13 +420,13 @@ public class DURKController {
 		return modelAndView;
 	}
 	
-	@RequestMapping("/announceBoardWriteOk")
-	public ModelAndView announceBoardWriteOk(HttpServletRequest request) {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("community/announce/announce_board_write_ok");
-		
-		return modelAndView;
-	}
+//	@RequestMapping("/announceBoardWriteOk")
+//	public ModelAndView announceBoardWriteOk(HttpServletRequest request) {
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.setViewName("community/announce/announce_board_write_ok");
+//		
+//		return modelAndView;
+//	}
 	
 	// community/free
 	@RequestMapping("/freeBoardList")
@@ -448,7 +490,6 @@ public class DURKController {
 	
 	@RequestMapping("/freeBoardView")
 	public ModelAndView freeBoardView(HttpServletRequest request) {
-		System.out.println("dddddddddddddddddd");
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/free/free_board_view");
 
@@ -495,9 +536,7 @@ public class DURKController {
 		to.setMemSeq(req.getParameter("memSeq"));
 		to.setContent(req.getParameter("content"));
 		to.setWip(req.getRemoteAddr());
-		
-		System.out.println(to.getBoardSeq() + "/" + to.getMemSeq() + "/" + to.getContent() + "/" + to.getWip());
-		
+
 		if(!to.getMemSeq().equals("")) {
 			 result = commentDAO.boardCommentWrite(to);
 		}
@@ -505,8 +544,36 @@ public class DURKController {
 		return result;
 	}
 	
+	// 댓글 추천
+	@PostMapping("/commentRec")
+	public int commentRec(HttpServletRequest req) {
+		int response;
+		
+		String cmtSeq = req.getParameter("cmtSeq");
+		String memSeq = req.getParameter("memSeq");
+
+		if(memSeq.equals("")) {
+			response = 0;
+		}else {
+			if(req.getParameter("writerSeq").equals(memSeq)) {
+				response = 3;
+			}else {
+				int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
+			
+				if(recCheck == 0) {
+					commentDAO.commentRec(memSeq, cmtSeq);
+					response = 1;
+				}else {
+					response = 2;
+				}
+			}
+		}
+		
+		return response;
+	}
+	
 	// ck에디터 이미지 업로드하기@@
-	@PostMapping("/upload/freeboard")
+	@PostMapping( value= { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
 		//System.out.println("upload request");
 		Boolean uploadResult = false;
@@ -536,7 +603,7 @@ public class DURKController {
 	}
 	
 	// 글쓰기
-	@PostMapping("/freeBoardWriteOk")
+	@PostMapping( value = { "/freeBoardWriteOk", "/announceBoardWriteOk" } )
 	public int writeOk(HttpServletRequest req){
 		int result = 0;
 		

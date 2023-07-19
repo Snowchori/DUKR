@@ -81,4 +81,8 @@ public interface BoardMapperInter {
 	// 밴 ip 해제
 	@Delete("delete from ipban where seq = #{seq}")
 	public int banIpDeleteOk(BanTO to);
+	
+	// 회원 게시글 전부 지우기
+	@Update("update board set isDel = true where memSeq = #{seq}")
+	public int boardDeleteAll(String seq);
 }
