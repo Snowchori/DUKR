@@ -58,6 +58,9 @@ public interface BoardMapperInter {
 	@Select("select count(*) from board where content like '%<img src=\"%' and seq=#{seq};")
 	public int hasFile(BoardTO to);
 	
+	@Select("select content from board where seq=#{seq}")
+	public String boardContent(String seq);
+	
 	// 뷰 진입시 조회수 +1
 	@Update("update board set hit=hit+1 where seq=#{seq}")
 	public int hitPlus(String seq);

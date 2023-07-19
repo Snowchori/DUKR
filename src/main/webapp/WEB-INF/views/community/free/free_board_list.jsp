@@ -40,13 +40,13 @@
 	
 	for(BoardTO list: listTO.getBoardLists()) {
 		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
-		boardHtml.append("<td class='board-img'><i class='bi ");
+		boardHtml.append("<td class='board-img'>");
 		if(!list.isHasFile()) {
-			boardHtml.append("bi-file-earmark-excel");
+			boardHtml.append("<i class='bi bi-file-earmark-excel h1 icon'></i>");
 		} else {
-			boardHtml.append("bi-card-image");
+			boardHtml.append(list.getThumbnail());
 		}
-		boardHtml.append(" h1 icon'></i></td>");
+		boardHtml.append("</td>");
 		boardHtml.append("<td><span class='badge bg-secondary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
@@ -130,6 +130,10 @@
 			
 			main, footer {
 				max-width: 1920px;
+			}
+			
+			img {
+				width: 100%;
 			}
 		</style>
 	</head>
