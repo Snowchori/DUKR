@@ -78,7 +78,7 @@
 				        
 				        // 로그인 성공 후 메인페이지로 이동
 						location.href = history.go(-2);
-				        
+       
 					}).catch(function(err) {
 						console.error('Failed to request user information: ' + err);
 					});

@@ -28,9 +28,11 @@
 			userHtml.append("아이디 : " + to.getId());
 			userHtml.append("</div>");
 			userHtml.append("<div class='col-3'>");
-			userHtml.append("<button type='button' class='btn btn-dark' onclick='changeNickname(");
-			userHtml.append(to.getSeq() + ", \"" + to.getNickname() + "\"");
-			userHtml.append(")'>닉네임 강제변경</button>");
+			if(!to.isAdmin()){
+				userHtml.append("<button type='button' class='btn btn-dark' onclick='changeNickname(");
+				userHtml.append(to.getSeq() + ", \"" + to.getNickname() + "\"");
+				userHtml.append(")'>닉네임 강제변경</button>");
+			}
 			userHtml.append("</div>");
 			userHtml.append("</div>");
 			userHtml.append("<div class='row py-2'>");
@@ -41,9 +43,11 @@
 			userHtml.append("점수 : " + to.getRate());
 			userHtml.append("</div>");
 			userHtml.append("<div class='col-3'>");
-			userHtml.append("<button type='button' class='btn btn-dark' onclick='deleteUser(");
-			userHtml.append(to.getSeq());
-			userHtml.append(")'>강제 회원탈퇴</button>");
+			if(!to.isAdmin()){
+				userHtml.append("<button type='button' class='btn btn-dark' onclick='deleteUser(");
+				userHtml.append(to.getSeq());
+				userHtml.append(")'>강제 회원탈퇴</button>");
+			}
 			userHtml.append("</div>");
 			userHtml.append("</div>");
 			userHtml.append("</div>");

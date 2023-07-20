@@ -33,3 +33,9 @@ build/
 .vscode/
 
 .metadata
+
+/src/main/resources
+application.properties
+*.properties
+
+/src/main/webapp/upload/

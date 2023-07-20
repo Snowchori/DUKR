@@ -36,6 +36,8 @@ import com.example.model.comment.CommentListTO;
 import com.example.model.comment.CommentTO;
 import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
+import com.example.model.inquiry.InquiryDAO;
+import com.example.model.inquiry.InquiryTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
@@ -44,6 +46,8 @@ import com.example.model.party.ApiPartyTO;
 import com.example.model.party.ApplyTO;
 import com.example.model.party.PartyDAO;
 import com.example.model.party.PartyTO;
+import com.example.model.report.ReportDAO;
+import com.example.model.report.ReportTO;
 
 @RestController
 public class DURKController {
@@ -68,6 +72,12 @@ public class DURKController {
 	
 	@Autowired
 	private NoteDAO noteDAO;
+	
+	@Autowired
+	private InquiryDAO inquiryDAO;
+	
+	@Autowired
+	private ReportDAO reportDAO;
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -235,8 +245,29 @@ public class DURKController {
 			return modelAndView;
 		}
 		
+		ArrayList<InquiryTO> inquiry_list = inquiryDAO.inquiryList();
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/inquiry_manage");
+		modelAndView.addObject("inquiry_list", inquiry_list);
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/logManage")
+	public ModelAndView logManage(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		boolean isAdmin = (userInfo != null) ? userInfo.isAdmin() : false;
+		if(!isAdmin) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("admin/not_admin");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/log_manage");
 		
 		return modelAndView;
 	}
@@ -292,8 +323,11 @@ public class DURKController {
 			return modelAndView;
 		}
 		
+		ArrayList<ReportTO> report_list = reportDAO.reportList();
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/report_list");
+		modelAndView.addObject("report_list", report_list);
 		
 		return modelAndView;
 	}
@@ -585,13 +619,68 @@ public class DURKController {
 				 sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + req.getParameter("memSeq") + "\", \"" + cSeq + "\")'>");
 				 sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 				 sbResponseHtml.append(cRecCnt);		
-				 sbResponseHtml.append("</button>");	
+				 sbResponseHtml.append("</button>");
+				 
+				 if(req.getParameter("memSeq").equals(writerSeq)){
+					 sbResponseHtml.append("<button class='btn float-end me-3' style='color: red;'>");
+					 sbResponseHtml.append("<i class='fas fa-times'></i>");
+					 sbResponseHtml.append("</button>");
+				 }
+				 
 				 sbResponseHtml.append("<br>");	
 				 sbResponseHtml.append(cContent);	
 				 sbResponseHtml.append("<hr class='mt-3 my-2'>");
 			 }
 		}
 
+		return sbResponseHtml.toString();
+	}
+	
+	// 댓글 삭제
+	@PostMapping("/commentDelete")
+	public String commentDelete(HttpServletRequest req) {
+		StringBuilder sbResponseHtml = new StringBuilder();
+		
+		String commentSeq = req.getParameter("commentSeq");
+		commentDAO.commentDelete(commentSeq);
+		
+		CommentListTO updatedComments = new CommentListTO();
+		updatedComments.setCommentList(commentDAO.boardCommentList(req.getParameter("boardSeq")));
+		 
+		for(CommentTO comment : updatedComments.getCommentList()) {
+			String cWriter = comment.getWriter();
+			String cWdate = comment.getWdate();
+			int cRecCnt = comment.getRecCnt();
+			String cContent = comment.getContent();	
+			String cSeq = comment.getSeq();
+			String writerSeq = comment.getMemSeq();
+
+			sbResponseHtml.append("<span class='dropdown'>");	
+			sbResponseHtml.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
+			sbResponseHtml.append(cWriter);	
+			sbResponseHtml.append("</a>");
+			sbResponseHtml.append("<ul class='dropdown-menu'>");
+			sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
+			sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
+			sbResponseHtml.append("</ul>");	
+			sbResponseHtml.append("</span>&nbsp;");	
+			sbResponseHtml.append("<span style='color:#888888;'>" + cWdate + "</span>");	
+			sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + req.getParameter("memSeq") + "\", \"" + cSeq + "\")'>");
+			sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
+			sbResponseHtml.append(cRecCnt);		
+			sbResponseHtml.append("</button>");
+			 
+			if(req.getParameter("userSeq").equals(writerSeq)){
+				sbResponseHtml.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
+				sbResponseHtml.append("<i class='fas fa-times'></i>");
+				sbResponseHtml.append("</button>");
+			}
+			 
+			sbResponseHtml.append("<br>");	
+			sbResponseHtml.append(cContent);	
+			sbResponseHtml.append("<hr class='mt-3 my-2'>");
+		}
+		
 		return sbResponseHtml.toString();
 	}
 	
@@ -905,7 +994,7 @@ public class DURKController {
 	}
 
 	
-	// game/info
+	// game
 	@RequestMapping("/evalDeleteOk")
 	public int evalDeleteOk(HttpServletRequest request) {
 		EvaluationTO to = new EvaluationTO();
@@ -1001,7 +1090,7 @@ public class DURKController {
 		BoardgameTO gameTO = gameDAO.gameInfo(request.getParameter("seq"));
 		if(gameTO == null) {
 			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.setViewName("game/info/no_info");
+			modelAndView.setViewName("game/no_info");
 			
 			return modelAndView;
 		}
@@ -1039,7 +1128,7 @@ public class DURKController {
 		gameTO.setDifficulty(evalDAO.evalDifficultyAvg(gameTO.getSeq()));
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("game/info/game_view");
+		modelAndView.setViewName("game/game_view");
 		modelAndView.addObject("gameTO", gameTO);
 		modelAndView.addObject("isRec", isRec);
 		modelAndView.addObject("isFav", isFav);
@@ -1049,7 +1138,7 @@ public class DURKController {
 		return modelAndView;
 	}
 	
-	// game/search
+	// game
 	@RequestMapping("/gameSearch")
 	public ModelAndView gameSearch(HttpServletRequest request) {
 		
@@ -1084,7 +1173,7 @@ public class DURKController {
 		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("game/search/game_search");
+		modelAndView.setViewName("game/game_search");
 		modelAndView.addObject("lists", lists);
 		return modelAndView;
 	}

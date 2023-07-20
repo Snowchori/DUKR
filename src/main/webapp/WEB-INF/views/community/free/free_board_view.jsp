@@ -54,6 +54,13 @@
 		sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 		sbComments.append(cRecCnt);		
 		sbComments.append("</button>");	
+		
+		if(userSeq != null && userSeq.equals(writerSeq)){
+			sbComments.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
+			sbComments.append("<i class='fas fa-times'></i>");
+			sbComments.append("</button>");
+		}
+		
 		sbComments.append("<br>");	
 		sbComments.append(cContent);	
 		sbComments.append("<hr class='mt-3 my-2'>");	
@@ -113,7 +120,7 @@
 						type:'post',
 						data: {
 							boardSeq: <%=boardSeq %>,
-							memSeq: <%=memSeq %>,
+							memSeq: <%=userSeq %>,
 							content: document.getElementById("cContent").value,
 						},
 						success: function(res){
@@ -135,7 +142,6 @@
 			
 			// 댓글 추천함수
 			function recommendComment(wSeq, mSeq, cSeq){
-				console.log(wSeq + mSeq + cSeq);
 				$.ajax({
 					url: '/commentRec',
 					type: 'POST',
@@ -160,6 +166,22 @@
 							alert('본인의 댓글은 추천할수 없습니다');
 						}
 					},
+				});
+			}
+			
+			// 댓글 삭제함수
+			function deleteComment(cSeq){
+				$.ajax({
+					url: "/commentDelete",
+					type: "POST", 
+					data: {
+						boardSeq: <%=boardSeq %>,
+						commentSeq: cSeq,
+						userSeq: <%=userSeq %>
+					},
+					success: function(res){
+						$('#comments').html(res);
+					}
 				});
 			}
 			

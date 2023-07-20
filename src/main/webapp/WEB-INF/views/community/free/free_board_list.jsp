@@ -117,31 +117,6 @@
 			}
 		</script>
 		<style>
-			.bottombody{
-				max-width: 992px;
-			}
-			
-			.thumbnail{
-				width: 3em;
-				height: 2.5em;
-				
-				display: flex;
-				justify-content: center;
-
-				border: 0.05em gray solid;
-				border-radius: 0.5em;
-				
-				overflow: hidden;
-			}
-			
-			img {
-				height: 100%;
-			}
-			
-			.hover, tr:hover {
-				cursor: pointer;
-			}
-}
 		</style>
 	</head>
 	<body>

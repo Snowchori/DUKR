@@ -47,7 +47,14 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 	sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + userSeq + "\", \"" + cSeq + "\")'>");
 	sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 	sbComments.append(cRecCnt);		
-	sbComments.append("</button>");	
+	sbComments.append("</button>");
+	
+	if(userSeq != null && userSeq.equals(writerSeq)){
+		sbComments.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
+		sbComments.append("<i class='fas fa-times'></i>");
+		sbComments.append("</button>");
+	}
+	
 	sbComments.append("<br>");	
 	sbComments.append(cContent);	
 	sbComments.append("<hr class='mt-3 my-2'>");	
@@ -235,6 +242,21 @@ if(!memSeq.equals(userSeq)){
 				});
 			}
 			
+			// 댓글 삭제함수
+			function deleteComment(cSeq){
+				$.ajax({
+					url: "/commentDelete",
+					type: "POST", 
+					data: {
+						boardSeq: <%=boardSeq %>,
+						commentSeq: cSeq,
+						userSeq: <%=userSeq %>
+					},
+					success: function(res){
+						$('#comments').html(res);
+					}
+				});
+			}
 		</script>
 	<style>
 		.bottombody{
