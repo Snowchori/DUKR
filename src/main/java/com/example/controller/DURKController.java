@@ -619,7 +619,14 @@ public class DURKController {
 				 sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + req.getParameter("memSeq") + "\", \"" + cSeq + "\")'>");
 				 sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 				 sbResponseHtml.append(cRecCnt);		
-				 sbResponseHtml.append("</button>");	
+				 sbResponseHtml.append("</button>");
+				 
+				 if(req.getParameter("memSeq").equals(writerSeq)){
+					 sbResponseHtml.append("<span class='float-end me-3' style='color: red;'>");
+					 sbResponseHtml.append("<i class='fas fa-times'></i>");
+					 sbResponseHtml.append("</span>");
+				 }
+				 
 				 sbResponseHtml.append("<br>");	
 				 sbResponseHtml.append(cContent);	
 				 sbResponseHtml.append("<hr class='mt-3 my-2'>");

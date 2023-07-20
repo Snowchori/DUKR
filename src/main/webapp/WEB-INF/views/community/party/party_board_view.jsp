@@ -47,7 +47,14 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 	sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + userSeq + "\", \"" + cSeq + "\")'>");
 	sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 	sbComments.append(cRecCnt);		
-	sbComments.append("</button>");	
+	sbComments.append("</button>");
+	
+	if(userSeq != null && userSeq.equals(writerSeq)){
+		sbComments.append("<span class='float-end me-3' style='color: red;'>");
+		sbComments.append("<i class='fas fa-times'></i>");
+		sbComments.append("</span>");
+	}
+	
 	sbComments.append("<br>");	
 	sbComments.append(cContent);	
 	sbComments.append("<hr class='mt-3 my-2'>");	

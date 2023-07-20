@@ -54,6 +54,13 @@
 		sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 		sbComments.append(cRecCnt);		
 		sbComments.append("</button>");	
+		
+		if(userSeq != null && userSeq.equals(writerSeq)){
+			sbComments.append("<span class='float-end me-3' style='color: red;'>");
+			sbComments.append("<i class='fas fa-times'></i>");
+			sbComments.append("</span>");
+		}
+		
 		sbComments.append("<br>");	
 		sbComments.append(cContent);	
 		sbComments.append("<hr class='mt-3 my-2'>");	
@@ -113,7 +120,7 @@
 						type:'post',
 						data: {
 							boardSeq: <%=boardSeq %>,
-							memSeq: <%=memSeq %>,
+							memSeq: <%=userSeq %>,
 							content: document.getElementById("cContent").value,
 						},
 						success: function(res){
