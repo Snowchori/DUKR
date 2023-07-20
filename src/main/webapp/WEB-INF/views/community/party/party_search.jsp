@@ -501,6 +501,8 @@
 			  			});
 					}
 				};
+				
+				const tooltips = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'), tip => new bootstrap.Tooltip(tip));
 			});
 			
 		</script>
@@ -531,8 +533,8 @@
 				font-weight: bold;
 			}
 			
-			.bottombody{
-				max-width: 1920px;
+			.mapframe{
+				max-width: 1200px;
 			}
 				
 			#map{
@@ -541,6 +543,9 @@
 			.mapinfo{
 				width:180px;
 				text-align:center;
+			}
+			.refresh{
+				display: none;
 			}
 			
 			.swal2-title {
@@ -560,15 +565,15 @@
 			#close {position: absolute;padding: 4px;top: 5px;left: 5px;z-index: 3;cursor: pointer;background: #fff;border-radius: 4px;border: 1px solid #c8c8c8;box-shadow: 0px 1px #888;}
 			#close .img {display: block;background: url(/assets/img/kakao/rv_close.png) no-repeat;width: 14px;height: 14px;}
 			
-			@media (min-width: 992px){
-				#map-side{
-					padding: 0em 2em 0em 2em;
+			@media (min-width: 576px) and (max-width: 991px){
+				.refresh{
+					display: inline-block;
 				}
 			}
 			
-			@media (max-width: 991px){
-				.mapframe{
-					width: 100%;
+			@media (min-width: 992px){
+				#map-side{
+					padding: 0em 1em 0em 1em;
 				}
 			}
 		</style>
@@ -585,12 +590,12 @@
 		</header>
 		<main>
 			<!-- 메인 요소 -->
-			<div class="container-fluid d-flex justify-content-center">
-				<div class="row py-5 mapframe">
+			<div class="d-flex justify-content-center">
+				<div class="container-fluid row py-5 mapframe">
 					<div id="map" class="col mb-3 border border-5" style="width:1100px;height:600px;">
 						<div id="roadviewControl" data-bs-toggle="modal" data-bs-target="#myModal"></div>
 					</div>
-					<div id="map-side" class="col-lg-4 align-self-center">
+					<div id="map-side" class="col-lg-3 align-self-center">
 						<form action="" class="row">
 							<div class="mb-3 col-sm-6 col-lg-12">
 								<label for="dosel" class="form-label">도(시)</label>
@@ -606,8 +611,8 @@
 							</div>
 						</form>
 						<div class="d-flex">
-							<button class="btn btn-primary" id="rbtn"><i class='bi bi-arrow-clockwise'></i></button>&nbsp;
-							<input type="button" class="btn btn-primary" id="sbtn" value="검색" style="width: 100%" disabled/>
+							<button class="btn btn-primary" id="rbtn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="모임 정보를 갱신합니다." style="width: 20%;"><i class='bi bi-arrow-clockwise'></i><span class="refresh">&nbsp;갱신</span></button>&nbsp;
+							<input type="button" class="btn btn-primary" id="sbtn" value="검색" style="width: 80%" disabled/>
 						</div>
 					</div>
 				</div>
