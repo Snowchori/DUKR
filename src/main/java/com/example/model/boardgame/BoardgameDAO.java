@@ -181,6 +181,7 @@ public class BoardgameDAO {
 		
 		int flag = 1;
 		int result = gameMapper.gameFavoriteDelete(map);
+		System.out.println(result);
 		
 		if(result == 1) {
 			flag = 0;
@@ -286,6 +287,13 @@ public class BoardgameDAO {
 		ArrayList<BoardgameTO> lists = gameMapper.gameMainList();
 		
 		return lists;
+	}
+	
+	// 마이페이지 좋아요한 보드게임 목록
+	public ArrayList<BoardgameTO> myfavBoardGame(String seq) {
+		ArrayList<BoardgameTO> list = gameMapper.myfavBoardGame(seq);
+		
+		return list;
 	}
 	
 	public BoardgameTO gameShortInfo(String gameId) {

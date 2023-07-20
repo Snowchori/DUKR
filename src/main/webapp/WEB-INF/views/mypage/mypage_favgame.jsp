@@ -1,6 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<%
+	ArrayList<BoardgameTO> list = (ArrayList<BoardgameTO>)request.getAttribute("myfavBoardGame");
+	
+	//보드게임 목록 html
+	StringBuilder boardhtml = new StringBuilder();
+	for(BoardgameTO data : list) {
+		
+		boardhtml.append("<div class='col'>");
+		boardhtml.append("<div class='card shadow-sm'>");
+		boardhtml.append("<img class='card-img-top' width='100%' height='225' alt='Card image' src='"+data.getImageUrl()+"'></img>");
+		boardhtml.append("<div class='card-body'>");
+		boardhtml.append("<p class='card-text'>"+data.getTitle()+"</p>");
+		boardhtml.append("<div class='d-flex justify-content-between align-items-center'>");
+		boardhtml.append("<div class='btn-group'>");
+		boardhtml.append("<button type='button' class='btn btn-sm btn-outline-secondary' onclick='location.href=\"gameView?seq=" + data.getSeq() + "\"'>게임 정보 보기</button>");
+		boardhtml.append("<button type='button' class='btn btn-sm btn-outline-secondary' onclick='location.href=\"freeBoardList?select=4&search="+data.getTitle()+"\"'>관련 글 보기</button>");
+		boardhtml.append("<button type='button' class='btn btn-sm btn-outline-secondary' onclick='updateFav("+data.getSeq()+",1)'>즐겨찾기 해제</button>");
+		boardhtml.append("</div></div></div></div></div>");
+		
+	}
+%>
 <!doctype html>
 <html>
 	<head>
@@ -8,6 +29,38 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
+			function updateFav(seq, isFav) {
+				$.ajax({
+					url:'gameFavoriteWriteOk',
+					 type:'post',
+					data: {
+						seq: seq,
+						isFav: isFav
+					},
+					success: function(data) {
+						if(data == 0) {
+							Swal.fire({
+								icon: 'success',
+								title: '추천해제 완료',
+								confirmButtonText: '확인',
+								timer : 1500,
+								timerProgressBar : true,
+								willClose: () => {
+								location.href='/favgame';
+								}
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: '에러',
+								timer : 1500,
+								timerProgressBar : true,
+								confirmButtonText: '확인'
+							});
+						}
+					}
+				});
+			}
 		</script>
 		<style type="text/css">
 			@font-face {
@@ -19,6 +72,15 @@
 			
 			.title {
 				font-family: SBAggroB;
+			}
+			.selection > div > div{
+				padding: 5px 0 5px 0;
+				border: 1px #cacaca solid;
+				box-sizing: border-box;
+				cursor: pointer;
+			}
+			.selection > div > div:hover{
+				background-color: #f2f2f2;
 			}
 		</style>
 	</head>
@@ -34,46 +96,26 @@
 		</header>
 		<main>
 		  	<!-- 버튼 디자인 -->
-			<div class="container mt-3 text-center">
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<td onClick="location.href='/mypage'" >회원 정보 변경</td>
-							<td onClick="location.href='/mywrite'">내가 쓴 글</td>
-							<td onClick="location.href='/mycomment'">내가 쓴 댓글</td>
-							<td onClick="location.href='/favwrite'">좋아요 한 글</td>
-						</tr>
-					</thead>
-					<tbody>	
-						<tr>
-							<td onClick="location.href='/favgame'">즐겨찾기 한 게임</td>
-							<td onClick="location.href='/mail'">쪽지함</td>
-							<td onClick="location.href='/admin'">문의하기</td>
-							<td onClick="location.href='/myparty'">참여신청한 모임</td>
-						</tr>
-					</tbody>
-				</table>
+			<div class="container mt-3">
+				<div class="row g-1 text-center selection">
+					<div class="col-6 col-lg-3" onClick="location.href='/mypage'"><div>회원 정보 변경</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mywrite'"><div>내가 쓴 글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mycomment'"><div>내가 쓴 댓글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/favwrite'"><div>좋아요 한 글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/favgame'"><div>즐겨찾기 한 게임</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mail'"><div>쪽지함</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/admin'"><div>문의하기</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/myparty'"><div>참여신청한 모임</div></div>
+				</div>
 			</div>
 			<!-- 버튼 디자인 -->
 		  	<!-- 마이페이지 정보페이지 디자인 -->
 			<div class="album py-5 bg-body-tertiary">
 				<div class="container">
 					<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-						<div class="col">
-							<div class="card shadow-sm">
-								<img class="card-img-top" width="100%" height="225"	alt="Card image" src="./images/game1.jpg"></img>
-								<div class="card-body">
-									<p class="card-text">보드게임 1번</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<div class="btn-group">
-											<button type="button" class="btn btn-sm btn-outline-secondary">게임 정보 보기</button>
-											<button type="button" class="btn btn-sm btn-outline-secondary">관련 글 보기</button>
-											<button type="button" class="btn btn-sm btn-outline-secondary">즐겨찾기 해제</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+					
+						<%=boardhtml %>
+						
 					</div>
 				</div>
 			</div>

@@ -14,9 +14,9 @@
 	StringBuilder sbSocialButtons = new StringBuilder();
 	StringBuilder sbSocialOption = new StringBuilder();
 	if(userType == 0){
-		sbSocialButtons.append("<img src='./assets/img/logos/google.png' class='rounded-circle float-start' style='width:100px; height:100px;' alt='Cinque Terre' onclick=''>");
+		sbSocialButtons.append("<img src='./assets/img/logos/google.png' class='rounded-circle float-start' style='width:100px; height:100px;' alt='Cinque Terre' onclick='javascript:loginWithGoogle()'>");
 		sbSocialButtons.append("<img src='./assets/img/logos/kakao.png' class='rounded-circle' style='width:100px; height:100px;' alt='Cinque Terre' onclick='javascript:loginWithKakao()'>");
-		sbSocialButtons.append("<img src='./assets/img/logos/naver.png' class='rounded-circle float-end' style='width:100px; height:100px;' alt='Cinque Terre' onclick=''>");
+		sbSocialButtons.append("<img src='./assets/img/logos/naver.png' class='rounded-circle float-end' style='width:100px; height:100px;' alt='Cinque Terre' onclick='javascript:loginWithNaver()'>");
 		sbSocialOption.append("소셜 인증하기");
 	}else{
 		sbSocialButtons.append("<h2><i class='fas fa-check green-check'></i> 소셜 인증을 완료했습니다</h2>");
@@ -35,97 +35,186 @@
 	.green-check {
       color: green;
     }
+    .selection > div > div{
+		padding: 5px 0 5px 0;
+		border: 1px #cacaca solid;
+		box-sizing: border-box;
+		cursor: pointer;
+	}
+	.selection > div > div:hover{
+		background-color: #f2f2f2;
+	}
 </style>
 		
-		<script type="text/javascript">
-		    $(document).ready( function() {
-		        //아이디 변경불가 alert
-				$('#id').click(function () {
-					Swal.fire({
-						icon : 'error',
-						title : '아이디는 변경 불가합니다',
-						timer : 1500
-					})
+<script type="text/javascript">
+	$(document).ready( function() {
+		//아이디 변경불가 alert
+		$('#id').click(function () {
+			Swal.fire({
+				icon : 'error',
+				title : '아이디는 변경 불가합니다',
+				timer : 1500
+			})
+		});
+		
+		const userType = <%=userType%>;
+		if(userType == 2) {
+			$('#id').remove();
+			$('#idlabel').remove();
+			$('#password').remove();
+			$('#passwordlabel').remove();
+		}
+		
+		//정보수정버튼 기능
+		$('#infoUpdate').on('click', function() {
+			if(userType != 2) {
+				Swal.fire({
+				title: '회원정보 변경을 위해 비밀번호를 입력하세요',
+				html:
+					 '<div>비밀번호 변경을 원치않으시면 새로운 비밀번호란에</br> 기존 비밀번호를 입력해주세요</div>' +
+					 '<input type="password" id="swal-currentPassword" class="swal2-input" placeholder="기존 비밀번호">' +
+					 '<input type="password" id="swal-newPassword" class="swal2-input" placeholder="새로운 비밀번호">' +
+					 '<input type="password" id="swal-confirmPassword" class="swal2-input" placeholder="새로운 비밀번호 확인">',
+				showCancelButton: true,
+				confirmButtonText: '회원정보 변경',
+				cancelButtonText: '취소',
+				preConfirm: () => {
+					const currentPassword = Swal.getPopup().querySelector('#swal-currentPassword').value;
+					const newPassword = Swal.getPopup().querySelector('#swal-newPassword').value;
+					const confirmPassword = Swal.getPopup().querySelector('#swal-confirmPassword').value;
+
+					   if (!currentPassword || !newPassword || !confirmPassword) {
+						Swal.showValidationMessage('모든 필드를 입력해주세요');
+					   } else if (newPassword !== confirmPassword) {
+						Swal.showValidationMessage('새로운 비밀번호가 일치하지 않습니다');
+					}
+
+					return {
+						currentPassword: currentPassword,
+						newPassword: newPassword,
+						confirmPassword: confirmPassword
+						};
+					}
+				}).then((result) => {
+					if (result.isConfirmed) {
+						const { currentPassword, newPassword } = result.value;
+						$('#password').val(currentPassword);
+						$('#newpassword').val(newPassword);
+						$.ajax({
+							url: "mypageEdit",
+		                    type: "post",
+		                    data: {
+		                    	nickname : $('#nickname').val().trim(),
+		                    	id : $('#id').val().trim(),
+		                        email : $('#email').val().trim(),
+		                        password : $('#password').val().trim(),
+		                        newpassword : $('#newpassword').val().trim()
+							},
+							success : function(data) {
+							//0 성공 / 1 오류 및 실패 / 2 비밀번호 오류
+								if(data == 0) {
+									Swal.fire({
+										title : '회원정보 변경',
+										text  : '정보변경 성공하였습니다',
+										icon  : 'success',
+										showCancelButton : false,
+										confirmButtonText : '확인',
+										timer : 1500,
+										timerProgressBar : true,
+										willClose : () => {
+										window.location.href = '/mypage';
+										}
+									});
+								} else if (data == 1) {
+									Swal.fire({
+										title : '회원정보 변경',
+										text  : '정보변경 실패하였습니다',
+										icon  : 'error',
+										showCancelButton : false,
+										confirmButtonText : '확인',
+										timer : 1500,
+										timerProgressBar : true,
+										willClose : () => {
+										window.location.href = '/mypage';
+										}
+		                        	});
+								} else {
+									Swal.fire({
+										title : '회원정보 변경',
+										text  : '비밀번호가 일치하지않습니다',
+										icon  : 'error',
+										showCancelButton : false,
+										confirmButtonText : '확인',
+										timer : 1500,
+										timerProgressBar : true,
+										willClose : () => {
+										window.location.href = '/mypage';
+										}
+			                        });
+								}
+							}
+		                })
+					}
 				});
-		        
-		        const userType = <%=userType%>;
-		        //if(userType == 0) {
-		            //아무작업도 하지않음
-		        //} else if (userType == 1) {
-		        //    $('#snsImage').empty();
-		        //    $('<i>소셜인증이 완료되었습니다</i>').appendTo('#snsImage');
-		        //} else {
-		        //    $('#id').remove();
-		        //    $('#idlabel').remove();
-		        //    $('#password').remove();
-		        //    $('#passwordlabel').remove();
-		        //    $('#snsImage').empty();
-		        //    $('<i>소셜인증이 완료되었습니다</i>').appendTo('#snsImage');
-		        //    $('#userinfo').submit
-		        //]
-		        
-		        //정보수정버튼 기능
-		        $('#userinfo').submit(function(event) {
-		            if(userType != 2) {
-		                event.preventDefault(); // 폼 기본 제출 동작 막기
-		                Swal.fire({
-		                title: '회원정보 변경을 위해 비밀번호를 입력하세요',
-		                html:
-		                     '<div>비밀번호 변경을 원치않으시면 새로운 비밀번호란에</br> 기존 비밀번호를 입력해주세요</div>' +
-		                     '<input type="password" id="swal-currentPassword" class="swal2-input" placeholder="기존 비밀번호">' +
-		                     '<input type="password" id="swal-newPassword" class="swal2-input" placeholder="새로운 비밀번호">' +
-		                     '<input type="password" id="swal-confirmPassword" class="swal2-input" placeholder="새로운 비밀번호 확인">',
-		                showCancelButton: true,
-		                confirmButtonText: '회원정보 변경',
-		                cancelButtonText: '취소',
-		                preConfirm: () => {
-		                    const currentPassword = Swal.getPopup().querySelector('#swal-currentPassword').value;
-		                    const newPassword = Swal.getPopup().querySelector('#swal-newPassword').value;
-		                    const confirmPassword = Swal.getPopup().querySelector('#swal-confirmPassword').value;
-		
-		                       if (!currentPassword || !newPassword || !confirmPassword) {
-		                        Swal.showValidationMessage('모든 필드를 입력해주세요');
-		                       } else if (newPassword !== confirmPassword) {
-		                        Swal.showValidationMessage('새로운 비밀번호가 일치하지 않습니다');
-		                    }
-		
-		                    return {
-		                        currentPassword: currentPassword,
-		                        newPassword: newPassword,
-		                        confirmPassword: confirmPassword
-		                        };
-		                    }
-		                }).then((result) => {
-		                    if (result.isConfirmed) {
-		                        const { currentPassword, newPassword } = result.value;
-		                            $('#password').val(currentPassword);
-		                            $('#newpassword').val(newPassword);
-		                            $('#userinfo').unbind('submit').submit(); // 폼 제출
-		                      }
-		                });
-		            } else {
-		                event.preventDefault(); // 폼 기본 제출 동작 막기
-		                Swal.fire({
-		                      title: '정말 변경하시겠습니까?',
-		                      icon: 'question',
-		                      showCancelButton: true,
-		                      confirmButtonText: '확인',
-		                      cancelButtonText: '취소'
-		                }).then((result) => {
-		                      if (result.isConfirmed) {
-		                             $('#userinfo').unbind('submit').submit(); // 폼 제출
-		                      }
-		                });
-		            }
-		        });
-		    });
-		</script>
+			} else {
+				Swal.fire({
+					  title: '정말 변경하시겠습니까?',
+					  icon: 'question',
+					  showCancelButton: true,
+					  confirmButtonText: '확인',
+					  cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: "mypageEdit",
+		                    type: "post",
+		                    data: {
+		                    	nickname : $('#nickname').val().trim(),
+		                        email : $('#email').val().trim(),
+		                        newpassword : ''
+		                    },
+							success : function(data) {
+								//0 성공 / 1 오류 및 실패 / 2 비밀번호 오류
+								if(data == 0) {
+									Swal.fire({
+			                            title : '회원정보 변경',
+			                            text  : '정보변경 성공하였습니다',
+			                            icon  : 'success',
+			                            showCancelButton : false,
+			                            confirmButtonText : '확인',
+			                            timer : 1500,
+			                            timerProgressBar : true,
+			                            willClose : () => {
+			                            window.location.href = '/mypage';
+			                            }
+		                            });
+								} else {
+									Swal.fire({
+			                            title : '회원정보 변경',
+			                            text  : '정보변경 실패하였습니다',
+			                            icon  : 'error',
+			                            showCancelButton : false,
+			                            confirmButtonText : '확인',
+			                            timer : 1500,
+			                            timerProgressBar : true,
+			                            willClose : () => {
+			                            window.location.href = '/mypage';
+			                            }
+		                            });
+								}
+							}
+						})
+					}
+				});
+			}
+		});
+	});
+</script>
 		
 		<!-- 카카오 소셜인증 -->
 		<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.2.0/kakao.min.js" integrity="sha384-x+WG2i7pOR+oWb6O5GV5f1KN2Ko6N7PTGPS7UlasYWNxZMKQA63Cj/B2lbUmUfuC" crossorigin="anonymous"></script>
 		<script type="text/javascript">
 			Kakao.init('a987d1929430749f2fdae0e54a73dbf3'); // 카카오 초기화
-			console.log(Kakao.isInitialized());
 			
 			function loginWithKakao() {
 		    	Kakao.Auth.authorize({
@@ -133,6 +222,32 @@
 		     		state: 'userme',
 		    	});
 		  	}
+			
+			function loginWithGoogle(){
+				Swal.fire({
+					title : '죄송합니다',
+                    text  : '해당기능은 미구현상태입니다',
+                    icon  : 'error',
+                    timer : 1500,
+                    timerProgressBar : true,
+                    willClose : () => {
+                    	window.location.href = '/mypage';
+                    }
+				})
+			}
+			
+			function loginWithNaver(){
+				Swal.fire({
+					title : '죄송합니다',
+                    text  : '해당기능은 미구현상태입니다',
+                    icon  : 'error',
+                    timer : 1500,
+                    timerProgressBar : true,
+                    willClose : () => {
+                    	window.location.href = '/mypage';
+                    }
+				})
+			}
 			
 			function requestUserInfo() {
 				return new Promise(function(resolve, reject) {
@@ -144,7 +259,6 @@
 		    			const nickname = res.properties.nickname;
 		    	
 		    			const userInf = id + '/' + nickname + '/' + email;
-		    			//console.log(userInf);
 		    	
 		    			resolve(userInf);
 					}).catch(function(err) {
@@ -174,7 +288,6 @@
 
 					requestUserInfo()
 					.then(function(userInfo) {
-						console.log("userinf " + userInfo);
 
 			        	// 컨트롤러단에 POST 방식으로 유저정보 전송 
 			        	$.ajax({
@@ -184,11 +297,28 @@
 			            		userInfo: userInfo
 			          		},
 			          		success: function(res) {
-			          			swal.fire(res);
-			          			//location.href='/mypage';
+			          			Swal.fire({
+			    					title : '소셜인증',
+			                        text  : '인증완료되었습니다',
+			                        icon  : 'sucess',
+			                        timer : 1500,
+			                        timerProgressBar : true,
+			                        willClose : () => {
+			                        	window.location.href = '/mypage';
+			                        }
+			    				})
 			          		},
 			          		error: function(xhr) {
-			            		swal.fire('소셜인증 오류');
+			          			Swal.fire({
+			    					title : '소셜인증',
+			                        text  : '인증 실패하였습니다',
+			                        icon  : 'error',
+			                        timer : 1500,
+			                        timerProgressBar : true,
+			                        willClose : () => {
+			                        	window.location.href = '/mypage';
+			                        }
+			    				})
 			          		}
 			        	});  
 
@@ -230,32 +360,24 @@
 		</header>
 		<main>
 	  		<!-- 버튼 디자인 -->
-			<div class="container mt-3 text-center">
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<td onClick="location.href='/mypage'" >회원 정보 변경</td>
-							<td onClick="location.href='/mywrite'">내가 쓴 글</td>
-							<td onClick="location.href='/mycomment'">내가 쓴 댓글</td>
-							<td onClick="location.href='/favwrite'">좋아요 한 글</td>
-						</tr>
-					</thead>
-					<tbody>	
-						<tr>
-							<td onClick="location.href='/favgame'">즐겨찾기 한 게임</td>
-							<td onClick="location.href='/mail'">쪽지함</td>
-							<td onClick="location.href='/admin'">문의하기</td>
-							<td onClick="location.href='/myparty'">참여신청한 모임</td>
-						</tr>
-					</tbody>
-				</table>
+			<div class="container mt-3">
+				<div class="row g-1 text-center selection">
+					<div class="col-6 col-lg-3" onClick="location.href='/mypage'"><div>회원 정보 변경</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mywrite'"><div>내가 쓴 글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mycomment'"><div>내가 쓴 댓글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/favwrite'"><div>좋아요 한 글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/favgame'"><div>즐겨찾기 한 게임</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mail'"><div>쪽지함</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/admin'"><div>문의하기</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/myparty'"><div>참여신청한 모임</div></div>
+				</div>
 			</div>
 			<!-- 버튼 디자인 -->
 		  	<!-- 마이페이지 정보페이지 디자인 -->
 			<div class="container mt-3" id="result">
 				<div class="row">
 					<div class="col-sm-6">
-						<form action="/mypageEdit" name="userinfo" id="userinfo">
+						<form name="userinfo" id="userinfo">
 							<div class="mb-3 mt-3">
 		    					<label class="form-label">닉네임:</label>
 		   						<input type="text" class="form-control" id="nickname" name="nickname" value="<%=nickname%>"><br>
@@ -265,7 +387,7 @@
 		   						<input type="text" class="form-control" id="password" name="password" value="" placeholder="비밀번호는 보이지 않습니다" readonly="readonly"><br>
 		    					<label class="form-label">이메일:</label>
 		   						<input type="email" class="form-control" id="email" name="email" value="<%=email%>"><br>
-		   						<button type="submit" id="infoUpdate" class="btn btn-primary">정보수정</button>
+		   						<button type="button" id="infoUpdate" class="btn btn-primary">정보수정</button>
 		   						<input type="text" class="form-control visually-hidden" id="newpassword" name="newpassword" value=""><br>
 		 					</div>
 						</form>		
