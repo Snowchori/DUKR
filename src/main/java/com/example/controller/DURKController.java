@@ -581,6 +581,31 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	//글 수정
+	@RequestMapping("/freeBoardModify")
+	public ModelAndView freeBoardModify(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+			
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+				
+			return modelAndView;
+		}
+			
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardModify(to);
+				
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("to", to);
+			
+		modelAndView.setViewName("community/free/free_board_modify");		
+		return modelAndView;
+	}
+	
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
 	public String freeboardCommentWrite(HttpServletRequest req){
