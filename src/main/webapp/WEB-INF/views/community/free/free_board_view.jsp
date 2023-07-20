@@ -304,10 +304,10 @@
 						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>			
 					</div>
 				</div>
-
-				<hr class="my-4">
+				<hr class="my-2">
 
 				<b style="font-size: 20px;">댓글</b>
+				<hr class="my-2">
 
 				<!-- 댓글영역 -->
 				<div class="mb-3" id="cmtArea">
