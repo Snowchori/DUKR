@@ -603,7 +603,7 @@ public class DURKController {
 		String cmtSeq = req.getParameter("cmtSeq");
 		String memSeq = req.getParameter("memSeq");
 
-		if(memSeq.equals("")) {
+		if(memSeq.equals("") || memSeq.equals("null")) {
 			response = 0;
 		}else {
 			if(req.getParameter("writerSeq").equals(memSeq)) {
@@ -682,27 +682,36 @@ public class DURKController {
 	
 	// 글 추천
 	@PostMapping("/rec")
-	public String recommend(HttpServletRequest req) {
-		String responseText = "";
+	public int recommend(HttpServletRequest req) {
+		System.out.println();
+		int response = 0;
 		
 		String boardSeq = req.getParameter("boardSeq");
-		MemberTO logged_in_user = (MemberTO)req.getSession().getAttribute("logged_in_user");
+		String userSeq = req.getParameter("userSeq");
+		String isWriter = req.getParameter("isWriter");
 		
-		if(logged_in_user == null) {
-			responseText = "먼저 로그인을 해야합니다";
+		if(userSeq == "") {
+			// 로그인 필요
+			response = 2;
 		}else {
-			String memSeq = logged_in_user.getSeq();
-			int recCheck = boardDAO.recCheck(memSeq, boardSeq);
-			
-			if(recCheck == 1) {
-				responseText = "이미 추천한 게시글 입니다";
+			if(isWriter.equals("true")) {
+				// 본인게시글을 추천한 경우
+				response = 4;
 			}else {
-				boardDAO.boardRecommend(memSeq, boardSeq);
-				responseText = "게시글을 추천했습니다";
+				int recCheck = boardDAO.recCheck(userSeq, boardSeq);
+			
+				if(recCheck == 1) {
+					// 이미 추천한 게시글인 경우
+					response = 3;
+				}else {
+					// 추천 성공
+					boardDAO.boardRecommend(userSeq, boardSeq);
+					response = 1;
+				}
 			}
 		}
 		
-		return responseText;
+		return response;
 	}
 	
 	// community/party
