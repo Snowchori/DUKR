@@ -28,7 +28,29 @@
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
-
+			function totalData() {
+				$('.uncheck').show();
+				$('.check').show();
+				$('.complete').show();
+			}
+			
+			function uncheckData() {
+				$('.uncheck').show();
+				$('.check').hide();
+				$('.complete').hide();
+			}
+						
+			function checkData() {
+				$('.uncheck').hide();
+				$('.check').show();
+				$('.complete').hide();
+			}
+			
+			function completeData() {
+				$('.uncheck').hide();
+				$('.check').hide();
+				$('.complete').show();
+			}
 		</script>
 		<style>
 		
@@ -45,13 +67,159 @@
 			</div>
 		</header>
 		<main>
-			<!-- ======= gameInfo Section ======= -->
-			<section id="gameInfo" class="gameInfo p-3 mb-2">
+			<!-- ======= about Section ======= -->
+			<section id="about" class="about p-3 mb-2">
 				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					
+					<div class="container" data-aos="fade-up">
+						<div class="row g-4 g-lg-5" data-aos="fade-up" data-aos-delay="200">
+							<div class="col-lg-12">
+								<!-- Tabs -->
+								<ul class="nav nav-pills mb-3">
+									<li><a class="nav-link active" data-bs-toggle="pill" onclick='totalData()'>전체</a></li>
+									<li><a class="nav-link" data-bs-toggle="pill" onclick='uncheckData()'>미확인</a></li>
+									<li><a class="nav-link" data-bs-toggle="pill" onclick='checkData()'>확인</a></li>
+									<li><a class="nav-link" data-bs-toggle="pill" onclick='completeData()'>처리완료</a></li>
+								</ul>
+								<!-- End Tabs -->
+								<!-- Tab Content -->
+								<div class="tab-content">
+									<div class="tab-pane fade show active">
+										<div class="accordion accordion-flush" id="accordionFlushExample">
+										  <div class="accordion-item uncheck">
+										    <h2 class="accordion-header" id="flush-headingOne">
+										      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+										        [미확인] 제목 - 닉네임
+										      </button>
+										    </h2>
+										    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+										      <div class="accordion-body">
+										      	<form action="" class="row" style="width: 100%;" method="post" name="nfrm">
+													<div class="col-md-3 mb-3 ms-auto">
+														<input type="button" class="btn btn-dark float-end" value="게시글보기"/>
+													</div>
+													<div class="col-12 mb-3">
+														<label for="content" class="form-label">내용</label>
+														<textarea
+															class="form-control"
+															name="content"
+															id="content"
+															rows="10"
+															style="resize: none;"
+															readonly="readonly"
+														></textarea>
+													</div>
+													<div class="col-12 mb-3">
+														<label for="content" class="form-label">답변</label>
+														<textarea
+															class="form-control"
+															name="answer"
+															id="answer"
+															rows="10"
+															placeholder="답변을 입력하세요"
+															style="resize: none;"
+														></textarea>
+													</div>
+													<div class="col-12 mb-3">
+														<input type="button" class="btn btn-dark float-end mx-2" value="답변"/>
+														<input type="button" class="btn btn-dark float-end mx-2" value="게시글삭제"/>
+														<input type="button" class="btn btn-dark float-end mx-2" value="ip밴"/>
+													</div>
+												</form>
+										      </div>
+										    </div>
+										  </div>
+										  <div class="accordion-item check">
+										    <h2 class="accordion-header" id="flush-headingTwo">
+										      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+										        [확인] 제목 - 닉네임
+										      </button>
+										    </h2>
+										    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+										      <div class="accordion-body">
+										      	<form action="" class="row" style="width: 100%;" method="post" name="nfrm">
+													<div class="col-md-3 mb-3 ms-auto">
+														<input type="button" class="btn btn-dark float-end" value="게시글보기"/>
+													</div>
+													<div class="col-12 mb-3">
+														<label for="content" class="form-label">내용</label>
+														<textarea
+															class="form-control"
+															name="content"
+															id="content"
+															rows="10"
+															style="resize: none;"
+															readonly="readonly"
+														></textarea>
+													</div>
+													<div class="col-12 mb-3">
+														<label for="content" class="form-label">답변</label>
+														<textarea
+															class="form-control"
+															name="answer"
+															id="answer"
+															rows="10"
+															placeholder="답변을 입력하세요"
+															style="resize: none;"
+														></textarea>
+													</div>
+													<div class="col-12 mb-3">
+														<input type="button" class="btn btn-dark float-end mx-2" value="답변"/>
+														<input type="button" class="btn btn-dark float-end mx-2" value="게시글삭제"/>
+														<input type="button" class="btn btn-dark float-end mx-2" value="ip밴"/>
+													</div>
+												</form>
+										      </div>
+										    </div>
+										  </div>
+										  <div class="accordion-item complete">
+										    <h2 class="accordion-header" id="flush-headingThree">
+										      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+										        [처리완료] 제목 - 닉네임
+										      </button>
+										    </h2>
+										    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+										      <div class="accordion-body">
+										      	<form action="" class="row" style="width: 100%;" method="post" name="nfrm">
+													<div class="col-md-3 mb-3">
+														<label for="subject" class="form-label">처리</label>
+														<input type="text" class="form-control" name="inquiryType" id="inquiryType" readonly="readonly"/>
+													</div>
+													<div class="col-12 mb-3">
+														<label for="content" class="form-label">내용</label>
+														<textarea
+															class="form-control"
+															name="content"
+															id="content"
+															rows="10"
+															style="resize: none;"
+															readonly="readonly"
+														></textarea>
+													</div>
+													<div class="col-12 mb-3">
+														<label for="content" class="form-label">답변</label>
+														<textarea
+															class="form-control"
+															name="answer"
+															id="answer"
+															rows="10"
+															style="resize: none;"
+															readonly="readonly"
+														></textarea>
+													</div>
+												</form>
+										      </div>
+										    </div>
+										  </div>
+										</div>
+									</div>
+									<!-- End Tab 1 Content -->
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</section>
-			<!-- End gameInfo Section -->
+			<!-- End about Section -->
 		</main>
 		<footer>
 			<!-- 최하단 디자인 영역 -->

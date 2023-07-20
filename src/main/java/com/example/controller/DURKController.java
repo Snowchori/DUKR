@@ -1082,6 +1082,45 @@ public class DURKController {
 		return flag;
 	}
 	
+	@RequestMapping("/gameSearch")
+	public ModelAndView gameSearch(HttpServletRequest request) {
+		
+		String keyword = "";
+		if(request.getParameter("stx") != null) {
+			keyword = request.getParameter("stx");
+		}
+		
+		String players = "";
+		if(request.getParameter("players") != null) {
+			players = request.getParameter("players");
+		}
+		
+		String genre = "";
+		if(request.getParameter("genre") != null) {
+			genre = request.getParameter("genre");
+		}
+		
+		String sort = "yearpublished";
+		if(request.getParameter("sort") != null) {
+			sort = request.getParameter("sort");
+		} else {
+			sort = "yearpublished";
+		}
+
+		SearchFilterTO filterTO = new SearchFilterTO();
+		filterTO.setKeyword(keyword);
+		filterTO.setPlayers(players);
+		filterTO.setGenre(genre);
+		filterTO.setSort(sort);
+		
+		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("game/game_search");
+		modelAndView.addObject("lists", lists);
+		return modelAndView;
+	}
+	
 	@RequestMapping("/gameView")
 	public ModelAndView gameView(HttpServletRequest request) {
 		BoardgameTO gameTO = gameDAO.gameInfo(request.getParameter("seq"));
@@ -1132,46 +1171,6 @@ public class DURKController {
 		modelAndView.addObject("listTO", listTO);
 		modelAndView.addObject("evalList", evalList);
 		
-		return modelAndView;
-	}
-	
-	// game
-	@RequestMapping("/gameSearch")
-	public ModelAndView gameSearch(HttpServletRequest request) {
-		
-		String keyword = "";
-		if(request.getParameter("stx") != null) {
-			keyword = request.getParameter("stx");
-		}
-		
-		String players = "";
-		if(request.getParameter("players") != null) {
-			players = request.getParameter("players");
-		}
-		
-		String genre = "";
-		if(request.getParameter("genre") != null) {
-			genre = request.getParameter("genre");
-		}
-		
-		String sort = "yearpublished";
-		if(request.getParameter("sort") != null) {
-			sort = request.getParameter("sort");
-		} else {
-			sort = "yearpublished";
-		}
-
-		SearchFilterTO filterTO = new SearchFilterTO();
-		filterTO.setKeyword(keyword);
-		filterTO.setPlayers(players);
-		filterTO.setGenre(genre);
-		filterTO.setSort(sort);
-		
-		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("game/game_search");
-		modelAndView.addObject("lists", lists);
 		return modelAndView;
 	}
 	

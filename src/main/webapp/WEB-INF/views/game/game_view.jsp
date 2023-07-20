@@ -475,31 +475,31 @@
 									</table>
 									<form action="evalWriteOk" method="post" name="rfrm">
 										<input type="hidden" name="gameSeq" value="<%= seq %>">
-										<div class="row">
-											<div class="col-lg-6">
-												<label for="input-4" class="control-label">평점</label>
-												<input id="rate" name="rate" class="rating rating-loading" data-show-clear="false" data-show-caption="true">
+											<div class="row">
+												<div class="col-lg-6">
+													<label for="input-4" class="control-label">평점</label>
+													<input id="rate" name="rate" class="rating rating-loading" data-show-clear="false" data-show-caption="true">
+												</div>
+												<div class="col-lg-6">
+													<label for="input-4" class="control-label">난이도</label>
+													<input id="difficulty" name="difficulty" class="rating rating-loading" data-show-clear="false" data-show-caption="true">
+												</div>
 											</div>
-											<div class="col-lg-6">
-												<label for="input-4" class="control-label">난이도</label>
-												<input id="difficulty" name="difficulty" class="rating rating-loading" data-show-clear="false" data-show-caption="true">
+											<div class="row align-items-center">
+												<div class="col">
+												<input type="text" class="input-text" name="eval" placeholder="한줄평">
+											</div>
+											<div class="col-3">
+												<button type='button' class='btn btn-dark' id="rbtn">등록</button>
 											</div>
 										</div>
-										<div class="row align-items-center">
-											<div class="col">
-											<input type="text" class="input-text" name="eval" placeholder="한줄평">
-										</div>
-										<div class="col-3">
-											<button type='button' class='btn btn-dark' id="rbtn">등록</button>
-										</div>
-									</div>
-								</form>
-							</div>
-							<!-- End Tab 2 Content -->
-							<div class="tab-pane fade show" id="tab3">
-								<%= boardHtml %>
-							</div>
-							<!-- End Tab 3 Content -->
+									</form>
+								</div>
+								<!-- End Tab 2 Content -->
+								<div class="tab-pane fade show" id="tab3">
+									<%= boardHtml %>
+								</div>
+								<!-- End Tab 3 Content -->
 							</div>
 						</div>
 					</div>
