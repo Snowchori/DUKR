@@ -271,7 +271,7 @@
 
 				<!-- 댓글영역 -->
 				<div class="mb-3" id="cmtArea">
-					<div>
+					<div id="comments">
 						<%=sbComments%>
 					</div>
 					
