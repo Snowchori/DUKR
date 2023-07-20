@@ -307,10 +307,9 @@
 				<hr class="my-2">
 
 				<b style="font-size: 20px;">댓글</b>
-				<hr class="my-2">
 
 				<!-- 댓글영역 -->
-				<div class="mb-3" id="cmtArea">
+				<div class="mt-2 mb-3" id="cmtArea">
 					<div id="comments">
 						<%=sbComments%>
 					</div>
