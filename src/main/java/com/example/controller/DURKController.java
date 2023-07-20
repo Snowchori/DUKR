@@ -36,6 +36,8 @@ import com.example.model.comment.CommentListTO;
 import com.example.model.comment.CommentTO;
 import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
+import com.example.model.inquiry.InquiryDAO;
+import com.example.model.inquiry.InquiryTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
@@ -44,6 +46,8 @@ import com.example.model.party.ApiPartyTO;
 import com.example.model.party.ApplyTO;
 import com.example.model.party.PartyDAO;
 import com.example.model.party.PartyTO;
+import com.example.model.report.ReportDAO;
+import com.example.model.report.ReportTO;
 
 @RestController
 public class DURKController {
@@ -68,6 +72,12 @@ public class DURKController {
 	
 	@Autowired
 	private NoteDAO noteDAO;
+	
+	@Autowired
+	private InquiryDAO inquiryDAO;
+	
+	@Autowired
+	private ReportDAO reportDAO;
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -235,8 +245,29 @@ public class DURKController {
 			return modelAndView;
 		}
 		
+		ArrayList<InquiryTO> inquiry_list = inquiryDAO.inquiryList();
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/inquiry_manage");
+		modelAndView.addObject("inquiry_list", inquiry_list);
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/logManage")
+	public ModelAndView logManage(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		boolean isAdmin = (userInfo != null) ? userInfo.isAdmin() : false;
+		if(!isAdmin) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("admin/not_admin");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("admin/log_manage");
 		
 		return modelAndView;
 	}
@@ -292,8 +323,11 @@ public class DURKController {
 			return modelAndView;
 		}
 		
+		ArrayList<ReportTO> report_list = reportDAO.reportList();
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/report_list");
+		modelAndView.addObject("report_list", report_list);
 		
 		return modelAndView;
 	}

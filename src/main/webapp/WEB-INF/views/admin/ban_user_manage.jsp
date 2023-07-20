@@ -50,7 +50,7 @@
 		<script type="text/javascript" >
 			function deleteBan(seq) {
 				Swal.fire({
-					title: '삭제하시겠습니까?',
+					title: '해제하시겠습니까?',
 					showDenyButton: true,
 					confirmButtonText: '네',
 					denyButtonText: `아니오`,

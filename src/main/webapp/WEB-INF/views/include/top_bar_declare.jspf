@@ -31,6 +31,7 @@
 		adminHtml.append("<li><a class='dropdown-item' href='noteSendAll'>전체 쪽지 보내기</a></li>");
 		adminHtml.append("<li><a class='dropdown-item' href='inquiryManage'>문의 관리</a></li>");
 		adminHtml.append("<li><a class='dropdown-item' href='gameManage'>게임 관리</a></li>");
+		adminHtml.append("<li><a class='dropdown-item' href='logManage'>로그 관리</a></li>");
 		adminHtml.append("</ul>");
 		adminHtml.append("</li>");
 	}
