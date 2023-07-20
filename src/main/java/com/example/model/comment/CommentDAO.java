@@ -56,4 +56,10 @@ public class CommentDAO {
 		int result = commentMapperInter.getRecCnt(seq);
 		return result;
 	}
+	
+	// 댓글 삭제하기
+	public int commentDelete(String seq) {
+		int result = commentMapperInter.commentDelete(seq);
+		return result;
+	}
 }
