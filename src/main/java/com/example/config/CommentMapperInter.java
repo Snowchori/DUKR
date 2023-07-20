@@ -2,6 +2,7 @@ package com.example.config;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -39,6 +40,10 @@ public interface CommentMapperInter {
 	// 댓글 추천하기 
 	@Insert("insert into commentrecommend values(#{memSeq}, #{cmtSeq})")
 	public int commentRec(String memSeq, String cmtSeq);
+	
+	// 댓글 삭제하기
+	@Delete("delete from comment where seq=#{seq}")
+	public int commentDelete(String seq);
 	
 	// 댓글 추천카운트 +1
 	@Update("update comment set recCnt=recCnt+1 where seq=#{seq}")

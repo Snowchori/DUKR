@@ -50,9 +50,9 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 	sbComments.append("</button>");
 	
 	if(userSeq != null && userSeq.equals(writerSeq)){
-		sbComments.append("<span class='float-end me-3' style='color: red;'>");
+		sbComments.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
 		sbComments.append("<i class='fas fa-times'></i>");
-		sbComments.append("</span>");
+		sbComments.append("</button>");
 	}
 	
 	sbComments.append("<br>");	
@@ -242,6 +242,21 @@ if(!memSeq.equals(userSeq)){
 				});
 			}
 			
+			// 댓글 삭제함수
+			function deleteComment(cSeq){
+				$.ajax({
+					url: "/commentDelete",
+					type: "POST", 
+					data: {
+						boardSeq: <%=boardSeq %>,
+						commentSeq: cSeq,
+						userSeq: <%=userSeq %>
+					},
+					success: function(res){
+						$('#comments').html(res);
+					}
+				});
+			}
 		</script>
 	<style>
 		.bottombody{
