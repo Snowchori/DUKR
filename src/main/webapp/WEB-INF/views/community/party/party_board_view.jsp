@@ -36,10 +36,10 @@ for (CommentTO comment : commentListTo.getCommentList()) {
 	String writerSeq = comment.getMemSeq();
 
 	sbComments.append("<span class='dropdown'>");	
-	sbComments.append("<a href='#' role='button' id='dropdownMenuLinkc' data-bs-toggle='dropdown' aria-expanded='false'>");	
+	sbComments.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
 	sbComments.append(cWriter);	
 	sbComments.append("</a>");
-	sbComments.append("<ul class='dropdown-menu' aria-labelledby='dropdownMenuLinkc'>");
+	sbComments.append("<ul class='dropdown-menu'>");
 	sbComments.append("<li><a class='dropdown-item' href='/partyBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
 	sbComments.append("<li><a class='dropdown-item' href='/partyBoardList?'>댓글 보기</a></li>");	
 	sbComments.append("</ul>");	
@@ -107,7 +107,7 @@ if(!memSeq.equals(userSeq)){
 						url : '/freeboardCommentWrite',
 						type : 'post',
 						data : {
-							boardSeq : bseqe,
+							boardSeq : bseq,
 							memSeq : useq,
 							content : document.getElementById("cContent").value,
 						},
