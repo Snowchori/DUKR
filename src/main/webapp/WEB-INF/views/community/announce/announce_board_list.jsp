@@ -42,7 +42,7 @@
 	
 	if (startBlock != 1) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='announceBoardList?select=" + select + "&search=" + search + "&cpage=");
 		pageHtml.append(startBlock - blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Previous'>");
@@ -56,7 +56,7 @@
 			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
 		} else {
 			pageHtml.append("<li class='page-item'><a class='page-link' href='");
-			pageHtml.append("freeBoardList?select=" + select + "&search=" + search + "&cpage=" + i);
+			pageHtml.append("announceBoardList?select=" + select + "&search=" + search + "&cpage=" + i);
 			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 			pageHtml.append(">" + i + "</a></li>");
 		}
@@ -64,7 +64,7 @@
 	
 	if(endBlock != totalPage) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='freeBoardList?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='announceBoardList?select=" + select + "&search=" + search + "&cpage=");
 		pageHtml.append(startBlock + blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Next'>");
@@ -86,34 +86,31 @@
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
-			window.onload = function() {
-				document.getElementById('sbtn').onclick = function() {
-					if(document.sfrm.select.value.trim() != "0" && document.sfrm.search.value.trim() == "") {
-						Swal.fire({
-							icon: 'error',
-							title: '검색어를 입력하세요.',
-							showConfirmButton: false,
-							timer: 1500
-						})
-					} else {
-						document.sfrm.submit();				
-					}
-				}
-			}
 		</script>
 		<style>
-			.search_select {
-				width: 150px;
-				float: left;
+			.bottombody{
+				max-width: 992px;
 			}
 			
-			.search_input {
-				width: 250px;
-				float: left;
+			.thumbnail{
+				width: 3em;
+				height: 2.5em;
+				
+				display: flex;
+				justify-content: center;
+
+				border: 0.05em gray solid;
+				border-radius: 0.5em;
+				
+				overflow: hidden;
 			}
 			
-			main, footer {
-				max-width: 1920px;
+			img {
+				height: 100%;
+			}
+			
+			.hover, tr:hover {
+				cursor: pointer;
 			}
 		</style>
 	</head>
@@ -127,19 +124,26 @@
 				</div>
 			</div>
 		</header>
-		<main class="container-fluid d-flex justify-content-center bg-light">
-			<div class="container d-flex justify-content-center row bottombody">
-				<div class="col-12 mt-3 p-2">
+		<main>
+			<div class="container-fluid bottombody">
+				<div class="mt-3 p-2">
 					총 <%= totalRecord %>건
 					<button type='button' class='btn btn-dark float-end' data-bs-toggle="modal" data-bs-target="#searchModal" id="wbtn"><i class="bi bi-search"></i></button>
 				</div>
-				<div class="col-12 p-2 row boardlist">
+				<div class="mt-3 p-2 row boardlist">
 					<table class="table">
 						<%= boardHtml %>
 					</table>
 				</div>
-				<div class="col-12 p-2">
-					<%= writebutton %>
+				<div class="p-2 d-flex justify-content-end">
+					<button type='button' class='btn btn-dark' id="wbtn" onclick="location.href='announceBoardWrite'">글쓰기</button>
+				</div>
+				<div class="container p-2">
+					<nav class="pagination-outer" aria-label="Page navigation">
+						<ul class="pagination">
+							<%= pageHtml %>
+						</ul>
+					</nav>
 				</div>
 			</div>
 			<div class="modal fade" id="searchModal">
@@ -149,7 +153,7 @@
 							<div class="modalHead text-center">
 								<h4><i class="bi bi-search"></i> Search</h4>
 							</div>
-							<form action="freeBoardList" id="sfrm" name="sfrm" method="get" class="form mt-3">
+							<form action="announceBoardList" id="sfrm" name="sfrm" method="get" class="form mt-3">
 								<select name="select" id="select" class="form-select mb-3">
 									<option value="0">전체</option>
 									<option value="1">제목</option>
@@ -157,9 +161,9 @@
 									<option value="3">작성자</option>
 									<option value="4">태그</option>
 								</select>
-								<input type="text" name="search" id="search" class="form-control mb-3" maxlength="20" placeholder="검색어">
-								<div class="col-12 btn-group btn-group ">
-									<button type="button" id="sbtn" class="btn btn-danger"><i class="bi bi-check"></i></button>
+								<input type="text" name="search" id="search" class="form-control mb-3" maxlength="20" placeholder="검색어" required>
+								<div class="col-12 btn-group btn-group">
+									<button type="submit" class="btn btn-danger"><i class="bi bi-check"></i></button>
 									<button type="button" class="btn btn-dark" data-bs-dismiss="modal"><i class="bi bi-x"></i></button>
 								</div>
 							</form>
@@ -168,14 +172,7 @@
 				</div>
 			</div>
 		</main>
-		<footer class="container-fluid d-flex justify-content-center bg-light">
-			<div class="container demo mx-5 p-2">
-				<nav class="pagination-outer" aria-label="Page navigation">
-					<ul class="pagination">
-						<%= pageHtml %>
-					</ul>
-				</nav>
-			</div>
+		<footer>
 		</footer>
 	</body>
 </html>

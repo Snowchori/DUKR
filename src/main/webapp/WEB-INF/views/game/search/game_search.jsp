@@ -434,7 +434,7 @@
 				</script>
 				
 				<!-- 조건에 맞는 게임 리스트 -->				
-				<section class="page-section bg-light" id="portfolio">
+				<section class="page-section" id="portfolio">
 			        <div class="container" id="p1">
 			            <div class="text-center">
 			                <h2 class="section-heading text-uppercase">검색결과</h2>

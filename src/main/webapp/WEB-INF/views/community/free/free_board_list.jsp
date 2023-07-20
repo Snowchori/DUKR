@@ -117,16 +117,6 @@
 			}
 		</script>
 		<style>
-			.search_select {
-				width: 150px;
-				float: left;
-			}
-			
-			.search_input {
-				width: 250px;
-				float: left;
-			}
-			
 			.bottombody{
 				max-width: 992px;
 			}
