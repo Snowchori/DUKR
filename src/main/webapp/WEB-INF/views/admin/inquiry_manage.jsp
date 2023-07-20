@@ -1,8 +1,24 @@
+<%@page import="com.example.model.inquiry.InquiryTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
+	ArrayList<InquiryTO> inquiry_list = (ArrayList)request.getAttribute("inquiry_list");
 
+	StringBuilder iqHtml = new StringBuilder();
+	
+	for(InquiryTO to: inquiry_list) {
+		iqHtml.append("<div>");
+		iqHtml.append("seq : " + to.getSeq() + "<br>");
+		iqHtml.append("senderSeq : " + to.getSenderSeq() + "<br>");
+		iqHtml.append("writer : " + to.getWriter() + "<br>");
+		iqHtml.append("wdate : " + to.getWdate() + "<br>");
+		iqHtml.append("subject : " + to.getSubject() + "<br>");
+		iqHtml.append("content : " + to.getContent() + "<br>");
+		iqHtml.append("status : " + to.getStatus() + "<br>");
+		iqHtml.append("inquiryType : " + to.getInquiryType() + "<br>");
+		iqHtml.append("<div>");
+	}
 %>
 <!doctype html>
 <html>

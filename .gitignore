@@ -33,3 +33,7 @@ build/
 .vscode/
 
 .metadata
+
+/src/main/resources
+application.properties
+*.properties
