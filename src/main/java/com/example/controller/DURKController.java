@@ -573,10 +573,10 @@ public class DURKController {
 				 String writerSeq = comment.getMemSeq();
 
 				 sbResponseHtml.append("<span class='dropdown'>");	
-				 sbResponseHtml.append("<a href='#' role='button' id='dropdownMenuLinkc' data-bs-toggle='dropdown' aria-expanded='false'>");	
+				 sbResponseHtml.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
 				 sbResponseHtml.append(cWriter);	
 				 sbResponseHtml.append("</a>");
-				 sbResponseHtml.append("<ul class='dropdown-menu' aria-labelledby='dropdownMenuLinkc'>");
+				 sbResponseHtml.append("<ul class='dropdown-menu'>");
 				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
 				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
 				 sbResponseHtml.append("</ul>");	
@@ -588,7 +588,7 @@ public class DURKController {
 				 sbResponseHtml.append("</button>");	
 				 sbResponseHtml.append("<br>");	
 				 sbResponseHtml.append(cContent);	
-				 sbResponseHtml.append("<hr class='my-2'>");		 
+				 sbResponseHtml.append("<hr class='mt-3 my-2'>");
 			 }
 		}
 
