@@ -25,7 +25,6 @@ CommentListTO commentListTo = new CommentListTO();
 commentListTo = (CommentListTO) request.getAttribute("commentListTo");
 
 StringBuilder sbComments = new StringBuilder();
-StringBuilder sbScript = new StringBuilder();
 
 for (CommentTO comment : commentListTo.getCommentList()) {
 	String cWriter = comment.getWriter();
@@ -88,15 +87,31 @@ if(!memSeq.equals(userSeq)){
 					}
 				}
 				
+				// 글 추천하기
 				document.getElementById("recBtn").onclick = function() {
 					$.ajax({
 						url : '/rec',
 						type : 'post',
 						data : {
-							boardSeq : bseq
+							boardSeq: <%=boardSeq %>,
+							userSeq: <%=userSeq %>,
+							isWriter: <%=isWriter %>
 						},
 						success : function(res) {
-							alert(res);
+							if(res == 2){
+								alert('먼저 로그인 해야합니다');
+							}else if(res == 3){
+								alert('이미 추천한 게시글입니다');
+							}else if(res == 4){
+								alert('본인 게시글은 추천할 수 없습니다');
+							}else if(res == 0){
+								alert('알 수 없는 추천 오류');
+							}else{
+								let curRecCnt = $('#viewRecCnt').html();
+								$('#viewRecCnt').html(parseInt(curRecCnt) + 1);
+								console.log(curRecCnt);
+								alert('글을 추천했습니다');
+							}
 						}
 					});
 				};
@@ -113,6 +128,9 @@ if(!memSeq.equals(userSeq)){
 						},
 						success : function(res) {
 							if (res != "") {
+								let curCmtCnt = $('#viewCmtCnt').html();
+								$('#viewCmtCnt').html(parseInt(curCmtCnt) + 1);
+								
 								$('#comments').html(res);
 								$('#cContent').val('');
 							} else {
@@ -216,6 +234,7 @@ if(!memSeq.equals(userSeq)){
 					},
 				});
 			}
+			
 		</script>
 	<style>
 		.bottombody{
@@ -228,7 +247,7 @@ if(!memSeq.equals(userSeq)){
 		
 		.dropdown {
 			display: inline-block;
-		}
+		} 
 		
 		.disinherit {
 			color: black;
@@ -284,8 +303,10 @@ if(!memSeq.equals(userSeq)){
 						<%=wdate%>&nbsp;&nbsp;
 						<br class="phone" style="display: none;">
 						<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
-						<i class="fas fa-comment"></i>&nbsp;<%=cmtCnt%>&nbsp;&nbsp; 
-						<i class="fas fa-thumbs-up"></i>&nbsp;<%=recCnt%>
+						<i class="fas fa-comment"></i>
+						<span id='viewCmtCnt'><%=cmtCnt%></span>&nbsp;&nbsp; 
+						<i class="fas fa-thumbs-up"></i>
+						<span id='viewRecCnt'><%=recCnt%></span>
 					</div>
 				</div>
 
