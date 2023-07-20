@@ -93,9 +93,9 @@ if(!memSeq.equals(userSeq)){
 						url : '/rec',
 						type : 'post',
 						data : {
-							boardSeq: <%=boardSeq %>,
-							userSeq: <%=userSeq %>,
-							isWriter: <%=isWriter %>
+							boardSeq: bseq,
+							userSeq: useq,
+							isWriter: isWriter
 						},
 						success : function(res) {
 							if(res == 2){
