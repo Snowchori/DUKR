@@ -5,6 +5,14 @@
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 
 <%
+	// 현재 페이지 번호
+	int cpage = 1;
+	if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")){
+		cpage = Integer.parseInt(request.getParameter("cpage"));
+	}
+%>
+
+<%
 	String memSeq = "null";
 	if(session.getAttribute("logged_in_user") != null){
 		MemberTO logged_in_user = (MemberTO)session.getAttribute("logged_in_user");
@@ -287,9 +295,19 @@
 						<i class="fas fa-thumbs-up"></i> 추천
 					</button>
 				</div>
+				
+				<div class="d-flex">
+					<button class="btn btn-secondary" style="margin-right: auto;" onclick="location.href='freeBoardList?cpage=<%=cpage %>'">목록</button>
+					
+					<div class="d-flex">
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" >삭제</button>								
+						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>			
+					</div>
+				</div>
+
+				<hr class="my-4">
 
 				<b style="font-size: 20px;">댓글</b>
-				<hr class="my-2">
 
 				<!-- 댓글영역 -->
 				<div class="mb-3" id="cmtArea">

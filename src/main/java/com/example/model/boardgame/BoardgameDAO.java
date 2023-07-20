@@ -288,6 +288,13 @@ public class BoardgameDAO {
 		return lists;
 	}
 	
+	// 마이페이지 좋아요한 보드게임 목록
+	public ArrayList<BoardgameTO> myfavBoardGame(String seq) {
+		ArrayList<BoardgameTO> list = gameMapper.myfavBoardGame(seq);
+		
+		return list;
+	}
+	
 	public BoardgameTO gameShortInfo(String gameId) {
 		BoardgameTO gameTO = new BoardgameTO();
 		gameTO.setSeq(gameId);

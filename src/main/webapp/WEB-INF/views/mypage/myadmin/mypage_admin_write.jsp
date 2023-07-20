@@ -19,6 +19,15 @@
 			.title {
 				font-family: SBAggroB;
 			}
+			.selection > div > div{
+				padding: 5px 0 5px 0;
+				border: 1px #cacaca solid;
+				box-sizing: border-box;
+				cursor: pointer;
+			}
+			.selection > div > div:hover{
+				background-color: #f2f2f2;
+			}
 		</style>
 	</head>
 	<body>
@@ -33,25 +42,17 @@
 		</header>
 		<main>
 	  		<!-- 버튼 디자인 -->
-			<div class="container mt-3 text-center">
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<td onClick="location.href='/mypage'" >회원 정보 변경</td>
-							<td onClick="location.href='/mywrite'">내가 쓴 글</td>
-							<td onClick="location.href='/mycomment'">내가 쓴 댓글</td>
-							<td onClick="location.href='/favwrite'">좋아요 한 글</td>
-						</tr>
-					</thead>
-					<tbody>	
-						<tr>
-							<td onClick="location.href='/favgame'">즐겨찾기 한 게임</td>
-							<td onClick="location.href='/mail'">쪽지함</td>
-							<td onClick="location.href='/admin'">문의하기</td>
-							<td onClick="location.href='/myparty'">참여신청한 모임</td>
-						</tr>
-					</tbody>
-				</table>
+			<div class="container mt-3">
+				<div class="row g-1 text-center selection">
+					<div class="col-6 col-lg-3" onClick="location.href='/mypage'"><div>회원 정보 변경</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mywrite'"><div>내가 쓴 글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mycomment'"><div>내가 쓴 댓글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/favwrite'"><div>좋아요 한 글</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/favgame'"><div>즐겨찾기 한 게임</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/mail'"><div>쪽지함</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/admin'"><div>문의하기</div></div>
+					<div class="col-6 col-lg-3" onClick="location.href='/myparty'"><div>참여신청한 모임</div></div>
+				</div>
 			</div>
 			<!-- 버튼 디자인 -->
 	  		<!-- 마이페이지 정보페이지 디자인 -->

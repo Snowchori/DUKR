@@ -99,4 +99,8 @@ public interface BoardgameMapperInter {
 	@Select("select seq, title, imageUrl, yearpublished, minPlayer, maxPlayer, minPlaytime, maxPlaytime,"
 			+ "minAge, brief, hit, recCnt, evalCnt, theme, genre, isModi from boardgame order by yearpublished desc limit 0, 6")
 	public ArrayList<BoardgameTO> gameMainList();
+	
+	// 마이페이지 즐겨찾기한 보드게임 목록 가져오기
+	@Select("select b.seq seq, title, imageUrl from favorites f, boardgame b where memSeq = #{seq} and f.gameSeq=b.seq")
+	public ArrayList<BoardgameTO> myfavBoardGame(String seq);
 }
