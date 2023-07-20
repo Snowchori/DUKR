@@ -54,6 +54,10 @@ public interface BoardMapperInter {
 	@Select("select b.seq seq, memSeq, subject, content, wip, wdate, hit, recCnt, cmtCnt, tag, nickname writer from board b inner join member m on b.memSeq=m.seq where b.seq=#{seq}")
 	public BoardTO boardView(BoardTO to);
 	
+	// seq로 글정보 가져오기( 글 수정 ) - 제목, 내용, 태그
+	@Select("select seq, subject, content, tag from board where seq = #{seq}")
+	public BoardTO boardModify(BoardTO to);
+	
 	// 게시글의 파일 포함여부 검사
 	@Select("select count(*) from board where content like '%<img src=\"%' and seq=#{seq};")
 	public int hasFile(BoardTO to);

@@ -24,6 +24,7 @@
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 		<!-- Template Main CSS File -->
 		<link href="assets/css/style.css" rel="stylesheet">
+		
 		<!-- CKEditor5 -->
 		<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
 		

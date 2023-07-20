@@ -122,6 +122,12 @@ public class BoardDAO {
 		return to;
 	}
 	
+	public BoardTO boardModify(BoardTO to) {
+		
+		to = boardMapper.boardModify(to);
+		return to;
+	}
+	
 	// 게시글 추천
 	public int boardRecommend(String memSeq, String boardSeq) {
 		int result = boardMapper.boardRecommend(memSeq, boardSeq);

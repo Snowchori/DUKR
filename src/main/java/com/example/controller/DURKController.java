@@ -581,6 +581,31 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	//글 수정
+	@RequestMapping("/freeBoardModify")
+	public ModelAndView freeBoardModify(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+			
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+				
+			return modelAndView;
+		}
+			
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardModify(to);
+				
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("to", to);
+			
+		modelAndView.setViewName("community/free/free_board_modify");		
+		return modelAndView;
+	}
+	
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
 	public String freeboardCommentWrite(HttpServletRequest req){
@@ -1463,6 +1488,10 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
+		
+		ArrayList<BoardgameTO> list = gameDAO.myfavBoardGame(userSeq);
+		
+		modelAndView.addObject("myfavBoardGame", list);
 		modelAndView.setViewName("mypage/mypage_favgame");
 		
 		return modelAndView;
@@ -1532,12 +1561,12 @@ public class DURKController {
 		//2일경우 소셜회원가입을 한 회원
 		int userType;
 		
-		if(uuid == null) {
-			userType = 0;
-		} else if (id==null) {
+		if(uuid != null & id != null) {
+			userType = 1;
+		} else if (id == null) {
 			userType = 2;
 		} else {
-			userType = 1;
+			userType = 0;
 		}
 		
 		ModelAndView modelAndView = new ModelAndView();
@@ -1581,12 +1610,10 @@ public class DURKController {
 	}
 	
 	@RequestMapping("/mypageEdit")
-	public ModelAndView mypageEdit(HttpServletRequest request) {
+	public int mypageEdit(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
-		
-		ModelAndView modelAndView = new ModelAndView();
 		
 		MemberTO memberTO = new MemberTO();
 		memberTO.setSeq(userSeq);
@@ -1594,7 +1621,6 @@ public class DURKController {
 		memberTO.setId(request.getParameter("id"));
 		memberTO.setEmail(request.getParameter("email"));
 		memberTO.setPassword(request.getParameter("password"));
-		//memberTO.setNewpassword(request.getParameter("newpassword"));
 		String newpassword = request.getParameter("newpassword");
 		//소셜회원체크 소셜회원가입유저는 비밀번호 확인을 건너뛰고 닉네임 이메일 바로변경
 		if(newpassword.equals("")) {
@@ -1603,31 +1629,19 @@ public class DURKController {
 			if(flag == 1) {
 				flag = 0;
 			}
-			modelAndView.addObject("flag", flag);
-			modelAndView.setViewName("mypage/mypage_ok");
-			return modelAndView;
-			
+			return flag;
 		} else {
-			
 			int flag = memberDAO.memberpasswordCheck(memberTO);
 			if(flag != 1) {
 				flag = 3;
-				modelAndView.addObject("flag", flag);
-				modelAndView.setViewName("mypage/mypage_ok");
-				
 			} else {
 				memberTO.setPassword(newpassword);
 				flag = memberDAO.memberUpdate(memberTO);
 				if(flag == 1) {
 					flag = 0;
 				}
-				
-				modelAndView.addObject("flag", flag);
-				modelAndView.setViewName("mypage/mypage_ok");
-				
 			}
-			
-			return modelAndView;
+			return flag;
 		}
 	}
 	
