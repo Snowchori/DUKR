@@ -181,7 +181,6 @@ public class BoardgameDAO {
 		
 		int flag = 1;
 		int result = gameMapper.gameFavoriteDelete(map);
-		System.out.println(result);
 		
 		if(result == 1) {
 			flag = 0;

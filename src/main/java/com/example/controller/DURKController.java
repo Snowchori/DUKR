@@ -1051,9 +1051,6 @@ public class DURKController {
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
 		int isFav = Integer.parseInt(request.getParameter("isFav"));
-		System.out.println(isFav);
-		System.out.println(seq);
-		System.out.println(userSeq);
 		
 		int flag = 2;
 		// 1: 해제 2: 추가
