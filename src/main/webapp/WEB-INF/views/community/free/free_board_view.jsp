@@ -41,10 +41,10 @@
 		String cContent = comment.getContent();
 
 		sbComments.append("<span class='dropdown'>");	
-		sbComments.append("<a href='#' role='button' id='dropdownMenuLinkc' data-bs-toggle='dropdown' aria-expanded='false'>");	
+		sbComments.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
 		sbComments.append(cWriter);	
 		sbComments.append("</a>");
-		sbComments.append("<ul class='dropdown-menu' aria-labelledby='dropdownMenuLinkc'>");
+		sbComments.append("<ul class='dropdown-menu'>");
 		sbComments.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
 		sbComments.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
 		sbComments.append("</ul>");	
@@ -56,7 +56,7 @@
 		sbComments.append("</button>");	
 		sbComments.append("<br>");	
 		sbComments.append(cContent);	
-		sbComments.append("<hr class='my-2'>");	
+		sbComments.append("<hr class='mt-3 my-2'>");	
 	}
 %>
 <%
@@ -135,6 +135,7 @@
 			
 			// 댓글 추천함수
 			function recommendComment(wSeq, mSeq, cSeq){
+				console.log(wSeq + mSeq + cSeq);
 				$.ajax({
 					url: '/commentRec',
 					type: 'POST',
@@ -164,17 +165,53 @@
 			
 		</script>
 		<style>
+			.bottombody{
+				max-width: 992px;
+			}
+			
+			.subject_info{
+				display: flex;
+			}
+			.main_info{
+				margin-right: auto;
+			}
+			
+			.slash {
+				font-size: 15px;
+			}
+			
+			.dropdown {
+				display: inline-block;
+			}
+			
+			.disinherit {
+				color: black;
+			}
+			
 			img {
-  				max-width: 100%;
-  			}
-  			.image{
-  				display: flex;
-  				justify-content: center;
-  			}
-  			.image.image-style-side{
-  				display: flex;
-  				justify-content: flex-end;
-  			}
+				max-width: 100%;
+			}
+			
+			.image{
+				display: flex;
+				justify-content: center;
+			}
+			.image.image-style-side{
+				display: flex;
+				justify-content: flex-end;
+			}
+			
+			@media (max-width: 575px){
+				.subject_info{
+					font-size: 14px;
+				}
+			}
+			
+			@media (min-width: 576px){
+				.subject_info{
+					font-size: 16px;
+				}
+			}
 		</style>
 
 	</head>
@@ -190,71 +227,59 @@
 		</header>
 		<main>
 
-			<div class="container">
-				<div class="row justify-content-center">
-    				<div class="col-lg-8">
-
-  						<hr class="my-4">
-
-						<div class="container text-left"> 
-							<b><%=subject %></b>
-							<div style="text-align: left; font-size: 16px; margin-top: 8px; color: #888888;">
-								<b>
-									<span class="dropdown">
-  										<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-    										<%=writer %>
-  										</a>
-  										<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    										<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
-    										<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
-  										</ul>
-									</span>
-								</b>&nbsp;
-								<%=wdate %>&nbsp;&nbsp;
-								<i class="fas fa-eye"></i>&nbsp;<%=hit %>&nbsp;&nbsp;
-								<i class="fas fa-comment"></i>
-								<span id='viewCmtCnt'><%=commentListTo.getCommentList().size() %></span>&nbsp;&nbsp;
-								<i class="fas fa-thumbs-up"></i>
-								<span id='viewRecCnt'><%=recCnt %></span>
+			<div class="container-fluid bottombody">
+				<hr class="my-4">
+				<div class="subject">
+					<b><%=subject%></b>
+					<div class="subject_info mt-2" style="color: #888888;">
+						<div class="main_info">
+							<div class="dropdown">
+								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+									<li><a class="dropdown-item" href="/freeBoardList?select=3&search=<%=writer%>">게시글 보기</a></li>
+									<li><a class="dropdown-item" href="/freeBoardList?">댓글 보기</a></li>
+								</ul>
 							</div>
-							<div class="container" style="margin-top: -10px;">
-  							<hr class="my-4">
+							<span class="slash">|</span>
+							<%=wdate%>
 						</div>
+						<div class="extra_info">
+							<i class="fas fa-eye"></i>&nbsp;<%=hit%>&nbsp;&nbsp;
+							<i class="fas fa-comment"></i>
+							<span id="viewCmtCnt"><%=cmtCnt%></span>&nbsp;&nbsp; 
+							<i class="fas fa-thumbs-up"></i>
+							<span id='viewRecCnt'><%=recCnt%></span>
 						</div>
+					</div>
+				</div>
+
+				<hr class="my-4">
+
+				<div class="content">
+					<%=content%>
+				</div>
+				
+				<div class="mt-5 pt-5 d-flex justify-content-center">
+					<button id="recBtn" class="btn btn-primary">
+						<i class="fas fa-thumbs-up"></i> 추천
+					</button>
+				</div>
+
+				<b style="font-size: 20px;">댓글</b>
+				<hr class="my-2">
+
+				<!-- 댓글영역 -->
+				<div class="mb-3" id="cmtArea">
+					<div>
+						<%=sbComments%>
+					</div>
 					
-						<div class="container">
-							<%=content %>
-						</div>
-				
-						<br>
-  						<div class="row justify-content-center">
-    						<div class="col-md-6 text-center">
-      							<button id="recBtn" class="btn btn-primary">
-        							<i class="fas fa-thumbs-up"></i> 추천
-      							</button>
-    						</div>
-  						</div>
-				
-						<br>
-						<b style="font-size: 20px;">댓글</b>
-  						<hr class="my-2">
-  				
-  						<!-- 댓글영역 -->
-  						<div name="cmtArea">
-  							<div id="comments">
-  								<%=sbComments %>
-  							</div>
-  										
-  							<textarea id="cContent" name="cContent" class="form-control" rows="3">
-  							</textarea>
-  							<div class="text-lg-end" style="margin-top:10px;">
-  								<button id="cmtWbtn" class="btn btn-secondary float-right">댓글쓰기</button>
-  							</div>
-  						
-  						</div>
-  				
-  					</div>
-  				</div>
+					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>
+					<div class="d-flex" style="margin-top: 10px;">
+						<button id="cmtWbtn" class="btn btn-secondary" style="margin-left: auto;">댓글쓰기</button>
+					</div>
+				</div>
 			</div>
 			
 		</main>

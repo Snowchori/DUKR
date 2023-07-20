@@ -603,7 +603,7 @@ public class DURKController {
 		String cmtSeq = req.getParameter("cmtSeq");
 		String memSeq = req.getParameter("memSeq");
 
-		if(memSeq.equals("")) {
+		if(memSeq.equals("") || memSeq.equals("null")) {
 			response = 0;
 		}else {
 			if(req.getParameter("writerSeq").equals(memSeq)) {

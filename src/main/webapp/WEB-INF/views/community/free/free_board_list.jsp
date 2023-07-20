@@ -212,7 +212,7 @@
 				</div>
 			</div>
 		</main>
-		<footer class="container-fluid d-flex justify-content-center">
+		<footer>
 		</footer>
 	</body>
 </html>
