@@ -946,7 +946,7 @@ public class DURKController {
 	}
 
 	
-	// game/info
+	// game
 	@RequestMapping("/evalDeleteOk")
 	public int evalDeleteOk(HttpServletRequest request) {
 		EvaluationTO to = new EvaluationTO();
@@ -1039,7 +1039,7 @@ public class DURKController {
 		BoardgameTO gameTO = gameDAO.gameInfo(request.getParameter("seq"));
 		if(gameTO == null) {
 			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.setViewName("game/info/no_info");
+			modelAndView.setViewName("game/no_info");
 			
 			return modelAndView;
 		}
@@ -1077,7 +1077,7 @@ public class DURKController {
 		gameTO.setDifficulty(evalDAO.evalDifficultyAvg(gameTO.getSeq()));
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("game/info/game_view");
+		modelAndView.setViewName("game/game_view");
 		modelAndView.addObject("gameTO", gameTO);
 		modelAndView.addObject("isRec", isRec);
 		modelAndView.addObject("isFav", isFav);
@@ -1087,7 +1087,7 @@ public class DURKController {
 		return modelAndView;
 	}
 	
-	// game/search
+	// game
 	@RequestMapping("/gameSearch")
 	public ModelAndView gameSearch(HttpServletRequest request) {
 		
@@ -1122,7 +1122,7 @@ public class DURKController {
 		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("game/search/game_search");
+		modelAndView.setViewName("game/game_search");
 		modelAndView.addObject("lists", lists);
 		return modelAndView;
 	}
