@@ -587,7 +587,7 @@
 			<!-- 메인 요소 -->
 			<div class="container-fluid d-flex justify-content-center">
 				<div class="row py-5 mapframe">
-					<div id="map" class="col mb-3 border border-3" style="width:1100px;height:600px;">
+					<div id="map" class="col mb-3 border border-5" style="width:1100px;height:600px;">
 						<div id="roadviewControl" data-bs-toggle="modal" data-bs-target="#myModal"></div>
 					</div>
 					<div id="map-side" class="col-lg-4 align-self-center">
