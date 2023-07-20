@@ -105,14 +105,6 @@
 		</script>
 		
 		<style>
-			.title {
-				font-family: SBAggroB;
-			}
-			
-			a {
-				text-decoration: none;
-			}
-			
 			.bottombody{
 				max-width: 992px;
 			}
@@ -187,11 +179,11 @@
 							</div>
 							<form action="partyBoardList" id="sfrm" name="sfrm" method="get" class="form mt-3">
 								<select name="select" id="select" class="form-select mb-3">
+									<option value="0">전체</option>
 									<option value="1">제목</option>
-									<option value="2">내용</option>
-									<option value="3">제목+내용</option>
-									<option value="4">작성자</option>
-									<option value="5">태그</option>
+									<option value="2">제목 + 내용</option>
+									<option value="3">작성자</option>
+									<option value="4">태그</option>
 								</select>
 								<input type="text" name="search" id="search" class="form-control mb-3" maxlength="20" placeholder="검색어" required>
 								<div class="col-12 btn-group btn-group">

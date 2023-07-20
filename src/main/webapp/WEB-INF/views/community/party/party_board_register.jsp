@@ -398,7 +398,7 @@
 						<label for="content" class="form-label">내용</label>
 						<textarea name="content" id="content" maxlength="10000" style="display: none;"></textarea>
 					</div>
-					<div class="col-12 mb-3 d-flex justify-content-end">
+					<div class="col-12 d-flex justify-content-end">
 						<input type="button" class="btn btn-dark mx-2" value="취소" onclick="history.back();"/>
 						<input type="button" class="btn btn-primary" id="rbtn" value="등록"/>
 					</div>
