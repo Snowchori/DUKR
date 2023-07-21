@@ -60,6 +60,7 @@ public class CommentDAO {
 	// 댓글 삭제하기
 	public int commentDelete(String seq) {
 		int result = commentMapperInter.commentDelete(seq);
+		commentMapperInter.boardCmtCntMinus(seq);
 		return result;
 	}
 }

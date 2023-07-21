@@ -814,7 +814,6 @@ public class DURKController {
 	// ck에디터 이미지 업로드하기@@
 	@PostMapping( value= { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
-		//System.out.println("upload request");
 		Boolean uploadResult = false;
 		
 		String originalFileName = upload.getOriginalFilename();

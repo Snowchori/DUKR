@@ -11,14 +11,6 @@
 		cpage = Integer.parseInt(request.getParameter("cpage"));
 	}
 %>
-
-<%
-	String memSeq = "null";
-	if(session.getAttribute("logged_in_user") != null){
-		MemberTO logged_in_user = (MemberTO)session.getAttribute("logged_in_user");
-		memSeq = "\"" + logged_in_user.getSeq() + "\"";
-	}
-%>
 <%
 	BoardTO to = (BoardTO)request.getAttribute("to");
 
@@ -133,11 +125,11 @@
 						},
 						success: function(res){
 							if(res != ""){
-								let curCmtCnt = $('#viewCmtCnt').html();
-								$('#viewCmtCnt').html(parseInt(curCmtCnt) + 1);
-								
 								$('#comments').html(res);
 								$('#cContent').val('');
+								
+								let numberOfComments = res.split("<span class='dropdown'").length - 1;
+								$('#viewCmtCnt').html(numberOfComments);	
 							}else{
 								alert("먼저 로그인을 해야합니다");
 								console.log(res);
@@ -189,6 +181,9 @@
 					},
 					success: function(res){
 						$('#comments').html(res);
+						
+						let numberOfComments = res.split("<span class='dropdown'").length - 1;
+						$('#viewCmtCnt').html(numberOfComments);
 					}
 				});
 			}
