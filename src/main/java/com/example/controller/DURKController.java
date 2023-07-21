@@ -38,6 +38,8 @@ import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.inquiry.InquiryDAO;
 import com.example.model.inquiry.InquiryTO;
+import com.example.model.logs.LogsDAO;
+import com.example.model.logs.LogsTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
@@ -78,6 +80,9 @@ public class DURKController {
 	
 	@Autowired
 	private ReportDAO reportDAO;
+	
+	@Autowired
+	private LogsDAO logsDAO;
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -289,8 +294,13 @@ public class DURKController {
 			return modelAndView;
 		}
 		
+		String keyWord = (request.getParameter("keyWord") != null && !request.getParameter("keyWord").equals("")) ? request.getParameter("keyWord") : "%"; 
+		
+		ArrayList<LogsTO> logs_list = logsDAO.logsList(keyWord);
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/log_manage");
+		modelAndView.addObject("logs_list", logs_list);
 		
 		return modelAndView;
 	}
@@ -1213,6 +1223,20 @@ public class DURKController {
 		
 		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
 		
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq != null) {
+			LogsTO logTO = new LogsTO();
+	        logTO.setMemSeq(userSeq);
+	        logTO.setLog("게임검색");
+	        logTO.setRemarks(keyword);
+	        logTO.setLogType("2");
+	        
+	        logsDAO.logsWriteOk(logTO);
+		}
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("game/game_search");
 		modelAndView.addObject("lists", lists);
@@ -1303,6 +1327,14 @@ public class DURKController {
 		to = memberDAO.trySocialLogin(to);
         req.getSession().setAttribute("logged_in_user", to);
         
+        LogsTO logTO = new LogsTO();
+        logTO.setMemSeq(to.getSeq());
+        logTO.setLog("로그인");
+        logTO.setRemarks("");
+        logTO.setLogType("1");
+        
+        logsDAO.logsWriteOk(logTO);
+        
         return "소셜로그인 성공";
 	}
 	
@@ -1320,6 +1352,14 @@ public class DURKController {
 		if(to != null) {
 			req.getSession().setAttribute("logged_in_user", to);
 			flag = 0;
+			
+			LogsTO logTO = new LogsTO();
+	        logTO.setMemSeq(to.getSeq());
+	        logTO.setLog("로그인");
+	        logTO.setRemarks("");
+	        logTO.setLogType("1");
+	        
+	        logsDAO.logsWriteOk(logTO);
 		}
 
 		return flag;
@@ -1335,8 +1375,21 @@ public class DURKController {
 	
 	// 로그아웃 처리 페이지
 	@RequestMapping("/logout")
-	public ModelAndView logout(HttpServletRequest req) {
+	public ModelAndView logout(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
 		ModelAndView mav = new ModelAndView("login/logout");
+		
+		LogsTO logTO = new LogsTO();
+        logTO.setMemSeq(userSeq);
+        logTO.setLog("로그아웃");
+        logTO.setRemarks("");
+        logTO.setLogType("1");
+        
+        logsDAO.logsWriteOk(logTO);
+		
 		return mav;
 	}
 	

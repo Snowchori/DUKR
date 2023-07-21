@@ -1,6 +1,40 @@
+<%@page import="com.example.model.logs.LogsTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<%
+	ArrayList<LogsTO> logs_list = (ArrayList)request.getAttribute("logs_list");
+	
+	StringBuilder logHtml = new StringBuilder();
+	
+	if(logs_list.size() == 0) {
+		logHtml.append("로그 정보가 없습니다.");
+	} else {
+		logHtml.append("<table class='table table-bordered'>");
+		logHtml.append("<thead>");
+		logHtml.append("<tr>");
+		logHtml.append("<th scope='col'>#</th>");
+		logHtml.append("<th scope='col'>닉네임</th>");
+		logHtml.append("<th scope='col'>로그</th>");
+		logHtml.append("<th scope='col'>날짜</th>");
+		logHtml.append("<th scope='col'>비고</th>");
+		logHtml.append("</tr>");
+		logHtml.append("</thead>");
+		
+		for(LogsTO to: logs_list) {
+			logHtml.append("<tr class='log" + to.getLogType() + "'>");
+			logHtml.append("<th scope='row'>" + to.getSeq() + "</th>");
+			logHtml.append("<td>" + to.getNickname() + "</td>");
+			logHtml.append("<td>" + to.getLog() + "</td>");
+			logHtml.append("<td>" + to.getLdate() + "</td>");
+			logHtml.append("<td>" + to.getRemarks() + "</td>");
+			logHtml.append("</tr>");
+		}
+		
+		logHtml.append("</tbody>");
+		logHtml.append("</table>");
+	}
+%>
 <!doctype html>
 <html>
 	<head>
@@ -10,7 +44,39 @@
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
+			function total() {
+				$('.log1').show();
+				$('.log2').show();
+			}
+		
+			function login() {
+				$('.log1').show();
+				$('.log2').hide();
+			}
 			
+			function gameSearch() {
+				$('.log1').hide();
+				$('.log2').show();
+			}
+			
+			function search() {
+				(async () => {
+					const {value: getName} = await Swal.fire({
+						title: '유저 검색',
+						input: 'text',
+						inputAttributes: {
+							autocapitalize: 'off'
+						},
+						inputPlaceholder: '유저 닉네임',
+						showDenyButton: true,
+						confirmButtonText: '검색',
+						denyButtonText: `취소`
+					})
+					
+					location.href='logManage?keyWord=' + getName;
+					
+				})()
+			}
 		</script>
 		<style>
 		
@@ -33,92 +99,22 @@
 					<div class="container" data-aos="fade-up">
 						<div class="row g-4 g-lg-5" data-aos="fade-up" data-aos-delay="200">
 							<div class="col-lg-12">
+								<div class="my-3 p-2">
+									<button type='button' class='btn btn-dark cbtn float-end' onclick='search()'><i class="bi bi-search"></i></button>
+								</div>
 								<!-- Tabs -->
 								<ul class="nav nav-pills mb-3">
-									<li><a class="nav-link active" data-bs-toggle="pill" href="#tab1">로그인</a></li>
-									<li><a class="nav-link" data-bs-toggle="pill" href="#tab2">게임검색</a></li>
+									<li><a class="nav-link active" data-bs-toggle="pill" onclick='total()'>전체</a></li>
+									<li><a class="nav-link" data-bs-toggle="pill" onclick='login()'>로그인</a></li>
+									<li><a class="nav-link" data-bs-toggle="pill" onclick='gameSearch()'>게임검색</a></li>
 								</ul>
 								<!-- End Tabs -->
 								<!-- Tab Content -->
 								<div class="tab-content">
-									<div class="tab-pane fade show active" id="tab1">
-										<table class="table table-striped">
-										  <thead>
-										    <tr>
-										      <th scope="col">#</th>
-										      <th scope="col">닉네임</th>
-										      <th scope="col">로그</th>
-										      <th scope="col">날짜</th>
-										    </tr>
-										  </thead>
-										  <tbody>
-										    <tr>
-										      <th scope="row">1</th>
-										      <td>tester</td>
-										      <td>로그인</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										    <tr>
-										      <th scope="row">2</th>
-										      <td>test</td>
-										      <td>로그인</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										    <tr>
-										      <th scope="row">3</th>
-										      <td>test</td>
-										      <td>로그아웃</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										    <tr>
-										      <th scope="row">4</th>
-										      <td>tester</td>
-										      <td>로그아웃</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										  </tbody>
-										</table>
+									<div class="tab-pane fade show active">
+										<%= logHtml %>
 									</div>
 									<!-- End Tab 1 Content -->
-									<div class="tab-pane fade show" id="tab2">
-										<table class="table table-striped">
-										  <thead>
-										    <tr>
-										      <th scope="col">#</th>
-										      <th scope="col">닉네임</th>
-										      <th scope="col">로그</th>
-										      <th scope="col">날짜</th>
-										    </tr>
-										  </thead>
-										  <tbody>
-										    <tr>
-										      <th scope="row">1</th>
-										      <td>tester</td>
-										      <td>게임검색</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										    <tr>
-										      <th scope="row">2</th>
-										      <td>test</td>
-										      <td>게임검색</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										    <tr>
-										      <th scope="row">3</th>
-										      <td>test</td>
-										      <td>게임검색</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										    <tr>
-										      <th scope="row">4</th>
-										      <td>tester</td>
-										      <td>게임검색</td>
-										      <td>2023.07.21</td>
-										    </tr>
-										  </tbody>
-										</table>
-									</div>
-									<!-- End Tab 2 Content -->
 								</div>
 							</div>
 						</div>
