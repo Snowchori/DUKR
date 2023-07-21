@@ -355,6 +355,85 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/reportAnswerWriteOk")
+	public int reportAnswerWriteOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("답변완료");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 답변 완료");
+			noteTO.setContent("관리자가 신고글에 답변을 남겼습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/deleteBoardOk")
+	public int deleteBoardOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("게시글삭제");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			boardDAO.boardDelete(request.getParameter("boardSeq"));
+			
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 게시글 삭제 완료");
+			noteTO.setContent("관리자가 신고글의 게시글을 삭제하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/ipBanOk")
+	public int ipBanOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("ip밴");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			int check = boardDAO.bipCheck(request.getParameter("boardSeq"));
+			if(check == 0) {
+				boardDAO.ipBan(request.getParameter("boardSeq"));
+			}
+			boardDAO.boardDelete(request.getParameter("boardSeq"));
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 게시글 ip밴 완료");
+			noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
 	@RequestMapping("/userList")
 	public ModelAndView userList(HttpServletRequest request) {
 		HttpSession session = request.getSession();

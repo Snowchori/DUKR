@@ -29,9 +29,11 @@
 		rpHtml.append("<div class='accordion-body'>");
 		rpHtml.append("<form action='' class='row' style='width: 100%;' method='post' name='nfrm" + to.getSeq() + "'>");
 		if(to.getStatus() == 0) {
-			rpHtml.append("<div class='col-md-3 mb-3'>");
-			rpHtml.append("<input type='button' class='btn btn-dark' value='게시글보기'  onclick=\"location.href='freeBoardView?seq=" + to.getBoardSeq() + "'\"/>");
-			rpHtml.append("</div>");			
+			if(!to.isBoardDel()) {
+				rpHtml.append("<div class='col-md-3 mb-3'>");
+				rpHtml.append("<input type='button' class='btn btn-dark' value='게시글보기'  onclick=\"location.href='freeBoardView?seq=" + to.getBoardSeq() + "'\"/>");
+				rpHtml.append("</div>");
+			}
 		} else {
 			rpHtml.append("<div class='col-md-3 mb-3'>");
 			rpHtml.append("<label for='subject' class='form-label'>처리</label>");
@@ -58,7 +60,7 @@
 		rpHtml.append("<textarea ");
 		rpHtml.append("class='form-control' ");
 		rpHtml.append("name='answer' ");
-		rpHtml.append("id='answer' ");
+		rpHtml.append("id='answer" + to.getSeq() + "' ");
 		rpHtml.append("rows='10' ");
 		if(to.getStatus() == 0) {
 			rpHtml.append("placeholder='답변을 입력하세요' ");			
@@ -69,14 +71,24 @@
 		rpHtml.append(">");
 		if(to.getStatus() == 1) {
 			rpHtml.append(to.getAnswer());			
+		} else if(to.isBoardDel()) {
+			rpHtml.append("이미 삭제된 게시글입니다.");
 		}
 		rpHtml.append("</textarea>");
 		rpHtml.append("</div>");
 		if(to.getStatus() == 0) {
 			rpHtml.append("<div class='col-12 mb-3'>");
-			rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='답변'/>");
-			rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='게시글삭제'/>");
-			rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='ip밴'/>");
+			rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='답변' onclick='insertAnswer(");
+			rpHtml.append(to.getSeq() + ", " + to.getMemSeq());
+			rpHtml.append(")'/>");
+			if(!to.isBoardDel()) {
+				rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='게시글삭제' onclick='deleteBoard(");
+				rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq());
+				rpHtml.append(")'/>");
+				rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='ip밴' onclick='ipBan(");
+				rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq());
+				rpHtml.append(")'/>");
+			}
 			rpHtml.append("</div>");
 		}
 		rpHtml.append("</form>");
@@ -107,6 +119,161 @@
 			function completeData() {
 				$('.uncheck').hide();
 				$('.complete').show();
+			}
+			
+			function insertAnswer(seq, senderSeq) {
+				let answer = $('#answer' + seq).val();
+				if(answer == "") {
+					Swal.fire({
+			  			icon: 'error',
+			  			title: '답변을 입력하세요.',
+			  			confirmButtonText: '확인',
+			  			timer: 1500,
+			  			timerProgressBar : true
+		  			});
+				} else {
+					$.ajax({
+			  			url:'reportAnswerWriteOk',
+			  			type:'post',
+			  			data: {
+			  				seq: seq,
+			  				answer: answer,
+			  				senderSeq: senderSeq
+			  			},
+			  			success: function(data) {
+				  			if(data == 0) {
+					  			Swal.fire({
+						  			icon: 'success',
+						  			title: '답변 완료',
+						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true,
+						  			willClose: () => {
+						  				location.href='reportList';
+					  				}
+				  				});
+				  			} else {
+					  			Swal.fire({
+						  			icon: 'error',
+						  			title: '답변 실패',
+						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true
+					  			});
+				  			}
+				  		}
+				  	});
+				}
+			}
+			
+			function deleteBoard(seq, senderSeq, boardSeq) {
+				let answer = $('#answer' + seq).val();
+				if(answer == "") {
+					Swal.fire({
+			  			icon: 'error',
+			  			title: '답변을 입력하세요.',
+			  			confirmButtonText: '확인',
+			  			timer: 1500,
+			  			timerProgressBar : true
+		  			});
+				} else {
+					Swal.fire({
+						title: '게시글만 삭제합니다',
+						showDenyButton: true,
+						confirmButtonText: '네',
+						denyButtonText: `아니오`,
+					}).then((result) => {
+						if (result.isConfirmed) {
+							$.ajax({
+					  			url:'deleteBoardOk',
+					  			type:'post',
+					  			data: {
+					  				seq: seq,
+					  				senderSeq: senderSeq,
+					  				answer: answer,
+					  				boardSeq: boardSeq
+					  			},
+					  			success: function(data) {
+						  			if(data == 0) {
+							  			Swal.fire({
+								  			icon: 'success',
+								  			title: '삭제 완료',
+								  			confirmButtonText: '확인',
+								  			timer: 1500,
+								  			timerProgressBar : true,
+								  			willClose: () => {
+								  				location.href='reportList';
+							  				}
+						  				});
+						  			} else {
+							  			Swal.fire({
+								  			icon: 'error',
+								  			title: '삭제 실패',
+								  			confirmButtonText: '확인',
+								  			timer: 1500,
+								  			timerProgressBar : true,
+							  			});
+						  			}
+						  		}
+						  	});
+						}
+					})
+				}
+			}
+			
+			function ipBan(seq, senderSeq, boardSeq) {
+				let answer = $('#answer' + seq).val();
+				if(answer == "") {
+					Swal.fire({
+			  			icon: 'error',
+			  			title: '답변을 입력하세요.',
+			  			confirmButtonText: '확인',
+			  			timer: 1500,
+			  			timerProgressBar : true
+		  			});
+				} else {
+					Swal.fire({
+						title: '게시글을 삭제하고 게시글의 ip를 밴합니다.',
+						showDenyButton: true,
+						confirmButtonText: '네',
+						denyButtonText: `아니오`,
+					}).then((result) => {
+						if (result.isConfirmed) {
+							$.ajax({
+					  			url:'ipBanOk',
+					  			type:'post',
+					  			data: {
+					  				seq: seq,
+					  				senderSeq: senderSeq,
+					  				answer: answer,
+					  				boardSeq: boardSeq
+					  			},
+					  			success: function(data) {
+						  			if(data == 0) {
+							  			Swal.fire({
+								  			icon: 'success',
+								  			title: '삭제&ip밴 완료',
+								  			confirmButtonText: '확인',
+								  			timer: 1500,
+								  			timerProgressBar : true,
+								  			willClose: () => {
+								  				location.href='reportList';
+							  				}
+						  				});
+						  			} else {
+							  			Swal.fire({
+								  			icon: 'error',
+								  			title: '삭제&ip밴 실패',
+								  			confirmButtonText: '확인',
+								  			timer: 1500,
+								  			timerProgressBar : true,
+							  			});
+						  			}
+						  		}
+						  	});
+						}
+					})
+				}
 			}
 		</script>
 		<style>

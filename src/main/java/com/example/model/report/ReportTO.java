@@ -15,4 +15,5 @@ public class ReportTO {
 	private int status;
 	private String answer;
 	private String processType;
+	private boolean isBoardDel;
 }
