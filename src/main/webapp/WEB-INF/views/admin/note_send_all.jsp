@@ -41,6 +41,8 @@
 							  			icon: 'success',
 							  			title: '전송 완료',
 							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 							  			willClose: () => {
 							  				location.href='noteSendAll';
 						  				}
@@ -49,7 +51,9 @@
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '전송 실패',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
 						  			});
 					  			}
 					  		}

@@ -13,4 +13,6 @@ public class ReportTO {
 	private String content;
 	private String rdate;
 	private int status;
+	private String answer;
+	private String processType;
 }

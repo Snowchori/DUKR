@@ -205,6 +205,8 @@
 							  			icon: 'success',
 							  			title: '평가 등록 완료',
 							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 							  			willClose: () => {
 							  				location.href='gameView?seq=<%= seq %>';
 						  				}
@@ -213,7 +215,9 @@
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '평가 등록 실패',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
 						  			});
 					  			}
 					  		}
@@ -244,6 +248,8 @@
 						  			icon: 'success',
 						  			title: '<%= strFav %> 완료',
 						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true,
 						  			willClose: () => {
 						  				location.href='gameView?seq=<%= seq %>';
 					  				}
@@ -252,7 +258,9 @@
 					  			Swal.fire({
 						  			icon: 'error',
 						  			title: '<%= strFav %> 실패',
-						  			confirmButtonText: '확인'
+						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true,
 					  			});
 				  			}
 				  		}
@@ -278,19 +286,14 @@
 			  			},
 			  			success: function(data) {
 				  			if(data == 0) {
-					  			Swal.fire({
-						  			icon: 'success',
-						  			title: '<%= strRec %> 완료',
-						  			confirmButtonText: '확인',
-						  			willClose: () => {
-						  				location.href='gameView?seq=<%= seq %>';
-					  				}
-				  				});
+				  				location.href='gameView?seq=<%= seq %>';
 				  			} else {
 					  			Swal.fire({
 						  			icon: 'error',
 						  			title: '<%= strRec %> 실패',
-						  			confirmButtonText: '확인'
+						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true,
 					  			});
 				  			}
 				  		}
@@ -323,19 +326,14 @@
 			  			},
 			  			success: function(data) {
 				  			if(data == 0) {
-					  			Swal.fire({
-						  			icon: 'success',
-						  			title: strEvalRec + ' 완료',
-						  			confirmButtonText: '확인',
-						  			willClose: () => {
-						  				location.href='gameView?seq=' + seq;
-					  				}
-				  				});
+				  				location.href='gameView?seq=' + seq;
 				  			} else {
 					  			Swal.fire({
 						  			icon: 'error',
 						  			title: strEvalRec + ' 실패',
-						  			confirmButtonText: '확인'
+						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true,
 					  			});
 				  			}
 				  		}
@@ -364,6 +362,8 @@
 							  			icon: 'success',
 							  			title: '삭제 완료',
 							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 							  			willClose: () => {
 							  				location.href='gameView?seq=' + seq;
 						  				}
@@ -372,7 +372,9 @@
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '삭제 실패',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 						  			});
 					  			}
 					  		}

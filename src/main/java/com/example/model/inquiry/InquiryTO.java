@@ -14,4 +14,5 @@ public class InquiryTO {
 	private String content;
 	private int status;
 	private String inquiryType;
+	private String answer;
 }

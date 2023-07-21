@@ -254,6 +254,29 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/inquiryAnswerWriteOk")
+	public int inquiryAnswerWriteOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		InquiryTO to = new InquiryTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		
+		int flag = inquiryDAO.inquiryAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("문의 답변 완료");
+			noteTO.setContent("관리자가 문의에 답변을 남겼습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
 	@RequestMapping("/logManage")
 	public ModelAndView logManage(HttpServletRequest request) {
 		HttpSession session = request.getSession();

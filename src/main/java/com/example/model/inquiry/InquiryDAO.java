@@ -17,4 +17,15 @@ public class InquiryDAO {
 		
 		return lists;
 	}
+	
+	public int inquiryAnswerWriteOk(InquiryTO to) {
+		int flag = 1;
+		int result = inquiryMapper.inquiryAnswerWriteOk(to);
+		
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
 }

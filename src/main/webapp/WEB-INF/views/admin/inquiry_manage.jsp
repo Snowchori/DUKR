@@ -8,16 +8,77 @@
 	StringBuilder iqHtml = new StringBuilder();
 	
 	for(InquiryTO to: inquiry_list) {
-		iqHtml.append("<div>");
-		iqHtml.append("seq : " + to.getSeq() + "<br>");
-		iqHtml.append("senderSeq : " + to.getSenderSeq() + "<br>");
-		iqHtml.append("writer : " + to.getWriter() + "<br>");
-		iqHtml.append("wdate : " + to.getWdate() + "<br>");
-		iqHtml.append("subject : " + to.getSubject() + "<br>");
-		iqHtml.append("content : " + to.getContent() + "<br>");
-		iqHtml.append("status : " + to.getStatus() + "<br>");
-		iqHtml.append("inquiryType : " + to.getInquiryType() + "<br>");
-		iqHtml.append("<div>");
+		iqHtml.append("<div class='accordion-item ");
+		if(to.getStatus() == 0) {
+			iqHtml.append("uncheck");	
+		} else {
+			iqHtml.append("complete");
+		}
+		iqHtml.append("'>");
+		iqHtml.append("<h2 class='accordion-header' id='flush-heading" + to.getSeq() + "'>");
+		iqHtml.append("<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#flush-collapse" + to.getSeq() + "' aria-expanded='false' aria-controls='flush-collapse" + to.getSeq() + "'>");
+		if(to.getStatus() == 0) {
+			iqHtml.append("[미확인] ");	
+		} else {
+			iqHtml.append("[답변완료] ");
+		}
+		iqHtml.append(to.getSubject());
+		iqHtml.append(" - ");
+		iqHtml.append(to.getWriter());
+		iqHtml.append("</button>");
+		iqHtml.append("</h2>");
+		iqHtml.append("<div id='flush-collapse" + to.getSeq() + "' class='accordion-collapse collapse' aria-labelledby='flush-heading" + to.getSeq() + "' data-bs-parent='#accordionFlushExample'>");
+		iqHtml.append("<div class='accordion-body'>");
+		iqHtml.append("<form action='' class='row' style='width: 100%;' method='post' name='nfrm" + to.getSeq() + "'>");
+		iqHtml.append("<div class='col-md-3 mb-3'>");
+		iqHtml.append("<label for='subject' class='form-label'>문의타입</label>");
+		iqHtml.append("<input type='text' class='form-control' name='inquiryType' id='inquiryType' readonly='readonly' value='" + to.getInquiryType() + "'/>");
+		iqHtml.append("</div>");
+		iqHtml.append("<div class='col-md-3 mb-3 ms-auto'>");
+		iqHtml.append("<label for='content' class='form-label'>보낸 시간</label>");
+		iqHtml.append("<input type='text' class='form-control' name='wdate' id='wdate' readonly='readonly' value='" + to.getWdate() + "' />");
+		iqHtml.append("</div>");
+		iqHtml.append("<div class='col-12 mb-3'>");
+		iqHtml.append("<label for='content' class='form-label'>내용</label>");
+		iqHtml.append("<textarea ");
+		iqHtml.append("class='form-control' ");
+		iqHtml.append("name='content' ");
+		iqHtml.append("id='content' ");
+		iqHtml.append("rows='10' ");
+		iqHtml.append("style='resize: none;' ");
+		iqHtml.append("readonly='readonly' ");
+		iqHtml.append(">" + to.getContent() + "</textarea>");
+		iqHtml.append("</div>");
+		iqHtml.append("<div class='col-12 mb-3'>");
+		iqHtml.append("<label for='content' class='form-label'>답변</label>");
+		iqHtml.append("<textarea ");
+		iqHtml.append("class='form-control' ");
+		iqHtml.append("name='answer' ");
+		iqHtml.append("id='answer" + to.getSeq() + "' ");
+		iqHtml.append("rows='10' ");
+		if(to.getStatus() == 0) {
+			iqHtml.append("placeholder='답변을 입력하세요' ");	
+		} else {
+			iqHtml.append("readonly='readonly' ");
+		}
+		iqHtml.append("style='resize: none;' ");
+		iqHtml.append(">");
+		if(to.getStatus() == 1) {
+			iqHtml.append(to.getAnswer());	
+		}
+		iqHtml.append("</textarea>");
+		iqHtml.append("</div>");
+		if(to.getStatus() == 0) {
+			iqHtml.append("<div class='col-12 mb-3'>");
+			iqHtml.append("<input type='button' class='btn btn-dark float-end' value='답변' onclick='insertAnswer(");
+			iqHtml.append(to.getSeq() + ", " + to.getSenderSeq());
+			iqHtml.append(")'/>");
+			iqHtml.append("</div>");
+		}
+		iqHtml.append("</form>");
+		iqHtml.append("</div>");
+		iqHtml.append("</div>");
+		iqHtml.append("</div>");
 	}
 %>
 <!doctype html>
@@ -31,26 +92,62 @@
 		<script type="text/javascript" >
 			function totalData() {
 				$('.uncheck').show();
-				$('.check').show();
 				$('.complete').show();
 			}
 			
 			function uncheckData() {
 				$('.uncheck').show();
-				$('.check').hide();
-				$('.complete').hide();
-			}
-						
-			function checkData() {
-				$('.uncheck').hide();
-				$('.check').show();
 				$('.complete').hide();
 			}
 			
 			function completeData() {
 				$('.uncheck').hide();
-				$('.check').hide();
 				$('.complete').show();
+			}
+			
+			function insertAnswer(seq, senderSeq) {
+				let answer = $('#answer' + seq).val();
+				if(answer == "") {
+					Swal.fire({
+			  			icon: 'error',
+			  			title: '답변을 입력하세요.',
+			  			confirmButtonText: '확인',
+			  			timer: 1500,
+			  			timerProgressBar : true
+		  			});
+				} else {
+					$.ajax({
+			  			url:'inquiryAnswerWriteOk',
+			  			type:'post',
+			  			data: {
+			  				seq: seq,
+			  				answer: answer,
+			  				senderSeq: senderSeq
+			  			},
+			  			success: function(data) {
+				  			if(data == 0) {
+					  			Swal.fire({
+						  			icon: 'success',
+						  			title: '답변 완료',
+						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true,
+						  			willClose: () => {
+						  				location.href='inquiryManage';
+					  				}
+				  				});
+				  			} else {
+					  			Swal.fire({
+						  			icon: 'error',
+						  			title: '답변 실패',
+						  			confirmButtonText: '확인',
+						  			timer: 1500,
+						  			timerProgressBar : true
+					  			});
+				  			}
+				  		}
+				  	});
+				}
 			}
 		</script>
 		<style>
@@ -78,7 +175,6 @@
 								<ul class="nav nav-pills mb-3">
 									<li><a class="nav-link active" data-bs-toggle="pill" onclick='totalData()'>전체</a></li>
 									<li><a class="nav-link" data-bs-toggle="pill" onclick='uncheckData()'>미확인</a></li>
-									<li><a class="nav-link" data-bs-toggle="pill" onclick='checkData()'>확인</a></li>
 									<li><a class="nav-link" data-bs-toggle="pill" onclick='completeData()'>답변완료</a></li>
 								</ul>
 								<!-- End Tabs -->
@@ -86,141 +182,7 @@
 								<div class="tab-content">
 									<div class="tab-pane fade show active">
 										<div class="accordion accordion-flush" id="accordionFlushExample">
-										  <div class="accordion-item uncheck">
-										    <h2 class="accordion-header" id="flush-headingOne">
-										      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-										        [미확인] 제목 - 닉네임
-										      </button>
-										    </h2>
-										    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-										      <div class="accordion-body">
-										      	<form action="" class="row" style="width: 100%;" method="post" name="nfrm">
-													<div class="col-md-3 mb-3">
-														<label for="subject" class="form-label">문의타입</label>
-														<input type="text" class="form-control" name="inquiryType" id="inquiryType" readonly="readonly"/>
-													</div>
-													<div class="col-md-3 mb-3 ms-auto">
-														<label for="content" class="form-label">보낸 시간</label>
-														<input type="text" class="form-control" name="wdate" id="wdate" readonly="readonly"/>
-													</div>
-													<div class="col-12 mb-3">
-														<label for="content" class="form-label">내용</label>
-														<textarea
-															class="form-control"
-															name="content"
-															id="content"
-															rows="10"
-															style="resize: none;"
-															readonly="readonly"
-														></textarea>
-													</div>
-													<div class="col-12 mb-3">
-														<label for="content" class="form-label">답변</label>
-														<textarea
-															class="form-control"
-															name="answer"
-															id="answer"
-															rows="10"
-															placeholder="답변을 입력하세요"
-															style="resize: none;"
-														></textarea>
-													</div>
-													<div class="col-12 mb-3">
-														<input id="nbtn" type="button" class="btn btn-dark float-end" value="전송"/>
-													</div>
-												</form>
-										      </div>
-										    </div>
-										  </div>
-										  <div class="accordion-item check">
-										    <h2 class="accordion-header" id="flush-headingTwo">
-										      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-										        [확인] 제목 - 닉네임
-										      </button>
-										    </h2>
-										    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-										      <div class="accordion-body">
-										      	<form action="" class="row" style="width: 100%;" method="post" name="nfrm">
-													<div class="col-md-3 mb-3">
-														<label for="subject" class="form-label">문의타입</label>
-														<input type="text" class="form-control" name="inquiryType" id="inquiryType" readonly="readonly"/>
-													</div>
-													<div class="col-md-3 mb-3 ms-auto">
-														<label for="content" class="form-label">보낸 시간</label>
-														<input type="text" class="form-control" name="wdate" id="wdate" readonly="readonly"/>
-													</div>
-													<div class="col-12 mb-3">
-														<label for="content" class="form-label">내용</label>
-														<textarea
-															class="form-control"
-															name="content"
-															id="content"
-															rows="10"
-															style="resize: none;"
-															readonly="readonly"
-														></textarea>
-													</div>
-													<div class="col-12 mb-3">
-														<label for="content" class="form-label">답변</label>
-														<textarea
-															class="form-control"
-															name="answer"
-															id="answer"
-															rows="10"
-															placeholder="답변을 입력하세요"
-															style="resize: none;"
-														></textarea>
-													</div>
-													<div class="col-12 mb-3">
-														<input id="nbtn" type="button" class="btn btn-dark float-end" value="전송"/>
-													</div>
-												</form>
-										      </div>
-										    </div>
-										  </div>
-										  <div class="accordion-item complete">
-										    <h2 class="accordion-header" id="flush-headingThree">
-										      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-										        [답변완료] 제목 - 닉네임
-										      </button>
-										    </h2>
-										    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-										      <div class="accordion-body">
-										      	<form action="" class="row" style="width: 100%;" method="post" name="nfrm">
-													<div class="col-md-3 mb-3">
-														<label for="subject" class="form-label">문의타입</label>
-														<input type="text" class="form-control" name="inquiryType" id="inquiryType" readonly="readonly"/>
-													</div>
-													<div class="col-md-3 mb-3 ms-auto">
-														<label for="content" class="form-label">보낸 시간</label>
-														<input type="text" class="form-control" name="wdate" id="wdate" readonly="readonly"/>
-													</div>
-													<div class="col-12 mb-3">
-														<label for="content" class="form-label">내용</label>
-														<textarea
-															class="form-control"
-															name="content"
-															id="content"
-															rows="10"
-															style="resize: none;"
-															readonly="readonly"
-														></textarea>
-													</div>
-													<div class="col-12 mb-3">
-														<label for="content" class="form-label">답변</label>
-														<textarea
-															class="form-control"
-															name="answer"
-															id="answer"
-															rows="10"
-															style="resize: none;"
-															readonly="readonly"
-														></textarea>
-													</div>
-												</form>
-										      </div>
-										    </div>
-										  </div>
+											<%= iqHtml %>
 										</div>
 									</div>
 									<!-- End Tab 1 Content -->
