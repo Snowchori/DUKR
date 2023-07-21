@@ -100,12 +100,14 @@
 							userSeq: <%=userSeq %>,
 							isWriter: <%=isWriter %>
 						},
-						success : function(res) {
+						success : function(result) {
+							const res = (result % 10);
+							const updatedRecCnt = Math.floor(result / 10);
+							
 							if(res == 2){
 								alert('먼저 로그인 해야합니다');
 							}else if(res == 3){
-								let curRecCnt = $('#viewRecCnt').html();
-								$('#viewRecCnt').html(parseInt(curRecCnt) -1);
+								$('#viewRecCnt').html(updatedRecCnt);
 								$('#recBtn').removeClass('btn-primary').addClass('btn-secondary');
 
 								alert('게시글 추천을 취소했습니다');	
@@ -114,8 +116,7 @@
 							}else if(res == 0){
 								alert('알 수 없는 추천 오류');
 							}else{
-								let curRecCnt = $('#viewRecCnt').html();
-								$('#viewRecCnt').html(parseInt(curRecCnt) + 1);
+								$('#viewRecCnt').html(updatedRecCnt);
 								$('#recBtn').removeClass('btn-secondary').addClass('btn-primary');
 
 								alert('글을 추천했습니다');

@@ -921,6 +921,10 @@ public class DURKController {
 			}
 		}
 		
+		// 추천수 업데이트
+		int updatedRecCnt = boardDAO.recCount(boardSeq);
+		response += (updatedRecCnt * 10);
+		
 		return response;
 	}
 	
