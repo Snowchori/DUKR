@@ -99,6 +99,8 @@
 							  			icon: 'success',
 							  			title: '변경 완료',
 							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 							  			willClose: () => {
 							  				location.href='userList';
 						  				}
@@ -107,13 +109,17 @@
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '이미 존재하는 닉네임입니다.',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
 						  			});
 					  			} else {
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '변경 실패',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
 						  			});
 					  			}
 					  		}
@@ -142,6 +148,8 @@
 							  			icon: 'success',
 							  			title: '강제탈퇴 완료',
 							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 							  			willClose: () => {
 							  				location.href='userList';
 						  				}
@@ -150,7 +158,9 @@
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '강제탈퇴 실패',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 						  			});
 					  			}
 					  		}

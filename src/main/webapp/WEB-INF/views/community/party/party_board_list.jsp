@@ -103,14 +103,10 @@
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
 		</script>
-		
 		<style>
 		</style>
-	
 	</head>
-	
 	<body>
-	
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf"%>
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
@@ -122,7 +118,6 @@
 					</div>
 			</div>
 		</header>
-	
 		<main>
 			<div class="container-fluid bottombody">
 				<div class="mt-3 p-2">

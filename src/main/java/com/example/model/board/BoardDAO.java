@@ -177,4 +177,42 @@ public class BoardDAO {
 		
 		return flag;
 	}
+	
+	// 게시글 지우기
+	public int boardDelete(String seq) {
+		int flag = 1;
+		int result = boardMapper.boardDelete(seq);
+		
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
+	// 밴 ip 등록 확인
+	public int bipCheck(String seq) {
+		int flag = 1;
+		String bip = boardMapper.getBip(seq);
+		String result = boardMapper.bipCheck(bip);
+		
+		if(result == null) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
+	// 밴 ip 등록
+	public int ipBan(String seq) {
+		int flag = 1;
+		String bip = boardMapper.getBip(seq);
+		int result = boardMapper.ipBan(bip);
+		
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
 }

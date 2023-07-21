@@ -17,4 +17,15 @@ public class ReportDAO {
 		
 		return lists;
 	}
+	
+	public int reportAnswerWriteOk(ReportTO to) {
+		int flag = 1;
+		int result = reportMapper.reportAnswerWriteOk(to);
+		
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
 }

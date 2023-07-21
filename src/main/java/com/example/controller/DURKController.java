@@ -254,6 +254,29 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/inquiryAnswerWriteOk")
+	public int inquiryAnswerWriteOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		InquiryTO to = new InquiryTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		
+		int flag = inquiryDAO.inquiryAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("문의 답변 완료");
+			noteTO.setContent("관리자가 문의에 답변을 남겼습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
 	@RequestMapping("/logManage")
 	public ModelAndView logManage(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -330,6 +353,85 @@ public class DURKController {
 		modelAndView.addObject("report_list", report_list);
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/reportAnswerWriteOk")
+	public int reportAnswerWriteOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("답변완료");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 답변 완료");
+			noteTO.setContent("관리자가 신고글에 답변을 남겼습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/deleteBoardOk")
+	public int deleteBoardOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("게시글삭제");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			boardDAO.boardDelete(request.getParameter("boardSeq"));
+			
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 게시글 삭제 완료");
+			noteTO.setContent("관리자가 신고글의 게시글을 삭제하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/ipBanOk")
+	public int ipBanOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("ip밴");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			int check = boardDAO.bipCheck(request.getParameter("boardSeq"));
+			if(check == 0) {
+				boardDAO.ipBan(request.getParameter("boardSeq"));
+			}
+			boardDAO.boardDelete(request.getParameter("boardSeq"));
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 게시글 ip밴 완료");
+			noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
 	}
 	
 	@RequestMapping("/userList")
@@ -1078,6 +1180,45 @@ public class DURKController {
 		return flag;
 	}
 	
+	@RequestMapping("/gameSearch")
+	public ModelAndView gameSearch(HttpServletRequest request) {
+		
+		String keyword = "";
+		if(request.getParameter("stx") != null) {
+			keyword = request.getParameter("stx");
+		}
+		
+		String players = "";
+		if(request.getParameter("players") != null) {
+			players = request.getParameter("players");
+		}
+		
+		String genre = "";
+		if(request.getParameter("genre") != null) {
+			genre = request.getParameter("genre");
+		}
+		
+		String sort = "yearpublished";
+		if(request.getParameter("sort") != null) {
+			sort = request.getParameter("sort");
+		} else {
+			sort = "yearpublished";
+		}
+
+		SearchFilterTO filterTO = new SearchFilterTO();
+		filterTO.setKeyword(keyword);
+		filterTO.setPlayers(players);
+		filterTO.setGenre(genre);
+		filterTO.setSort(sort);
+		
+		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("game/game_search");
+		modelAndView.addObject("lists", lists);
+		return modelAndView;
+	}
+	
 	@RequestMapping("/gameView")
 	public ModelAndView gameView(HttpServletRequest request) {
 		BoardgameTO gameTO = gameDAO.gameInfo(request.getParameter("seq"));
@@ -1128,46 +1269,6 @@ public class DURKController {
 		modelAndView.addObject("listTO", listTO);
 		modelAndView.addObject("evalList", evalList);
 		
-		return modelAndView;
-	}
-	
-	// game
-	@RequestMapping("/gameSearch")
-	public ModelAndView gameSearch(HttpServletRequest request) {
-		
-		String keyword = "";
-		if(request.getParameter("stx") != null) {
-			keyword = request.getParameter("stx");
-		}
-		
-		String players = "";
-		if(request.getParameter("players") != null) {
-			players = request.getParameter("players");
-		}
-		
-		String genre = "";
-		if(request.getParameter("genre") != null) {
-			genre = request.getParameter("genre");
-		}
-		
-		String sort = "yearpublished";
-		if(request.getParameter("sort") != null) {
-			sort = request.getParameter("sort");
-		} else {
-			sort = "yearpublished";
-		}
-
-		SearchFilterTO filterTO = new SearchFilterTO();
-		filterTO.setKeyword(keyword);
-		filterTO.setPlayers(players);
-		filterTO.setGenre(genre);
-		filterTO.setSort(sort);
-		
-		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("game/game_search");
-		modelAndView.addObject("lists", lists);
 		return modelAndView;
 	}
 	

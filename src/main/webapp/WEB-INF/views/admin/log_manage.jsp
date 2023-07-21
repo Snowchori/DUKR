@@ -30,7 +30,42 @@
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
 				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					
+					<table class="table table-striped">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">닉네임</th>
+					      <th scope="col">로그</th>
+					      <th scope="col">날짜</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr>
+					      <th scope="row">1</th>
+					      <td>tester</td>
+					      <td>로그인</td>
+					      <td>2023.07.21</td>
+					    </tr>
+					    <tr>
+					      <th scope="row">2</th>
+					      <td>test</td>
+					      <td>로그인</td>
+					      <td>2023.07.21</td>
+					    </tr>
+					    <tr>
+					      <th scope="row">3</th>
+					      <td>test</td>
+					      <td>로그아웃</td>
+					      <td>2023.07.21</td>
+					    </tr>
+					    <tr>
+					      <th scope="row">4</th>
+					      <td>tester</td>
+					      <td>로그아웃</td>
+					      <td>2023.07.21</td>
+					    </tr>
+					  </tbody>
+					</table>
 				</div>
 			</section>
 			<!-- End gameInfo Section -->

@@ -96,4 +96,20 @@ public interface BoardMapperInter {
 	// 회원 게시글 전부 지우기
 	@Update("update board set isDel = true where memSeq = #{seq}")
 	public int boardDeleteAll(String seq);
+	
+	// 게시글 지우기
+	@Update("update board set isDel = true where seq = #{seq}")
+	public int boardDelete(String seq);
+	
+	// 밴 ip 등록 확인
+	@Select("select bip from ipban where bip=#{bip}")
+	public String bipCheck(String bip);
+	
+	// 밴 ip 등록
+	@Insert("insert into ipban values(0, #{bip}, now())")
+	public int ipBan(String bip);
+	
+	// 게시글 ip 가져오기
+	@Select("select wip from board where seq=#{seq}")
+	public String getBip(String seq);
 }

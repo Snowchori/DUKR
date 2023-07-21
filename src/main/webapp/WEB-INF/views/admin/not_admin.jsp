@@ -7,6 +7,8 @@
 			icon: 'error',
 			title: '권한이 없습니다.',
 			confirmButtonText: "확인",
+			timer: 1500,
+  			timerProgressBar : true,
 			willClose: () => {
 				location.href='/';
 			}
