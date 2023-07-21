@@ -135,6 +135,13 @@ public class BoardDAO {
 		return result;
 	}
 	
+	// 게시글 추천해제
+	public int boardRecommendCancel(String memSeq, String boardSeq) {
+		int result = boardMapper.boardRecommendCancel(memSeq, boardSeq);
+		boardMapper.boardRecCntMinus(boardSeq);
+		return result;
+	}
+	
 	// 게시글 추천여부
 	public int recCheck(String memSeq, String boardSeq) {
 		int result = boardMapper.recCheck(memSeq, boardSeq);

@@ -668,8 +668,20 @@ public class DURKController {
 		CommentListTO commentListTo = new CommentListTO();
 		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
 
+		// 보고있는 유저의 게시글 추천여부 감지
+		boolean didUserRec = false;
+		if(request.getSession().getAttribute("logged_in_user") != null) {
+			String userSeq = ((MemberTO)request.getSession().getAttribute("logged_in_user")).getSeq();
+			
+			int recCheck = boardDAO.recCheck(userSeq, request.getParameter("seq"));
+			if(recCheck == 1) {
+				didUserRec = true;
+			}
+		}
+		
 		modelAndView.addObject("to", to);
 		modelAndView.addObject("commentListTo", commentListTo);
+		modelAndView.addObject("didUserRec", didUserRec);
 		
 		return modelAndView;
 	}
@@ -783,12 +795,12 @@ public class DURKController {
 	// 댓글 삭제
 	@PostMapping("/commentDelete")
 	public String commentDelete(HttpServletRequest req) {
-		StringBuilder sbResponseHtml = new StringBuilder();
-		
+		String boardSeq = req.getParameter("boardSeq");
+		String userSeq = req.getParameter("userSeq");
 		String commentSeq = req.getParameter("commentSeq");
-		commentDAO.commentDelete(commentSeq);
+		commentDAO.commentDelete(commentSeq, boardSeq);
 		
-		String strReturn = commentsBuilder(req.getParameter("boardSeq"), req.getParameter("userSeq"));
+		String strReturn = commentsBuilder(boardSeq, userSeq);
 
 		return strReturn;
 	}
@@ -898,7 +910,8 @@ public class DURKController {
 				int recCheck = boardDAO.recCheck(userSeq, boardSeq);
 			
 				if(recCheck == 1) {
-					// 이미 추천한 게시글인 경우
+					// 이미 추천한 게시글인 경우, 추천해제
+					boardDAO.boardRecommendCancel(userSeq, boardSeq);
 					response = 3;
 				}else {
 					// 추천 성공
@@ -996,9 +1009,21 @@ public class DURKController {
 			status = partyDAO.isApplied(ato);
 		}
 		
+		// 보고있는 유저의 게시글 추천여부 감지
+		boolean didUserRec = false;
+		if(request.getSession().getAttribute("logged_in_user") != null) {
+			String userSeq = ((MemberTO)request.getSession().getAttribute("logged_in_user")).getSeq();
+					
+			int recCheck = boardDAO.recCheck(userSeq, request.getParameter("seq"));
+			if(recCheck == 1) {
+				didUserRec = true;
+			}
+		}
+		
 		modelAndView.addObject("to", to);
 		modelAndView.addObject("commentListTo", commentListTo);
 		modelAndView.addObject("status", status);
+		modelAndView.addObject("didUserRec", didUserRec);
 		
 		return modelAndView;
 	}

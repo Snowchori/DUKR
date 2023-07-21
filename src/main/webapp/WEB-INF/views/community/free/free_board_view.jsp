@@ -1,3 +1,4 @@
+<%@page import="com.example.model.board.BoardDAO"%>
 <%@page import="com.example.model.comment.CommentListTO"%>
 <%@page import="com.example.model.comment.CommentTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -68,9 +69,14 @@
 %>
 <%
 	boolean isWriter = true;
-
 	if(!wSeq.equals(userSeq)){
 		isWriter = false;
+	}
+	
+	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
+	String recBtnColor = "btn-secondary";
+	if(didUserRec){
+		recBtnColor = "btn-primary";
 	}
 %>
 
@@ -98,7 +104,11 @@
 							if(res == 2){
 								alert('먼저 로그인 해야합니다');
 							}else if(res == 3){
-								alert('이미 추천한 게시글입니다');
+								let curRecCnt = $('#viewRecCnt').html();
+								$('#viewRecCnt').html(parseInt(curRecCnt) -1);
+								$('#recBtn').removeClass('btn-primary').addClass('btn-secondary');
+
+								alert('게시글 추천을 취소했습니다');	
 							}else if(res == 4){
 								alert('본인 게시글은 추천할 수 없습니다');
 							}else if(res == 0){
@@ -106,7 +116,8 @@
 							}else{
 								let curRecCnt = $('#viewRecCnt').html();
 								$('#viewRecCnt').html(parseInt(curRecCnt) + 1);
-								console.log(curRecCnt);
+								$('#recBtn').removeClass('btn-secondary').addClass('btn-primary');
+
 								alert('글을 추천했습니다');
 							}
 						}
@@ -286,7 +297,7 @@
 				</div>
 				
 				<div class="mt-5 pt-5 d-flex justify-content-center">
-					<button id="recBtn" class="btn btn-primary">
+					<button id="recBtn" class="btn <%=recBtnColor%>">
 						<i class="fas fa-thumbs-up"></i> 추천
 					</button>
 				</div>

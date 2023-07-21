@@ -58,9 +58,9 @@ public class CommentDAO {
 	}
 	
 	// 댓글 삭제하기
-	public int commentDelete(String seq) {
-		int result = commentMapperInter.commentDelete(seq);
-		commentMapperInter.boardCmtCntMinus(seq);
+	public int commentDelete(String commentSeq, String boardSeq) {
+		int result = commentMapperInter.commentDelete(commentSeq);
+		commentMapperInter.boardCmtCntMinus(boardSeq);
 		return result;
 	}
 }

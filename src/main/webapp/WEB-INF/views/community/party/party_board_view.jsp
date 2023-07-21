@@ -69,6 +69,12 @@ if(!memSeq.equals(userSeq)){
 	strApply = "&nbsp;<button id='appBtn' class='btn btn-success'><i id='appIcon' class='bi bi-patch-check'></i>&nbsp;<span id='appText'>참여신청</span></button>";
 	isWriter = false;
 }
+
+boolean didUserRec = (boolean)request.getAttribute("didUserRec");
+String recBtnColor = "btn-secondary";
+if(didUserRec){
+	recBtnColor = "btn-primary";
+}
 %>
 <!doctype html>
 <html>
@@ -108,7 +114,11 @@ if(!memSeq.equals(userSeq)){
 							if(res == 2){
 								alert('먼저 로그인 해야합니다');
 							}else if(res == 3){
-								alert('이미 추천한 게시글입니다');
+								let curRecCnt = $('#viewRecCnt').html();
+								$('#viewRecCnt').html(parseInt(curRecCnt) -1);
+								$('#recBtn').removeClass('btn-primary').addClass('btn-secondary');
+
+								alert('게시글 추천을 취소했습니다');
 							}else if(res == 4){
 								alert('본인 게시글은 추천할 수 없습니다');
 							}else if(res == 0){
@@ -116,7 +126,8 @@ if(!memSeq.equals(userSeq)){
 							}else{
 								let curRecCnt = $('#viewRecCnt').html();
 								$('#viewRecCnt').html(parseInt(curRecCnt) + 1);
-								console.log(curRecCnt);
+								$('#recBtn').removeClass('btn-secondary').addClass('btn-primary');
+
 								alert('글을 추천했습니다');
 							}
 						}
@@ -135,11 +146,11 @@ if(!memSeq.equals(userSeq)){
 						},
 						success : function(res) {
 							if (res != "") {
-								let curCmtCnt = $('#viewCmtCnt').html();
-								$('#viewCmtCnt').html(parseInt(curCmtCnt) + 1);
-								
 								$('#comments').html(res);
 								$('#cContent').val('');
+								
+								let numberOfComments = res.split("<span class='dropdown'").length - 1;
+								$('#viewCmtCnt').html(numberOfComments);	
 							} else {
 								alert("먼저 로그인 해야합니다");
 								console.log(res);
@@ -254,6 +265,9 @@ if(!memSeq.equals(userSeq)){
 					},
 					success: function(res){
 						$('#comments').html(res);
+						
+						let numberOfComments = res.split("<span class='dropdown'").length - 1;
+						$('#viewCmtCnt').html(numberOfComments);
 					}
 				});
 			}
@@ -355,7 +369,7 @@ if(!memSeq.equals(userSeq)){
 				</div>
 				
 				<div class="mt-5 pt-5 d-flex justify-content-center">
-					<button id="recBtn" class="btn btn-primary">
+					<button id="recBtn" class="btn <%=recBtnColor %>">
 						<i class="fas fa-thumbs-up"></i> 추천
 					</button>
 					<%= strApply %>
