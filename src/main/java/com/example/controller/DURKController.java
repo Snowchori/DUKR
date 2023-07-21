@@ -758,6 +758,7 @@ public class DURKController {
 		updatedComments.setCommentList(commentDAO.boardCommentList(boardSeq));
 		
 		StringBuilder sbReturn = new StringBuilder();
+		int commentIndex = 0;
 		for(CommentTO comment : updatedComments.getCommentList()) {
 			String cWriter = comment.getWriter();
 			String cWdate = comment.getWdate();
@@ -788,14 +789,27 @@ public class DURKController {
 			sbReturn.append("</button>");
 			 
 			if(memSeq != null && memSeq.equals(writerSeq)){
-				sbReturn.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
-				sbReturn.append("<i class='fas fa-times'></i>");
+				sbReturn.append("<span id='cmtOptions" + cSeq + "'>");
+				// 삭제버튼
+				sbReturn.append("<button class='btn float-end me-3' style='color: #888888;' onclick='deleteComment(\"" + cSeq + "\")'>");
+				sbReturn.append("<i class=\"fas fa-trash\"></i>");
 				sbReturn.append("</button>");
+				// 수정버튼
+				sbReturn.append("<button class='btn float-end' style='color: #888888;' onclick='modifyComment(\"" + cSeq + "\", \"" + commentIndex + "\")'>");
+				sbReturn.append("<i class=\"fas fa-pencil-alt\"></i>");
+				sbReturn.append("</button>");
+				sbReturn.append("</span>");
 			}
 			 
-			sbReturn.append("<br>");	
-			sbReturn.append(cContent);	
+			sbReturn.append("<br>");
+			
+			sbReturn.append("<span id='cmtContent" + cSeq + "'>");
+			sbReturn.append(cContent);
+			sbReturn.append("</span>");
+			
 			sbReturn.append("<hr class='mt-3 my-2'>");
+			
+			commentIndex ++;
 		 }
 		
 		return sbReturn.toString();
@@ -812,6 +826,20 @@ public class DURKController {
 		String strReturn = commentsBuilder(boardSeq, userSeq);
 
 		return strReturn;
+	}
+	
+	// 댓글 수정
+	@PostMapping("/modifyComment")
+	public String modifyComment(HttpServletRequest req) {
+		String cSeq = req.getParameter("cSeq");
+		String userSeq = req.getParameter("userSeq");
+		String boardSeq = req.getParameter("boardSeq");
+		String content = req.getParameter("content");
+
+		commentDAO.modifyComment(cSeq, content);
+		String updatedComments = commentsBuilder(boardSeq, userSeq);
+		
+		return updatedComments;
 	}
 	
 	// 댓글 추천

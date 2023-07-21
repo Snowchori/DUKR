@@ -70,4 +70,10 @@ public class CommentDAO {
 		commentMapperInter.boardCmtCntMinus(boardSeq);
 		return result;
 	}
+	
+	// 댓글 삭제하기
+	public int modifyComment(String seq, String content) {
+		int result = commentMapperInter.modifyComment(seq, content);
+		return result;
+	}
 }

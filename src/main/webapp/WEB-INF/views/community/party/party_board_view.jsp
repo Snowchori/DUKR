@@ -236,6 +236,36 @@ if(didUserRec){
 					}
 				});
 			}
+			
+			// 댓글 수정함수
+			function modifyComment(cSeq, commentIndex){
+				const cmtId = 'cmtContent' + cSeq;
+				let curContent = $('#' + cmtId).html();
+				let options = 'cmtOptions' + cSeq;
+				
+				$('#' + options).html('<button class="btn float-end" onclick="modifyCommentOk(' + cSeq + ')"><i class="far fa-check-circle"></i></button>');
+				$('#' + cmtId).html('<textArea id="modifiedCmt' + cSeq + '" class="form-control" rows="3" style="resize: none;">' + curContent + '</textArea>');
+			}
+			
+			// 댓글 수정완료함수
+			function modifyCommentOk(cmtSeq){
+				const cmtId = 'modifiedCmt' + cmtSeq;
+				const modifiedContent = $('#' + cmtId).val();
+				//console.log(modifiedContent);
+				$.ajax({
+					url: '/modifyComment',
+					type: 'POST',
+					data: {
+						cSeq: cmtSeq,
+						userSeq: <%=userSeq %>,
+						boardSeq: <%=boardSeq %>,
+						content: modifiedContent
+					},
+					success: function(result){
+						$('#comments').html(result);
+					}
+				});
+			}
 		</script>
 	<style>
 		.bottombody{

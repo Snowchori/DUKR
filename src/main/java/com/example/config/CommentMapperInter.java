@@ -49,6 +49,10 @@ public interface CommentMapperInter {
 	@Delete("delete from comment where seq=#{seq}")
 	public int commentDelete(String seq);
 	
+	// 댓글 수정하기
+	@Update("update comment set content=#{content} where seq=#{seq}")
+	public int modifyComment(String seq, String content);
+	
 	// 댓글 삭제하고 cmtCnt -1
 	@Update("update board set cmtCnt=cmtCnt-1 where seq=#{seq}")
 	public int boardCmtCntMinus(String seq);
