@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Update;
 import com.example.model.inquiry.InquiryTO;
 
 public interface InquiryMapperInter {
-	@Select("select i.seq seq, senderSeq, date_format(wdate, '%Y-%m-%d') wdate, subject, content, status, inquiryType, i.answer answer, m.nickname writer "
+	@Select("select i.seq seq, senderSeq, date_format(wdate, '%Y-%m-%d %T') wdate, subject, content, status, inquiryType, i.answer answer, m.nickname writer "
 			+ "from inquiry i, member m where i.senderSeq=m.seq order by seq desc")
 	public ArrayList<InquiryTO> inquiryList();
 	
