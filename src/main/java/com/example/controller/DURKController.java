@@ -664,24 +664,27 @@ public class DURKController {
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
-		
-		CommentListTO commentListTo = new CommentListTO();
-		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
 
-		// 보고있는 유저의 게시글 추천여부 감지
+		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		
+		// 보고있는 유저의 게시글 추천여부 감지 
 		boolean didUserRec = false;
-		if(request.getSession().getAttribute("logged_in_user") != null) {
-			String userSeq = ((MemberTO)request.getSession().getAttribute("logged_in_user")).getSeq();
+		String uSeq = null;
+		
+		if(userInfo != null) {
+			uSeq = userInfo.getSeq();
 			
-			int recCheck = boardDAO.recCheck(userSeq, request.getParameter("seq"));
+			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
 			if(recCheck == 1) {
 				didUserRec = true;
 			}
 		}
+
+		String comments = commentsBuilder(request.getParameter("seq"), uSeq);
 		
 		modelAndView.addObject("to", to);
-		modelAndView.addObject("commentListTo", commentListTo);
 		modelAndView.addObject("didUserRec", didUserRec);
+		modelAndView.addObject("comments", comments);
 		
 		return modelAndView;
 	}
@@ -762,6 +765,12 @@ public class DURKController {
 			String cContent = comment.getContent();	
 			String cSeq = comment.getSeq();
 			String writerSeq = comment.getMemSeq();
+			
+			String comRecBtnColor = "#4db2b2";
+			int didUserRecommendedThisComment = commentDAO.commentRecCheck(memSeq, cSeq);
+			if(didUserRecommendedThisComment == 1) {
+				comRecBtnColor = "#F08080";
+			}
 
 			sbReturn.append("<span class='dropdown'>");	
 			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
@@ -773,12 +782,12 @@ public class DURKController {
 			sbReturn.append("</ul>");	
 			sbReturn.append("</span>&nbsp;");	
 			sbReturn.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-			sbReturn.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + memSeq + "\", \"" + cSeq + "\")'>");
+			sbReturn.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: " + comRecBtnColor + ";' onclick='recommendComment(\"" + writerSeq + "\", \"" + memSeq + "\", \"" + cSeq + "\")'>");
 			sbReturn.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 			sbReturn.append(cRecCnt);		
 			sbReturn.append("</button>");
 			 
-			if(memSeq.equals(writerSeq)){
+			if(memSeq != null && memSeq.equals(writerSeq)){
 				sbReturn.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
 				sbReturn.append("<i class='fas fa-times'></i>");
 				sbReturn.append("</button>");
@@ -807,25 +816,33 @@ public class DURKController {
 	
 	// 댓글 추천
 	@PostMapping("/commentRec")
-	public int commentRec(HttpServletRequest req) {
-		int response;
+	public String commentRec(HttpServletRequest req) {
+		String response;
 		
 		String cmtSeq = req.getParameter("cmtSeq");
 		String memSeq = req.getParameter("memSeq");
+		String boardSeq = req.getParameter("boardSeq");
 
 		if(memSeq.equals("") || memSeq.equals("null")) {
-			response = 0;
+			response = "0";
 		}else {
 			if(req.getParameter("writerSeq").equals(memSeq)) {
-				response = 3;
+				response = "3";
 			}else {
 				int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
 			
 				if(recCheck == 0) {
 					commentDAO.commentRec(memSeq, cmtSeq);
-					response = 1;
+					response = "1";
+					
+					String updatedComments = commentsBuilder(boardSeq, memSeq); 
+					response += updatedComments;
 				}else {
-					response = 2;
+					commentDAO.commentRecCancel(memSeq, cmtSeq);
+					response = "2";
+					
+					String updatedComments = commentsBuilder(boardSeq, memSeq);
+					response += updatedComments;
 				}
 			}
 		}
@@ -900,7 +917,6 @@ public class DURKController {
 		String isWriter = req.getParameter("isWriter");
 		
 		if(userSeq == "") {
-			// 로그인 필요
 			response = 2;
 		}else {
 			if(isWriter.equals("true")) {
@@ -999,11 +1015,9 @@ public class DURKController {
 		to.setSeq(seq);
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
-		
-		CommentListTO commentListTo = new CommentListTO();
-		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
 
 		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		String uSeq = null;
 		
 		int status = 0;
 		if(userInfo != null) {
@@ -1011,7 +1025,11 @@ public class DURKController {
 			ato.setPartySeq(seq);
 			ato.setSenderSeq(userInfo.getSeq());
 			status = partyDAO.isApplied(ato);
+			
+			uSeq = userInfo.getSeq();
 		}
+
+		String comments = commentsBuilder(seq, uSeq);
 		
 		// 보고있는 유저의 게시글 추천여부 감지
 		boolean didUserRec = false;
@@ -1025,9 +1043,9 @@ public class DURKController {
 		}
 		
 		modelAndView.addObject("to", to);
-		modelAndView.addObject("commentListTo", commentListTo);
 		modelAndView.addObject("status", status);
 		modelAndView.addObject("didUserRec", didUserRec);
+		modelAndView.addObject("comments", comments);
 		
 		return modelAndView;
 	}

@@ -28,44 +28,7 @@
 	String cmtCnt = to.getCmtCnt();
 %>
 <%
-	CommentListTO commentListTo = new CommentListTO();
-	commentListTo = (CommentListTO)request.getAttribute("commentListTo");
-
-	StringBuilder sbComments = new StringBuilder();
-
-	for(CommentTO comment : commentListTo.getCommentList()){
-		String cSeq = comment.getSeq();
-		String writerSeq = comment.getMemSeq();
-		String cWriter = comment.getWriter();
-		String cWdate = comment.getWdate();
-		int cRecCnt = comment.getRecCnt();
-		String cContent = comment.getContent();
-
-		sbComments.append("<span class='dropdown'>");	
-		sbComments.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
-		sbComments.append(cWriter);	
-		sbComments.append("</a>");
-		sbComments.append("<ul class='dropdown-menu'>");
-		sbComments.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
-		sbComments.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
-		sbComments.append("</ul>");	
-		sbComments.append("</span>&nbsp;");	
-		sbComments.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-		sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + userSeq + "\", \"" + cSeq + "\")'>");
-		sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
-		sbComments.append(cRecCnt);		
-		sbComments.append("</button>");	
-		
-		if(userSeq != null && userSeq.equals(writerSeq)){
-			sbComments.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
-			sbComments.append("<i class='fas fa-times'></i>");
-			sbComments.append("</button>");
-		}
-		
-		sbComments.append("<br>");	
-		sbComments.append(cContent);	
-		sbComments.append("<hr class='mt-3 my-2'>");	
-	}
+	String comments = (String)request.getAttribute("comments");
 %>
 <%
 	boolean isWriter = true;
@@ -161,19 +124,18 @@
 						writerSeq: wSeq,
 						memSeq: mSeq,
 						cmtSeq: cSeq,
+						boardSeq: <%=boardSeq %>
 					},
-					success: function(res){
+					success: function(result){
+						const res = parseInt(result.substring(0, 1));
+						const updatedComments = result.substring(1);
+
 						if(res == 0){
 							alert('먼저 로그인 해야합니다');
 						}else if(res == 1){
-							let btnId = 'cmtRecBtn' + cSeq;
-							let btnHtml = $('#' + btnId).html();
-							const curRec = btnHtml.replace('<i class="fas fa-thumbs-up" aria-hidden="true"></i>&nbsp;', '');
-							const newRec = parseInt(curRec) + 1;
-
-							$('#' + btnId).html('<i class="fas fa-thumbs-up" aria-hidden="true"></i>&nbsp;' + newRec);
+							$('#comments').html(updatedComments);
 						}else if(res == 2){
-							alert('이미 추천한 댓글입니다');
+							$('#comments').html(updatedComments);
 						}else if(res == 3){
 							alert('본인의 댓글은 추천할수 없습니다');
 						}
@@ -318,7 +280,7 @@
 				<!-- 댓글영역 -->
 				<div class="mt-2 mb-3" id="cmtArea">
 					<div id="comments">
-						<%=sbComments%>
+						<%=comments%> 
 					</div>
 					
 					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>
