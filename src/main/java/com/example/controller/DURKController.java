@@ -1278,8 +1278,32 @@ public class DURKController {
 			LogsTO logTO = new LogsTO();
 	        logTO.setMemSeq(userSeq);
 	        logTO.setLog("게임검색");
-	        logTO.setRemarks(keyword);
 	        logTO.setLogType("2");
+	        
+	        String remarks = "검색어: ";
+	        if(!keyword.equals("")) {
+	        	remarks += keyword;
+	        }
+	        
+	        remarks += "<br>";
+	        
+	        if(!players.equals("")) {
+	        	remarks += players + "명/";
+	        }
+	        
+	        if(!genre.equals("")) {
+	        	remarks += genre + "/";
+	        }
+	        
+	        if(sort.equals("yearpublished")) {
+	        	remarks += "최신순";
+	        } else if(sort.equals("hit")) {
+	        	remarks += "조회수";
+	        } else if(sort.equals("recCnt")) {
+	        	remarks += "추천순";
+	        }
+
+	        logTO.setRemarks(remarks);
 	        
 	        logsDAO.logsWriteOk(logTO);
 		}
