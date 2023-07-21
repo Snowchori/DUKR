@@ -641,47 +641,54 @@ public class DURKController {
 		to.setWip(req.getRemoteAddr());
 
 		if(!to.getMemSeq().equals("")) {
-			 commentDAO.boardCommentWrite(to);
-			 
-			 CommentListTO updatedComments = new CommentListTO();
-			 updatedComments.setCommentList(commentDAO.boardCommentList(req.getParameter("boardSeq")));
-			 
-			 for(CommentTO comment : updatedComments.getCommentList()) {
-				 String cWriter = comment.getWriter();
-				 String cWdate = comment.getWdate();
-				 int cRecCnt = comment.getRecCnt();
-				 String cContent = comment.getContent();	
-				 String cSeq = comment.getSeq();
-				 String writerSeq = comment.getMemSeq();
-
-				 sbResponseHtml.append("<span class='dropdown'>");	
-				 sbResponseHtml.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
-				 sbResponseHtml.append(cWriter);	
-				 sbResponseHtml.append("</a>");
-				 sbResponseHtml.append("<ul class='dropdown-menu'>");
-				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
-				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
-				 sbResponseHtml.append("</ul>");	
-				 sbResponseHtml.append("</span>&nbsp;");	
-				 sbResponseHtml.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-				 sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + req.getParameter("memSeq") + "\", \"" + cSeq + "\")'>");
-				 sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
-				 sbResponseHtml.append(cRecCnt);		
-				 sbResponseHtml.append("</button>");
-				 
-				 if(req.getParameter("memSeq").equals(writerSeq)){
-					 sbResponseHtml.append("<button class='btn float-end me-3' style='color: red;'>");
-					 sbResponseHtml.append("<i class='fas fa-times'></i>");
-					 sbResponseHtml.append("</button>");
-				 }
-				 
-				 sbResponseHtml.append("<br>");	
-				 sbResponseHtml.append(cContent);	
-				 sbResponseHtml.append("<hr class='mt-3 my-2'>");
-			 }
-		}
+			 commentDAO.boardCommentWrite(to);			 
+			 sbResponseHtml.append(commentsBuilder(req.getParameter("boardSeq"), req.getParameter("memSeq")));
+		}	
 
 		return sbResponseHtml.toString();
+	}
+	
+	// 댓글목록 업데이트 => HTML 생성 메소드
+	public String commentsBuilder(String boardSeq, String memSeq) {
+		CommentListTO updatedComments = new CommentListTO();
+		updatedComments.setCommentList(commentDAO.boardCommentList(boardSeq));
+		
+		StringBuilder sbReturn = new StringBuilder();
+		for(CommentTO comment : updatedComments.getCommentList()) {
+			String cWriter = comment.getWriter();
+			String cWdate = comment.getWdate();
+			int cRecCnt = comment.getRecCnt();
+			String cContent = comment.getContent();	
+			String cSeq = comment.getSeq();
+			String writerSeq = comment.getMemSeq();
+
+			sbReturn.append("<span class='dropdown'>");	
+			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
+			sbReturn.append(cWriter);	
+			sbReturn.append("</a>");
+			sbReturn.append("<ul class='dropdown-menu'>");
+			sbReturn.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
+			sbReturn.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
+			sbReturn.append("</ul>");	
+			sbReturn.append("</span>&nbsp;");	
+			sbReturn.append("<span style='color:#888888;'>" + cWdate + "</span>");	
+			sbReturn.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + memSeq + "\", \"" + cSeq + "\")'>");
+			sbReturn.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
+			sbReturn.append(cRecCnt);		
+			sbReturn.append("</button>");
+			 
+			if(memSeq.equals(writerSeq)){
+				sbReturn.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
+				sbReturn.append("<i class='fas fa-times'></i>");
+				sbReturn.append("</button>");
+			}
+			 
+			sbReturn.append("<br>");	
+			sbReturn.append(cContent);	
+			sbReturn.append("<hr class='mt-3 my-2'>");
+		 }
+		
+		return sbReturn.toString();
 	}
 	
 	// 댓글 삭제
@@ -692,44 +699,9 @@ public class DURKController {
 		String commentSeq = req.getParameter("commentSeq");
 		commentDAO.commentDelete(commentSeq);
 		
-		CommentListTO updatedComments = new CommentListTO();
-		updatedComments.setCommentList(commentDAO.boardCommentList(req.getParameter("boardSeq")));
-		 
-		for(CommentTO comment : updatedComments.getCommentList()) {
-			String cWriter = comment.getWriter();
-			String cWdate = comment.getWdate();
-			int cRecCnt = comment.getRecCnt();
-			String cContent = comment.getContent();	
-			String cSeq = comment.getSeq();
-			String writerSeq = comment.getMemSeq();
+		String strReturn = commentsBuilder(req.getParameter("boardSeq"), req.getParameter("userSeq"));
 
-			sbResponseHtml.append("<span class='dropdown'>");	
-			sbResponseHtml.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
-			sbResponseHtml.append(cWriter);	
-			sbResponseHtml.append("</a>");
-			sbResponseHtml.append("<ul class='dropdown-menu'>");
-			sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
-			sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
-			sbResponseHtml.append("</ul>");	
-			sbResponseHtml.append("</span>&nbsp;");	
-			sbResponseHtml.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-			sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + req.getParameter("memSeq") + "\", \"" + cSeq + "\")'>");
-			sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
-			sbResponseHtml.append(cRecCnt);		
-			sbResponseHtml.append("</button>");
-			 
-			if(req.getParameter("userSeq").equals(writerSeq)){
-				sbResponseHtml.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
-				sbResponseHtml.append("<i class='fas fa-times'></i>");
-				sbResponseHtml.append("</button>");
-			}
-			 
-			sbResponseHtml.append("<br>");	
-			sbResponseHtml.append(cContent);	
-			sbResponseHtml.append("<hr class='mt-3 my-2'>");
-		}
-		
-		return sbResponseHtml.toString();
+		return strReturn;
 	}
 	
 	// 댓글 추천

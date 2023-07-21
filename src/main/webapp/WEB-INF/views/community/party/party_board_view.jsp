@@ -360,12 +360,21 @@ if(!memSeq.equals(userSeq)){
 					</button>
 					<%= strApply %>
 				</div>
-
-				<b style="font-size: 20px;">댓글</b>
+				
+				<div class="d-flex">
+					<button class="btn btn-secondary" style="margin-right: auto;" onclick="location.href='partyBoardList?cpage='">목록</button>
+					
+					<div class="d-flex">
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" >삭제</button>								
+						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='partyBoardModify?cpage=&seq=" + bseq + ">수정</button>			
+					</div>
+				</div>
 				<hr class="my-2">
 
+				<b style="font-size: 20px;">댓글</b>
+
 				<!-- 댓글영역 -->
-				<div class="mb-3" id="cmtArea">
+				<div class="mt-2 mb-3" id="cmtArea">
 					<div id="comments">
 						<%=sbComments%>
 					</div>
