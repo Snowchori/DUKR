@@ -45,7 +45,7 @@
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
- 		<link rel="stylesheet" href="assets/css/style2.css" />
+ 		<link rel="stylesheet" href="assets/css/style.css" />
 		
 		<!-- Font Awesome icons (free version)-->
 	    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>

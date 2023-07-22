@@ -14,7 +14,10 @@
 			userHtml.append("<button class='accordion-button collapsed' type='button' ");
 			userHtml.append("data-bs-toggle='collapse' data-bs-target='#flush-collapse" + to.getSeq());
 			userHtml.append("' aria-expanded='false' aria-controls='flush-collapse" + to.getSeq() + "'>");
-			userHtml.append(to.getNickname());
+			userHtml.append("닉네임 : " + to.getNickname());
+			if(to.isAdmin()) {
+				userHtml.append(" [관리자]");	
+			}
 			userHtml.append("</button>");
 			userHtml.append("</h2>");
 			userHtml.append("<div id='flush-collapse" + to.getSeq() + "' class='accordion-collapse collapse' ");

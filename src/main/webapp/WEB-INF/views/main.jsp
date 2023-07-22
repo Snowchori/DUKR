@@ -125,7 +125,7 @@
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 	    <!--  css 파일 -->
-		<link rel="stylesheet" href="assets/css/style2.css" />
+		<link rel="stylesheet" href="assets/css/style.css" />
 	    <!--  jquery cdn -->
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
 	    </script>
