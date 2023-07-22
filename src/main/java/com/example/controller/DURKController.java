@@ -38,6 +38,7 @@ import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.inquiry.InquiryDAO;
 import com.example.model.inquiry.InquiryTO;
+import com.example.model.logs.LogListTO;
 import com.example.model.logs.LogsDAO;
 import com.example.model.logs.LogsTO;
 import com.example.model.member.MemberDAO;
@@ -293,14 +294,35 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
 		
-		String keyWord = (request.getParameter("keyWord") != null && !request.getParameter("keyWord").equals("")) ? request.getParameter("keyWord") : "%"; 
+		String keyWord = (request.getParameter("keyWord") != null && !request.getParameter("keyWord").equals("")) ? request.getParameter("keyWord") : "%";
+		String logType = (request.getParameter("logType") != null && !request.getParameter("logType").equals("")) ? request.getParameter("logType") : "1";
 		
-		ArrayList<LogsTO> logs_list = logsDAO.logsList(keyWord);
+		LogListTO listTO = new LogListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setKeyWord(keyWord);
+		listTO.setLogType(logType);
+		
+		listTO = logsDAO.logsList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/log_manage");
-		modelAndView.addObject("logs_list", logs_list);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}

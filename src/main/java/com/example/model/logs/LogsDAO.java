@@ -1,7 +1,5 @@
 package com.example.model.logs;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,10 +10,15 @@ public class LogsDAO {
 	@Autowired
 	LogsMapperInter logsMapper;
 	
-	public ArrayList<LogsTO> logsList(String keyWord) {
-		ArrayList<LogsTO> lists = logsMapper.logsList(keyWord);
+	public LogListTO logsList(LogListTO listTO) {
+		listTO.setTotalRecord(logsMapper.logListTotal(listTO));
+		listTO.setSkip();
+		listTO.setLogLists(logsMapper.logsList(listTO));
+		listTO.setTotalPage();
+		listTO.setStartBlock();
+		listTO.setEndBlock();
 		
-		return lists;
+		return listTO;
 	}
 	
 	public int logsWriteOk(LogsTO to) {
