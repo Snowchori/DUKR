@@ -1,3 +1,4 @@
+<%@page import="com.example.model.board.BoardDAO"%>
 <%@page import="com.example.model.comment.CommentListTO"%>
 <%@page import="com.example.model.comment.CommentTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -11,19 +12,10 @@
 		cpage = Integer.parseInt(request.getParameter("cpage"));
 	}
 %>
-
-<%
-	String memSeq = "null";
-	if(session.getAttribute("logged_in_user") != null){
-		MemberTO logged_in_user = (MemberTO)session.getAttribute("logged_in_user");
-		memSeq = "\"" + logged_in_user.getSeq() + "\"";
-	}
-%>
 <%
 	BoardTO to = (BoardTO)request.getAttribute("to");
 
 	String boardSeq = to.getSeq();
-
 	String wSeq = to.getMemSeq();
 	String subject = to.getSubject();
 	String writer = to.getWriter();
@@ -35,50 +27,18 @@
 	String cmtCnt = to.getCmtCnt();
 %>
 <%
-	CommentListTO commentListTo = new CommentListTO();
-	commentListTo = (CommentListTO)request.getAttribute("commentListTo");
-
-	StringBuilder sbComments = new StringBuilder();
-
-	for(CommentTO comment : commentListTo.getCommentList()){
-		String cSeq = comment.getSeq();
-		String writerSeq = comment.getMemSeq();
-		String cWriter = comment.getWriter();
-		String cWdate = comment.getWdate();
-		int cRecCnt = comment.getRecCnt();
-		String cContent = comment.getContent();
-
-		sbComments.append("<span class='dropdown'>");	
-		sbComments.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
-		sbComments.append(cWriter);	
-		sbComments.append("</a>");
-		sbComments.append("<ul class='dropdown-menu'>");
-		sbComments.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
-		sbComments.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
-		sbComments.append("</ul>");	
-		sbComments.append("</span>&nbsp;");	
-		sbComments.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-		sbComments.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + userSeq + "\", \"" + cSeq + "\")'>");
-		sbComments.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
-		sbComments.append(cRecCnt);		
-		sbComments.append("</button>");	
-		
-		if(userSeq != null && userSeq.equals(writerSeq)){
-			sbComments.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
-			sbComments.append("<i class='fas fa-times'></i>");
-			sbComments.append("</button>");
-		}
-		
-		sbComments.append("<br>");	
-		sbComments.append(cContent);	
-		sbComments.append("<hr class='mt-3 my-2'>");	
-	}
+	String comments = (String)request.getAttribute("comments");
 %>
 <%
 	boolean isWriter = true;
-
 	if(!wSeq.equals(userSeq)){
 		isWriter = false;
+	}
+	
+	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
+	String recBtnColor = "btn-secondary";
+	if(didUserRec){
+		recBtnColor = "btn-primary";
 	}
 %>
 
@@ -102,26 +62,32 @@
 							userSeq: <%=userSeq %>,
 							isWriter: <%=isWriter %>
 						},
-						success : function(res) {
+						success : function(result) {
+							const res = (result % 10);
+							const updatedRecCnt = Math.floor(result / 10);
+							
 							if(res == 2){
 								alert('먼저 로그인 해야합니다');
 							}else if(res == 3){
-								alert('이미 추천한 게시글입니다');
+								$('#viewRecCnt').html(updatedRecCnt);
+								$('#recBtn').removeClass('btn-primary').addClass('btn-secondary');
+
+								alert('게시글 추천을 취소했습니다');	
 							}else if(res == 4){
 								alert('본인 게시글은 추천할 수 없습니다');
 							}else if(res == 0){
 								alert('알 수 없는 추천 오류');
 							}else{
-								let curRecCnt = $('#viewRecCnt').html();
-								$('#viewRecCnt').html(parseInt(curRecCnt) + 1);
-								console.log(curRecCnt);
+								$('#viewRecCnt').html(updatedRecCnt);
+								$('#recBtn').removeClass('btn-secondary').addClass('btn-primary');
+
 								alert('글을 추천했습니다');
 							}
 						}
 					});
 				};
 				
-				// 댓글쓰기
+				// 댓글쓰기 
 				document.getElementById("cmtWbtn").onclick = function(){
 					$.ajax({
 						url:'/freeboardCommentWrite',
@@ -133,11 +99,11 @@
 						},
 						success: function(res){
 							if(res != ""){
-								let curCmtCnt = $('#viewCmtCnt').html();
-								$('#viewCmtCnt').html(parseInt(curCmtCnt) + 1);
-								
 								$('#comments').html(res);
 								$('#cContent').val('');
+								
+								let numberOfComments = res.split("<span class='dropdown'").length - 1;
+								$('#viewCmtCnt').html(numberOfComments);	
 							}else{
 								alert("먼저 로그인을 해야합니다");
 								console.log(res);
@@ -157,19 +123,18 @@
 						writerSeq: wSeq,
 						memSeq: mSeq,
 						cmtSeq: cSeq,
+						boardSeq: <%=boardSeq %>
 					},
-					success: function(res){
+					success: function(result){
+						const res = parseInt(result.substring(0, 1));
+						const updatedComments = result.substring(1);
+
 						if(res == 0){
 							alert('먼저 로그인 해야합니다');
 						}else if(res == 1){
-							let btnId = 'cmtRecBtn' + cSeq;
-							let btnHtml = $('#' + btnId).html();
-							const curRec = btnHtml.replace('<i class="fas fa-thumbs-up" aria-hidden="true"></i>&nbsp;', '');
-							const newRec = parseInt(curRec) + 1;
-
-							$('#' + btnId).html('<i class="fas fa-thumbs-up" aria-hidden="true"></i>&nbsp;' + newRec);
+							$('#comments').html(updatedComments);
 						}else if(res == 2){
-							alert('이미 추천한 댓글입니다');
+							$('#comments').html(updatedComments);
 						}else if(res == 3){
 							alert('본인의 댓글은 추천할수 없습니다');
 						}
@@ -189,10 +154,42 @@
 					},
 					success: function(res){
 						$('#comments').html(res);
+						
+						let numberOfComments = res.split("<span class='dropdown'").length - 1;
+						$('#viewCmtCnt').html(numberOfComments);
 					}
 				});
 			}
 			
+			// 댓글 수정함수
+			function modifyComment(cSeq, commentIndex){
+				const cmtId = 'cmtContent' + cSeq;
+				let curContent = $('#' + cmtId).html();
+				let options = 'cmtOptions' + cSeq;
+				
+				$('#' + options).html('<button class="btn float-end" onclick="modifyCommentOk(' + cSeq + ')"><i class="far fa-check-circle"></i></button>');
+				$('#' + cmtId).html('<textArea id="modifiedCmt' + cSeq + '" class="form-control" rows="3" style="resize: none;">' + curContent + '</textArea>');
+			}
+			
+			// 댓글 수정완료함수
+			function modifyCommentOk(cmtSeq){
+				const cmtId = 'modifiedCmt' + cmtSeq;
+				const modifiedContent = $('#' + cmtId).val();
+				//console.log(modifiedContent);
+				$.ajax({
+					url: '/modifyComment',
+					type: 'POST',
+					data: {
+						cSeq: cmtSeq,
+						userSeq: <%=userSeq %>,
+						boardSeq: <%=boardSeq %>,
+						content: modifiedContent
+					},
+					success: function(result){
+						$('#comments').html(result);
+					}
+				});
+			}
 		</script>
 		<style>
 			.bottombody{
@@ -291,24 +288,27 @@
 				</div>
 				
 				<div class="mt-5 pt-5 d-flex justify-content-center">
-					<button id="recBtn" class="btn btn-primary">
+					<button id="recBtn" class="btn <%=recBtnColor%>">
 						<i class="fas fa-thumbs-up"></i> 추천
 					</button>
 				</div>
 				
 				<div class="d-flex">
 					<button class="btn btn-secondary" style="margin-right: auto;" onclick="location.href='freeBoardList?cpage=<%=cpage %>'">목록</button>
-					<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>			
+					
+					<div class="d-flex">
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" >삭제</button>								
+						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>			
+					</div>
 				</div>
-
-				<hr class="my-4">
+				<hr class="my-2">
 
 				<b style="font-size: 20px;">댓글</b>
 
 				<!-- 댓글영역 -->
-				<div class="mb-3" id="cmtArea">
+				<div class="mt-2 mb-3" id="cmtArea">
 					<div id="comments">
-						<%=sbComments%>
+						<%=comments%> 
 					</div>
 					
 					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>

@@ -38,6 +38,9 @@ import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.inquiry.InquiryDAO;
 import com.example.model.inquiry.InquiryTO;
+import com.example.model.logs.LogListTO;
+import com.example.model.logs.LogsDAO;
+import com.example.model.logs.LogsTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
@@ -78,6 +81,9 @@ public class DURKController {
 	
 	@Autowired
 	private ReportDAO reportDAO;
+	
+	@Autowired
+	private LogsDAO logsDAO;
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -254,6 +260,29 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/inquiryAnswerWriteOk")
+	public int inquiryAnswerWriteOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		InquiryTO to = new InquiryTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		
+		int flag = inquiryDAO.inquiryAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("문의 답변 완료");
+			noteTO.setContent("관리자가 문의에 답변을 남겼습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
 	@RequestMapping("/logManage")
 	public ModelAndView logManage(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -265,9 +294,35 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String keyWord = (request.getParameter("keyWord") != null && !request.getParameter("keyWord").equals("")) ? request.getParameter("keyWord") : "%";
+		String logType = (request.getParameter("logType") != null && !request.getParameter("logType").equals("")) ? request.getParameter("logType") : "1";
+		
+		LogListTO listTO = new LogListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setKeyWord(keyWord);
+		listTO.setLogType(logType);
+		
+		listTO = logsDAO.logsList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/log_manage");
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}
@@ -330,6 +385,85 @@ public class DURKController {
 		modelAndView.addObject("report_list", report_list);
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/reportAnswerWriteOk")
+	public int reportAnswerWriteOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("답변완료");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 답변 완료");
+			noteTO.setContent("관리자가 신고글에 답변을 남겼습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/deleteBoardOk")
+	public int deleteBoardOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("게시글삭제");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			boardDAO.boardDelete(request.getParameter("boardSeq"));
+			
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 게시글 삭제 완료");
+			noteTO.setContent("관리자가 신고글의 게시글을 삭제하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
+	@RequestMapping("/ipBanOk")
+	public int ipBanOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("ip밴");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			int check = boardDAO.bipCheck(request.getParameter("boardSeq"));
+			if(check == 0) {
+				boardDAO.ipBan(request.getParameter("boardSeq"));
+			}
+			boardDAO.boardDelete(request.getParameter("boardSeq"));
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 게시글 ip밴 완료");
+			noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
 	}
 	
 	@RequestMapping("/userList")
@@ -552,12 +686,27 @@ public class DURKController {
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
-		
-		CommentListTO commentListTo = new CommentListTO();
-		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
 
+		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		
+		// 보고있는 유저의 게시글 추천여부 감지 
+		boolean didUserRec = false;
+		String uSeq = null;
+		
+		if(userInfo != null) {
+			uSeq = userInfo.getSeq();
+			
+			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
+			if(recCheck == 1) {
+				didUserRec = true;
+			}
+		}
+
+		String comments = commentsBuilder(request.getParameter("seq"), uSeq);
+		
 		modelAndView.addObject("to", to);
-		modelAndView.addObject("commentListTo", commentListTo);
+		modelAndView.addObject("didUserRec", didUserRec);
+		modelAndView.addObject("comments", comments);
 		
 		return modelAndView;
 	}
@@ -618,60 +767,20 @@ public class DURKController {
 		to.setWip(req.getRemoteAddr());
 
 		if(!to.getMemSeq().equals("")) {
-			 commentDAO.boardCommentWrite(to);
-			 
-			 CommentListTO updatedComments = new CommentListTO();
-			 updatedComments.setCommentList(commentDAO.boardCommentList(req.getParameter("boardSeq")));
-			 
-			 for(CommentTO comment : updatedComments.getCommentList()) {
-				 String cWriter = comment.getWriter();
-				 String cWdate = comment.getWdate();
-				 int cRecCnt = comment.getRecCnt();
-				 String cContent = comment.getContent();	
-				 String cSeq = comment.getSeq();
-				 String writerSeq = comment.getMemSeq();
-
-				 sbResponseHtml.append("<span class='dropdown'>");	
-				 sbResponseHtml.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
-				 sbResponseHtml.append(cWriter);	
-				 sbResponseHtml.append("</a>");
-				 sbResponseHtml.append("<ul class='dropdown-menu'>");
-				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
-				 sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
-				 sbResponseHtml.append("</ul>");	
-				 sbResponseHtml.append("</span>&nbsp;");	
-				 sbResponseHtml.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-				 sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + req.getParameter("memSeq") + "\", \"" + cSeq + "\")'>");
-				 sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
-				 sbResponseHtml.append(cRecCnt);		
-				 sbResponseHtml.append("</button>");
-				 
-				 if(req.getParameter("memSeq").equals(writerSeq)){
-					 sbResponseHtml.append("<button class='btn float-end me-3' style='color: red;'>");
-					 sbResponseHtml.append("<i class='fas fa-times'></i>");
-					 sbResponseHtml.append("</button>");
-				 }
-				 
-				 sbResponseHtml.append("<br>");	
-				 sbResponseHtml.append(cContent);	
-				 sbResponseHtml.append("<hr class='mt-3 my-2'>");
-			 }
-		}
+			 commentDAO.boardCommentWrite(to);			 
+			 sbResponseHtml.append(commentsBuilder(req.getParameter("boardSeq"), req.getParameter("memSeq")));
+		}	
 
 		return sbResponseHtml.toString();
 	}
 	
-	// 댓글 삭제
-	@PostMapping("/commentDelete")
-	public String commentDelete(HttpServletRequest req) {
-		StringBuilder sbResponseHtml = new StringBuilder();
-		
-		String commentSeq = req.getParameter("commentSeq");
-		commentDAO.commentDelete(commentSeq);
-		
+	// 댓글목록 업데이트 => HTML 생성 메소드
+	public String commentsBuilder(String boardSeq, String memSeq) {
 		CommentListTO updatedComments = new CommentListTO();
-		updatedComments.setCommentList(commentDAO.boardCommentList(req.getParameter("boardSeq")));
-		 
+		updatedComments.setCommentList(commentDAO.boardCommentList(boardSeq));
+		
+		StringBuilder sbReturn = new StringBuilder();
+		int commentIndex = 0;
 		for(CommentTO comment : updatedComments.getCommentList()) {
 			String cWriter = comment.getWriter();
 			String cWdate = comment.getWdate();
@@ -679,57 +788,111 @@ public class DURKController {
 			String cContent = comment.getContent();	
 			String cSeq = comment.getSeq();
 			String writerSeq = comment.getMemSeq();
+			
+			String comRecBtnColor = "#4db2b2";
+			int didUserRecommendedThisComment = commentDAO.commentRecCheck(memSeq, cSeq);
+			if(didUserRecommendedThisComment == 1) {
+				comRecBtnColor = "#F08080";
+			}
 
-			sbResponseHtml.append("<span class='dropdown'>");	
-			sbResponseHtml.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
-			sbResponseHtml.append(cWriter);	
-			sbResponseHtml.append("</a>");
-			sbResponseHtml.append("<ul class='dropdown-menu'>");
-			sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
-			sbResponseHtml.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
-			sbResponseHtml.append("</ul>");	
-			sbResponseHtml.append("</span>&nbsp;");	
-			sbResponseHtml.append("<span style='color:#888888;'>" + cWdate + "</span>");	
-			sbResponseHtml.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: #4db2b2;' onclick='recommendComment(\"" + writerSeq + "\", \"" + req.getParameter("memSeq") + "\", \"" + cSeq + "\")'>");
-			sbResponseHtml.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
-			sbResponseHtml.append(cRecCnt);		
-			sbResponseHtml.append("</button>");
+			sbReturn.append("<span class='dropdown'>");	
+			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
+			sbReturn.append(cWriter);	
+			sbReturn.append("</a>");
+			sbReturn.append("<ul class='dropdown-menu'>");
+			sbReturn.append("<li><a class='dropdown-item' href='/freeBoardList?select=3&search=" + cWriter + "'>게시글 보기</a></li>");	
+			sbReturn.append("<li><a class='dropdown-item' href='/freeBoardList?'>댓글 보기</a></li>");	
+			sbReturn.append("</ul>");	
+			sbReturn.append("</span>&nbsp;");	
+			sbReturn.append("<span style='color:#888888;'>" + cWdate + "</span>");	
+			sbReturn.append("<button id='cmtRecBtn" + cSeq + "' class='btn' style='font-size:14px; color: " + comRecBtnColor + ";' onclick='recommendComment(\"" + writerSeq + "\", \"" + memSeq + "\", \"" + cSeq + "\")'>");
+			sbReturn.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
+			sbReturn.append(cRecCnt);		
+			sbReturn.append("</button>");
 			 
-			if(req.getParameter("userSeq").equals(writerSeq)){
-				sbResponseHtml.append("<button class='btn float-end me-3' style='color: red;' onclick='deleteComment(\"" + cSeq + "\")'>");
-				sbResponseHtml.append("<i class='fas fa-times'></i>");
-				sbResponseHtml.append("</button>");
+			if(memSeq != null && memSeq.equals(writerSeq)){
+				sbReturn.append("<span id='cmtOptions" + cSeq + "'>");
+				// 삭제버튼
+				sbReturn.append("<button class='btn float-end me-3' style='color: #888888;' onclick='deleteComment(\"" + cSeq + "\")'>");
+				sbReturn.append("<i class=\"fas fa-trash\"></i>");
+				sbReturn.append("</button>");
+				// 수정버튼
+				sbReturn.append("<button class='btn float-end' style='color: #888888;' onclick='modifyComment(\"" + cSeq + "\", \"" + commentIndex + "\")'>");
+				sbReturn.append("<i class=\"fas fa-pencil-alt\"></i>");
+				sbReturn.append("</button>");
+				sbReturn.append("</span>");
 			}
 			 
-			sbResponseHtml.append("<br>");	
-			sbResponseHtml.append(cContent);	
-			sbResponseHtml.append("<hr class='mt-3 my-2'>");
-		}
+			sbReturn.append("<br>");
+			
+			sbReturn.append("<span id='cmtContent" + cSeq + "'>");
+			sbReturn.append(cContent);
+			sbReturn.append("</span>");
+			
+			sbReturn.append("<hr class='mt-3 my-2'>");
+			
+			commentIndex ++;
+		 }
 		
-		return sbResponseHtml.toString();
+		return sbReturn.toString();
+	}
+	
+	// 댓글 삭제
+	@PostMapping("/commentDelete")
+	public String commentDelete(HttpServletRequest req) {
+		String boardSeq = req.getParameter("boardSeq");
+		String userSeq = req.getParameter("userSeq");
+		String commentSeq = req.getParameter("commentSeq");
+		commentDAO.commentDelete(commentSeq, boardSeq);
+		
+		String strReturn = commentsBuilder(boardSeq, userSeq);
+
+		return strReturn;
+	}
+	
+	// 댓글 수정
+	@PostMapping("/modifyComment")
+	public String modifyComment(HttpServletRequest req) {
+		String cSeq = req.getParameter("cSeq");
+		String userSeq = req.getParameter("userSeq");
+		String boardSeq = req.getParameter("boardSeq");
+		String content = req.getParameter("content");
+
+		commentDAO.modifyComment(cSeq, content);
+		String updatedComments = commentsBuilder(boardSeq, userSeq);
+		
+		return updatedComments;
 	}
 	
 	// 댓글 추천
 	@PostMapping("/commentRec")
-	public int commentRec(HttpServletRequest req) {
-		int response;
+	public String commentRec(HttpServletRequest req) {
+		String response;
 		
 		String cmtSeq = req.getParameter("cmtSeq");
 		String memSeq = req.getParameter("memSeq");
+		String boardSeq = req.getParameter("boardSeq");
 
 		if(memSeq.equals("") || memSeq.equals("null")) {
-			response = 0;
+			response = "0";
 		}else {
 			if(req.getParameter("writerSeq").equals(memSeq)) {
-				response = 3;
+				response = "3";
 			}else {
 				int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
 			
 				if(recCheck == 0) {
 					commentDAO.commentRec(memSeq, cmtSeq);
-					response = 1;
+					response = "1";
+					
+					String updatedComments = commentsBuilder(boardSeq, memSeq); 
+					response += updatedComments;
 				}else {
-					response = 2;
+					commentDAO.commentRecCancel(memSeq, cmtSeq);
+					response = "2";
+					
+					String updatedComments = commentsBuilder(boardSeq, memSeq);
+					response += updatedComments;
 				}
 			}
 		}
@@ -740,7 +903,6 @@ public class DURKController {
 	// ck에디터 이미지 업로드하기@@
 	@PostMapping( value= { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
-		//System.out.println("upload request");
 		Boolean uploadResult = false;
 		
 		String originalFileName = upload.getOriginalFilename();
@@ -805,7 +967,6 @@ public class DURKController {
 		String isWriter = req.getParameter("isWriter");
 		
 		if(userSeq == "") {
-			// 로그인 필요
 			response = 2;
 		}else {
 			if(isWriter.equals("true")) {
@@ -815,7 +976,8 @@ public class DURKController {
 				int recCheck = boardDAO.recCheck(userSeq, boardSeq);
 			
 				if(recCheck == 1) {
-					// 이미 추천한 게시글인 경우
+					// 이미 추천한 게시글인 경우, 추천해제
+					boardDAO.boardRecommendCancel(userSeq, boardSeq);
 					response = 3;
 				}else {
 					// 추천 성공
@@ -824,6 +986,10 @@ public class DURKController {
 				}
 			}
 		}
+		
+		// 추천수 업데이트
+		int updatedRecCnt = boardDAO.recCount(boardSeq);
+		response += (updatedRecCnt * 10);
 		
 		return response;
 	}
@@ -899,11 +1065,9 @@ public class DURKController {
 		to.setSeq(seq);
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
-		
-		CommentListTO commentListTo = new CommentListTO();
-		commentListTo.setCommentList(commentDAO.boardCommentList(to.getSeq()));
 
 		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		String uSeq = null;
 		
 		int status = 0;
 		if(userInfo != null) {
@@ -911,11 +1075,27 @@ public class DURKController {
 			ato.setPartySeq(seq);
 			ato.setSenderSeq(userInfo.getSeq());
 			status = partyDAO.isApplied(ato);
+			
+			uSeq = userInfo.getSeq();
+		}
+
+		String comments = commentsBuilder(seq, uSeq);
+		
+		// 보고있는 유저의 게시글 추천여부 감지
+		boolean didUserRec = false;
+		if(request.getSession().getAttribute("logged_in_user") != null) {
+			String userSeq = ((MemberTO)request.getSession().getAttribute("logged_in_user")).getSeq();
+					
+			int recCheck = boardDAO.recCheck(userSeq, request.getParameter("seq"));
+			if(recCheck == 1) {
+				didUserRec = true;
+			}
 		}
 		
 		modelAndView.addObject("to", to);
-		modelAndView.addObject("commentListTo", commentListTo);
 		modelAndView.addObject("status", status);
+		modelAndView.addObject("didUserRec", didUserRec);
+		modelAndView.addObject("comments", comments);
 		
 		return modelAndView;
 	}
@@ -1107,6 +1287,83 @@ public class DURKController {
 		return flag;
 	}
 	
+	@RequestMapping("/gameSearch")
+	public ModelAndView gameSearch(HttpServletRequest request) {
+		
+		String keyword = "";
+		if(request.getParameter("stx") != null) {
+			keyword = request.getParameter("stx");
+		}
+		
+		String players = "";
+		if(request.getParameter("players") != null) {
+			players = request.getParameter("players");
+		}
+		
+		String genre = "";
+		if(request.getParameter("genre") != null) {
+			genre = request.getParameter("genre");
+		}
+		
+		String sort = "yearpublished";
+		if(request.getParameter("sort") != null) {
+			sort = request.getParameter("sort");
+		} else {
+			sort = "yearpublished";
+		}
+
+		SearchFilterTO filterTO = new SearchFilterTO();
+		filterTO.setKeyword(keyword);
+		filterTO.setPlayers(players);
+		filterTO.setGenre(genre);
+		filterTO.setSort(sort);
+		
+		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
+		
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq != null) {
+			LogsTO logTO = new LogsTO();
+	        logTO.setMemSeq(userSeq);
+	        logTO.setLog("게임검색");
+	        logTO.setLogType("2");
+	        
+	        String remarks = "검색어: ";
+	        if(!keyword.equals("")) {
+	        	remarks += keyword;
+	        }
+	        
+	        remarks += "<br>";
+	        
+	        if(!players.equals("")) {
+	        	remarks += players + "명/";
+	        }
+	        
+	        if(!genre.equals("")) {
+	        	remarks += genre + "/";
+	        }
+	        
+	        if(sort.equals("yearpublished")) {
+	        	remarks += "최신순";
+	        } else if(sort.equals("hit")) {
+	        	remarks += "조회수";
+	        } else if(sort.equals("recCnt")) {
+	        	remarks += "추천순";
+	        }
+
+	        logTO.setRemarks(remarks);
+	        
+	        logsDAO.logsWriteOk(logTO);
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("game/game_search");
+		modelAndView.addObject("lists", lists);
+		return modelAndView;
+	}
+	
 	@RequestMapping("/gameView")
 	public ModelAndView gameView(HttpServletRequest request) {
 		BoardgameTO gameTO = gameDAO.gameInfo(request.getParameter("seq"));
@@ -1160,46 +1417,6 @@ public class DURKController {
 		return modelAndView;
 	}
 	
-	// game
-	@RequestMapping("/gameSearch")
-	public ModelAndView gameSearch(HttpServletRequest request) {
-		
-		String keyword = "";
-		if(request.getParameter("stx") != null) {
-			keyword = request.getParameter("stx");
-		}
-		
-		String players = "";
-		if(request.getParameter("players") != null) {
-			players = request.getParameter("players");
-		}
-		
-		String genre = "";
-		if(request.getParameter("genre") != null) {
-			genre = request.getParameter("genre");
-		}
-		
-		String sort = "yearpublished";
-		if(request.getParameter("sort") != null) {
-			sort = request.getParameter("sort");
-		} else {
-			sort = "yearpublished";
-		}
-
-		SearchFilterTO filterTO = new SearchFilterTO();
-		filterTO.setKeyword(keyword);
-		filterTO.setPlayers(players);
-		filterTO.setGenre(genre);
-		filterTO.setSort(sort);
-		
-		ArrayList<BoardgameTO> lists = gameDAO.gameSearch(filterTO);
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("game/game_search");
-		modelAndView.addObject("lists", lists);
-		return modelAndView;
-	}
-	
 	// login
 	// 카카오 소셜로그인
 	@RequestMapping("/loginKakao")
@@ -1231,6 +1448,14 @@ public class DURKController {
 		to = memberDAO.trySocialLogin(to);
         req.getSession().setAttribute("logged_in_user", to);
         
+        LogsTO logTO = new LogsTO();
+        logTO.setMemSeq(to.getSeq());
+        logTO.setLog("로그인");
+        logTO.setRemarks("");
+        logTO.setLogType("1");
+        
+        logsDAO.logsWriteOk(logTO);
+        
         return "소셜로그인 성공";
 	}
 	
@@ -1248,6 +1473,14 @@ public class DURKController {
 		if(to != null) {
 			req.getSession().setAttribute("logged_in_user", to);
 			flag = 0;
+			
+			LogsTO logTO = new LogsTO();
+	        logTO.setMemSeq(to.getSeq());
+	        logTO.setLog("로그인");
+	        logTO.setRemarks("");
+	        logTO.setLogType("1");
+	        
+	        logsDAO.logsWriteOk(logTO);
 		}
 
 		return flag;
@@ -1263,8 +1496,21 @@ public class DURKController {
 	
 	// 로그아웃 처리 페이지
 	@RequestMapping("/logout")
-	public ModelAndView logout(HttpServletRequest req) {
+	public ModelAndView logout(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
 		ModelAndView mav = new ModelAndView("login/logout");
+		
+		LogsTO logTO = new LogsTO();
+        logTO.setMemSeq(userSeq);
+        logTO.setLog("로그아웃");
+        logTO.setRemarks("");
+        logTO.setLogType("1");
+        
+        logsDAO.logsWriteOk(logTO);
+		
 		return mav;
 	}
 	

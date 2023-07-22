@@ -82,6 +82,8 @@ if(preRecHtml == null || preRecHtml.toString().equals("")) {
 	cbtnHtml.append("icon: 'success',");
 	cbtnHtml.append("title: '초기화 완료',");
 	cbtnHtml.append("confirmButtonText: '확인',");
+	cbtnHtml.append("timer: 1500,");
+	cbtnHtml.append("timerProgressBar : true,");
 	cbtnHtml.append("willClose: () => {");
 	cbtnHtml.append("location.href='gameManage';");
 	cbtnHtml.append("}");
@@ -90,7 +92,9 @@ if(preRecHtml == null || preRecHtml.toString().equals("")) {
 	cbtnHtml.append("Swal.fire({");
 	cbtnHtml.append("icon: 'error',");
 	cbtnHtml.append("title: '초기화 실패',");
-	cbtnHtml.append("confirmButtonText: '확인'");
+	cbtnHtml.append("confirmButtonText: '확인',");
+	cbtnHtml.append("timer: 1500,");
+	cbtnHtml.append("timerProgressBar : true");
 	cbtnHtml.append("});");
 	cbtnHtml.append("}");
 	cbtnHtml.append("}");
@@ -214,6 +218,8 @@ if(seq != null && !seq.equals("")) {
 	mbtnHtml.append("icon: 'success',");
 	mbtnHtml.append("title: '정보 수정 완료',");
 	mbtnHtml.append("confirmButtonText: '확인',");
+	mbtnHtml.append("timer: 1500,");
+	mbtnHtml.append("timerProgressBar : true,");
 	mbtnHtml.append("willClose: () => {");
 	mbtnHtml.append("location.href='gameManage?seq=" + seq + "';");
 	mbtnHtml.append("}");
@@ -222,7 +228,9 @@ if(seq != null && !seq.equals("")) {
 	mbtnHtml.append("Swal.fire({");
 	mbtnHtml.append("icon: 'error',");
 	mbtnHtml.append("title: '정보 수정 실패',");
-	mbtnHtml.append("confirmButtonText: '확인'");
+	mbtnHtml.append("confirmButtonText: '확인',");
+	mbtnHtml.append("timer: 1500,");
+	mbtnHtml.append("timerProgressBar : true");
 	mbtnHtml.append("});");
 	mbtnHtml.append("}");
 	mbtnHtml.append("}");
@@ -272,6 +280,8 @@ if(seq != null && !seq.equals("")) {
 							  			icon: 'success',
 							  			title: '등록 완료',
 							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 							  			willClose: () => {
 							  				location.href='gameManage';
 						  				}
@@ -280,7 +290,9 @@ if(seq != null && !seq.equals("")) {
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '등록 실패',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
 						  			});
 					  			}
 					  		}
@@ -313,54 +325,7 @@ if(seq != null && !seq.equals("")) {
 			}
 		</script>
 		<style>
-			ul, #myUL {
-			  list-style-type: none;
-			}
 			
-			#myUL {
-			  margin: 0;
-			  padding: 0;
-			}
-			
-			.caret {
-			  cursor: pointer;
-			  -webkit-user-select: none; /* Safari 3.1+ */
-			  -moz-user-select: none; /* Firefox 2+ */
-			  -ms-user-select: none; /* IE 10+ */
-			  user-select: none;
-			}
-			
-			.caret::before {
-			  content: "\25B6";
-			  color: black;
-			  display: inline-block;
-			  margin-right: 6px;
-			}
-			
-			.caret-down::before {
-			  -ms-transform: rotate(90deg); /* IE 9 */
-			  -webkit-transform: rotate(90deg); /* Safari */'
-			  transform: rotate(90deg);  
-			}
-			
-			.nested {
-			  display: none;
-			}
-			
-			.active {
-			  display: block;
-			}
-			
-			.coment_input_text { 
-				border:1px solid #bbb;
-				width:100%;
-				height:100px;
-			}
-			
-			.game_img {
-			    max-width:200px;
-			    max-height:200px;
-			}
 		</style>
 	</head>
 	<body class="bg-secondary text-white">

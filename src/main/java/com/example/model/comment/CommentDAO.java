@@ -51,6 +51,13 @@ public class CommentDAO {
 		return result;
 	}
 	
+	// 댓글 추천해제하기
+	public int commentRecCancel(String memSeq, String cmtSeq) {
+		int result = commentMapperInter.commentRecCancel(memSeq, cmtSeq);
+		commentMapperInter.recCntMinus(cmtSeq);
+		return result;
+	}
+	
 	// ajax응답용 추천수 가져오기
 	public int getRecCnt(String seq) {
 		int result = commentMapperInter.getRecCnt(seq);
@@ -58,8 +65,15 @@ public class CommentDAO {
 	}
 	
 	// 댓글 삭제하기
-	public int commentDelete(String seq) {
-		int result = commentMapperInter.commentDelete(seq);
+	public int commentDelete(String commentSeq, String boardSeq) {
+		int result = commentMapperInter.commentDelete(commentSeq);
+		commentMapperInter.boardCmtCntMinus(boardSeq);
+		return result;
+	}
+	
+	// 댓글 삭제하기
+	public int modifyComment(String seq, String content) {
+		int result = commentMapperInter.modifyComment(seq, content);
 		return result;
 	}
 }

@@ -68,6 +68,8 @@
 							  			icon: 'success',
 							  			title: '해제 완료',
 							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
 							  			willClose: () => {
 							  				location.href='banUserManage';
 						  				}
@@ -76,7 +78,9 @@
 						  			Swal.fire({
 							  			icon: 'error',
 							  			title: '해제 실패',
-							  			confirmButtonText: '확인'
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
 						  			});
 					  			}
 					  		}

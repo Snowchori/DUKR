@@ -73,9 +73,17 @@ public interface BoardMapperInter {
 	@Insert("insert into boardrecommend values(#{memSeq}, #{boardSeq})")
 	public int boardRecommend(String memSeq, String boardSeq);
 	
+	// 게시글 추천 해제하기
+	@Delete("delete from boardrecommend where memSeq=#{memSeq} and boardSeq=#{boardSeq}")
+	public int boardRecommendCancel(String memSeq, String boardSeq);
+	
 	// 게시글 추천후 recCnt +1
 	@Update("update board set recCnt=recCnt+1 where seq=#{seq}")
 	public int boardRecCntPlus(String seq);
+	
+	// 게시글 추천해제 후 recCnt -1
+	@Update("update board set recCnt=recCnt-1 where seq=#{seq}")
+	public int boardRecCntMinus(String seq);
 	
 	// 게시글 추천여부
 	@Select("select count(*) from boardrecommend where memSeq=#{memSeq} and boardSeq=#{boardSeq}")
@@ -96,4 +104,20 @@ public interface BoardMapperInter {
 	// 회원 게시글 전부 지우기
 	@Update("update board set isDel = true where memSeq = #{seq}")
 	public int boardDeleteAll(String seq);
+	
+	// 게시글 지우기
+	@Update("update board set isDel = true where seq = #{seq}")
+	public int boardDelete(String seq);
+	
+	// 밴 ip 등록 확인
+	@Select("select bip from ipban where bip=#{bip}")
+	public String bipCheck(String bip);
+	
+	// 밴 ip 등록
+	@Insert("insert into ipban values(0, #{bip}, now())")
+	public int ipBan(String bip);
+	
+	// 게시글 ip 가져오기
+	@Select("select wip from board where seq=#{seq}")
+	public String getBip(String seq);
 }

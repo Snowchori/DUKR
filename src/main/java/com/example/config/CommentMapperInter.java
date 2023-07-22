@@ -41,13 +41,29 @@ public interface CommentMapperInter {
 	@Insert("insert into commentrecommend values(#{memSeq}, #{cmtSeq})")
 	public int commentRec(String memSeq, String cmtSeq);
 	
+	// 댓글 추천해제하기 
+	@Delete("delete from commentrecommend where memSeq=#{memSeq} and cmtSeq=#{cmtSeq}")
+	public int commentRecCancel(String memSeq, String cmtSeq);
+	
 	// 댓글 삭제하기
 	@Delete("delete from comment where seq=#{seq}")
 	public int commentDelete(String seq);
 	
+	// 댓글 수정하기
+	@Update("update comment set content=#{content} where seq=#{seq}")
+	public int modifyComment(String seq, String content);
+	
+	// 댓글 삭제하고 cmtCnt -1
+	@Update("update board set cmtCnt=cmtCnt-1 where seq=#{seq}")
+	public int boardCmtCntMinus(String seq);
+	
 	// 댓글 추천카운트 +1
 	@Update("update comment set recCnt=recCnt+1 where seq=#{seq}")
 	public int recCntPlus(String seq);
+	
+	// 댓글 추천카운트 -1
+	@Update("update comment set recCnt=recCnt-1 where seq=#{seq}")
+	public int recCntMinus(String seq);
 	
 	// ajax응답용 추천수 가져오기
 	@Select("select recCnt from comment where seq=#{seq}")
