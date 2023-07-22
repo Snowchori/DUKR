@@ -58,7 +58,6 @@ a {text-decoration:none;}
 .quickmenu ul li a:hover {color:#000;}
 .quickmenu ul li:last-child {border-bottom:0;}
 
-.content {position:relative;min-height:1000px;}
 
 @font-face {
     font-family: 'SBAggroB';
