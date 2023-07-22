@@ -41,7 +41,7 @@
 		favSB.append("<section class='page-section bg-light' id='portfolio'>");
 		favSB.append("<div class='container' id='p2'>");
 		favSB.append("<div class='text-center'>");
-		favSB.append("<h2 class='section-heading text-uppercase'>favorite games</h2>");
+		favSB.append("<h2 class='section-heading text-uppercase title'>favorite games</h2>");
 		favSB.append("<h3 class='section-subheading text-muted'>내가 즐겨찾기 한 보드게임 목록 입니다.</h3>");
 		favSB.append("</div>");
 		favSB.append("<div class='row d-flex flex-row-reverse my-3'>");
@@ -204,8 +204,8 @@
 	    <!-- Masthead-->
 	    <header class="masthead">
 	        <div class="container">
-	            <div class="masthead-subheading">Welcome To DUKR!</div>
-	            <div class="masthead-heading text-uppercase">대한민국 보드게임 커뮤니티</div>
+	            <div class="masthead-subheading title">Welcome To DUKR!</div>
+	            <div class="masthead-heading text-uppercase title">대한민국 보드게임 커뮤니티</div>
 	            <a class="btn btn-secondary btn-xl text-uppercase" href="#mainNav">더보기</a>
 	        </div>
 	    </header>
@@ -254,7 +254,7 @@
 	    <section class="page-section bg-light" id="portfolio">
 	        <div class="container" id="p1">
 	            <div class="text-center">
-	                <h2 class="section-heading text-uppercase">Recommended games</h2>
+	                <h2 class="section-heading text-uppercase title">Recommended games</h2>
 	                <h3 class="section-subheading text-muted">관리자가 엄선한 추천게임 5종 입니다.</h3>
 	            </div>
 	            <div class="row">
@@ -268,7 +268,7 @@
 	    <section class="page-section bg-light" id="portfolio">
 	        <div class="container" id="p3">
 	            <div class="text-center">
-	                <h2 class="section-heading text-uppercase">whole games</h2>
+	                <h2 class="section-heading text-uppercase title">whole games</h2>
 	                <h3 class="section-subheading text-muted">전체 게임 목록입니다.</h3>
 	            </div>
             	<%=totalSB %>
