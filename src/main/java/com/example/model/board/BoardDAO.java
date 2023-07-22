@@ -76,7 +76,14 @@ public class BoardDAO {
 			int hasFile = boardMapper.hasFile(list);
 			if(hasFile == 1) {
 				list.setHasFile(true);
-			} else {
+				
+				String content = boardMapper.boardContent(list.getSeq());
+				String[] imgs =content.split("<img");
+				int imgEnd = imgs[1].indexOf("\">");
+				String thumbnail = "<img" + imgs[1].substring(0, imgEnd + 2);
+
+				list.setThumbnail(thumbnail);
+			}else {
 				list.setHasFile(false);
 			}
 		}

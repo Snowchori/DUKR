@@ -26,15 +26,15 @@
 	boardHtml.append("<table class='table'>");
 	boardHtml.append("<tr><th></th><th>내가 쓴글</th></tr>");
 	
-	for(BoardTO list : listTO.getBoardLists()) {
+	for(BoardTO list: listTO.getBoardLists()) {
 		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
-		boardHtml.append("<td class='board-img'><i class='bi ");
+		boardHtml.append("<td class='board-img'>");
 		if(!list.isHasFile()) {
-			boardHtml.append("bi-file-earmark-excel");
+			boardHtml.append("<i class='bi bi-file-earmark-text h1'></i>");
 		} else {
-			boardHtml.append("bi-card-image");
+			boardHtml.append("<div class='thumbnail'>" + list.getThumbnail() + "</div>");
 		}
-		boardHtml.append(" h1 icon'></i></td>");
+		boardHtml.append("</td>");
 		boardHtml.append("<td><span class='badge bg-secondary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
