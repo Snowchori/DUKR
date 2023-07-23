@@ -396,8 +396,11 @@ if(didUserRec){
 					<button class="btn btn-secondary" style="margin-right: auto;" onclick="location.href='partyBoardList?cpage='">목록</button>
 					
 					<div class="d-flex">
-						<button class="btn btn-secondary mx-3" style="margin-left: auto;" >삭제</button>								
-						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='partyBoardModify?cpage=&seq=" + bseq + ">수정</button>			
+						<%if(isWriter){ %>	
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
+						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage='null'&seq=<%=boardSeq %>'">수정</button>				
+						<%} %>
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
 					</div>
 				</div>
 				<hr class="my-2">
