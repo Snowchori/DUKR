@@ -1100,6 +1100,53 @@ public class DURKController {
 		return response;
 	}
 	
+	// 신고 팝업창
+	@RequestMapping("/report")
+	public ModelAndView report(HttpServletRequest req) {
+		ModelAndView mav = new ModelAndView("/community/report_form");
+		
+		// 게시글인지 댓글인지
+		String targetType = req.getParameter("targetType");
+		String subject = null;
+		if(targetType.equals("board")) {
+			subject = req.getParameter("subject");
+		}
+		// 글 또는 댓글 seq
+		String seq = req.getParameter("seq");
+		// 신고자 정보
+		MemberTO userInfo = (MemberTO)req.getSession().getAttribute("logged_in_user");
+		String userSeq = null;
+		if(userInfo == null) {
+			// 로그인하지 않고 신고페이지를 요청할경우 로그인페이지로 
+			mav.setViewName("/login/login");
+		}else {
+			userSeq = userInfo.getSeq();
+		}		
+		// 신고글 내용
+		String content = null;
+		String writer = null;
+		if(targetType.equals("board")) {
+			// 게시글인경우 게시글정보
+			
+		}else if(targetType.equals("comment")) {
+			// 댓글인경우 댓글정보
+			CommentTO to = new CommentTO();
+			to.setSeq(seq);
+			to = commentDAO.getCmtInfoBySeq(to);
+			content = to.getContent();
+			writer = to.getWriter();
+		}
+		
+		mav.addObject("targetType", targetType);
+		mav.addObject("subject", subject);
+		mav.addObject("seq", seq);
+		mav.addObject("userSeq", userSeq);
+		mav.addObject("content", content);
+		mav.addObject("writer", writer);
+		
+		return mav;
+	}
+	
 	// ck에디터 이미지 업로드하기@@
 	@PostMapping( value= { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
@@ -1296,10 +1343,8 @@ public class DURKController {
 		
 		// 보고있는 유저의 게시글 추천여부 감지
 		boolean didUserRec = false;
-		if(request.getSession().getAttribute("logged_in_user") != null) {
-			String userSeq = ((MemberTO)request.getSession().getAttribute("logged_in_user")).getSeq();
-					
-			int recCheck = boardDAO.recCheck(userSeq, request.getParameter("seq"));
+		if(uSeq != null) {
+			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
 			if(recCheck == 1) {
 				didUserRec = true;
 			}

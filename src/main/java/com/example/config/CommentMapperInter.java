@@ -76,4 +76,8 @@ public interface CommentMapperInter {
 	// ajax응답용 추천수 가져오기
 	@Select("select recCnt from comment where seq=#{seq}")
 	public int getRecCnt(String seq);
+	
+	// seq로 특정댓글 정보 가져오기
+	@Select("select c.seq seq, c.content content, m.nickname writer from comment c inner join member m on c.memSeq=m.seq where c.seq=#{seq}")
+	public CommentTO getCmtInfoBySeq(CommentTO to);
 }

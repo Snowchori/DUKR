@@ -25,6 +25,12 @@ public class CommentDAO {
 		return listTO;
 	}
 	
+	// seq로 특정 댓글정보 가져오기
+	public CommentTO getCmtInfoBySeq(CommentTO to) {
+		to = commentMapperInter.getCmtInfoBySeq(to);
+		return to;
+	}
+	
 	// 자유게시판 뷰 - 댓글목록
 	public ArrayList<CommentTO> boardCommentList(String boardSeq){
 		ArrayList<CommentTO> commentList = commentMapperInter.boardCommentList(boardSeq);

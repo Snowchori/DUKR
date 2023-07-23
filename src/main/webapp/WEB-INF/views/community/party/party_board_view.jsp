@@ -266,6 +266,29 @@ if(didUserRec){
 					}
 				});
 			}
+			
+			// 댓글 신고
+			function reportComment(cSeq){
+				if(<%=userSeq%> == null){
+					alert('로그인해라');
+				}else{
+					let url = '/report?targetType=comment&seq=' + cSeq;
+					const pageName = 'DUKR - report';
+					// 팝업 위치설정
+					const screenWidth = window.screen.width;
+					const screenHeight = window.screen.height;
+					//console.log(screenWidth + "/" + screenHeight);
+					const popupLeft = (screenWidth / 2) - 300;
+					const popupTop = (screenHeight / 2) - 400;
+					const spec = 'width=600, height=800, left=' + popupLeft + ', top=' + popupTop;
+					
+					let popup = window.open(url, pageName, spec);
+					
+					if(!popup) {
+						alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요');
+		            }
+				} 
+			}
 		</script>
 	<style>
 		.bottombody{
