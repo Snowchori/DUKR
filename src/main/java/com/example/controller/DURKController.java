@@ -606,6 +606,38 @@ public class DURKController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/announce/announce_board_view");
 		
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardView(to);
+		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
+		
+		if(to.isDel()) {
+			modelAndView.setViewName("community/deleted_board");
+			
+			return modelAndView;
+		}
+		
+		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		
+		// 보고있는 유저의 게시글 추천여부 감지 
+		boolean didUserRec = false;
+		String uSeq = null;
+		
+		if(userInfo != null) {
+			uSeq = userInfo.getSeq();
+			
+			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
+			if(recCheck == 1) {
+				didUserRec = true;
+			}
+		}
+
+		String comments = commentsBuilder(request.getParameter("seq"), uSeq);
+		
+		modelAndView.addObject("to", to);
+		modelAndView.addObject("didUserRec", didUserRec);
+		modelAndView.addObject("comments", comments);
+		
 		return modelAndView;
 	}
 	
@@ -705,6 +737,12 @@ public class DURKController {
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
+		
+		if(to.isDel()) {
+			modelAndView.setViewName("community/deleted_board");
+			
+			return modelAndView;
+		}
 
 		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
 		
@@ -1084,6 +1122,12 @@ public class DURKController {
 		to.setSeq(seq);
 		to = boardDAO.boardView(to);
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
+		
+		if(to.isDel()) {
+			modelAndView.setViewName("community/deleted_board");
+			
+			return modelAndView;
+		}
 
 		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
 		String uSeq = null;

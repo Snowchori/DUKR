@@ -51,7 +51,7 @@ public interface BoardMapperInter {
 	public int writeNew(BoardTO to);
 	
 	// seq로 글정보 가저오기
-	@Select("select b.seq seq, memSeq, subject, content, wip, wdate, hit, recCnt, cmtCnt, tag, nickname writer, boardType from board b inner join member m on b.memSeq=m.seq where b.seq=#{seq}")
+	@Select("select b.seq seq, memSeq, subject, content, wip, wdate, hit, recCnt, cmtCnt, tag, nickname writer, boardType, isDel from board b inner join member m on b.memSeq=m.seq where b.seq=#{seq}")
 	public BoardTO boardView(BoardTO to);
 	
 	// seq로 글정보 가져오기( 글 수정 ) - 제목, 내용, 태그
