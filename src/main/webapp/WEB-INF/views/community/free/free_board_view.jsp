@@ -215,7 +215,7 @@
 							  			timer: 1500,
 							  			timerProgressBar : true,
 							  			willClose: () => {
-							  				location.href='freeBoardList';
+							  				location.href='freeBoardList?cpage=<%=cpage%>';
 						  				}
 					  				});
 					  			} else {
