@@ -1,7 +1,5 @@
 package com.example.model.report;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,10 +10,15 @@ public class ReportDAO {
 	@Autowired
 	ReportMapperInter reportMapper;
 	
-	public ArrayList<ReportTO> reportList(){
-		ArrayList<ReportTO> lists = reportMapper.reportList();
+	public ReportListTO reportList(ReportListTO listTO) {
+		listTO.setTotalRecord(reportMapper.reportListTotal(listTO));
+		listTO.setSkip();
+		listTO.setReportLists(reportMapper.reportList(listTO));
+		listTO.setTotalPage();
+		listTO.setStartBlock();
+		listTO.setEndBlock();
 		
-		return lists;
+		return listTO;
 	}
 	
 	public int reportAnswerWriteOk(ReportTO to) {

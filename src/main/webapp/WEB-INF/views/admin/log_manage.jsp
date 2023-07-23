@@ -96,7 +96,6 @@
 		pageHtml.append("</a>");
 		pageHtml.append("</li>");
 	}
-	
 %>
 <!doctype html>
 <html>

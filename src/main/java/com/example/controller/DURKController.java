@@ -37,6 +37,7 @@ import com.example.model.comment.CommentTO;
 import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.inquiry.InquiryDAO;
+import com.example.model.inquiry.InquiryListTO;
 import com.example.model.inquiry.InquiryTO;
 import com.example.model.logs.LogListTO;
 import com.example.model.logs.LogsDAO;
@@ -50,6 +51,7 @@ import com.example.model.party.ApplyTO;
 import com.example.model.party.PartyDAO;
 import com.example.model.party.PartyTO;
 import com.example.model.report.ReportDAO;
+import com.example.model.report.ReportListTO;
 import com.example.model.report.ReportTO;
 
 @RestController
@@ -251,11 +253,41 @@ public class DURKController {
 			return modelAndView;
 		}
 		
-		ArrayList<InquiryTO> inquiry_list = inquiryDAO.inquiryList();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String status = (request.getParameter("status") != null && !request.getParameter("status").equals("")) ? request.getParameter("status") : "";
+		
+		InquiryListTO listTO = new InquiryListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		if(status.equals("0")) {
+			listTO.setQuery(" and status = 0");
+		} else if(status.equals("1")) {
+			listTO.setQuery(" and status = 1");
+		} else {
+			listTO.setQuery("");
+		}
+		
+		listTO.setStatus(status);
+		
+		listTO = inquiryDAO.inquiryList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/inquiry_manage");
-		modelAndView.addObject("inquiry_list", inquiry_list);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}
@@ -294,6 +326,7 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		
 		String cpage = request.getParameter("cpage");
 		String recordPerPage = request.getParameter("recordPerPage");
 		String blockPerPage = request.getParameter("blockPerPage");
@@ -378,11 +411,41 @@ public class DURKController {
 			return modelAndView;
 		}
 		
-		ArrayList<ReportTO> report_list = reportDAO.reportList();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String status = (request.getParameter("status") != null && !request.getParameter("status").equals("")) ? request.getParameter("status") : "";
+		
+		ReportListTO listTO = new ReportListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		if(status.equals("0")) {
+			listTO.setQuery(" and status = 0");
+		} else if(status.equals("1")) {
+			listTO.setQuery(" and status = 1");
+		} else {
+			listTO.setQuery("");
+		}
+		
+		listTO.setStatus(status);
+		
+		listTO = reportDAO.reportList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/report_list");
-		modelAndView.addObject("report_list", report_list);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}

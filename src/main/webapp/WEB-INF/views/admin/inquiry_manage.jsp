@@ -1,13 +1,45 @@
+<%@page import="com.example.model.inquiry.InquiryListTO"%>
 <%@page import="com.example.model.inquiry.InquiryTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
-	ArrayList<InquiryTO> inquiry_list = (ArrayList)request.getAttribute("inquiry_list");
+	InquiryListTO listTO = (InquiryListTO)request.getAttribute("listTO");
+	
+	int cpage = listTO.getCpage();
+	int totalRecode = listTO.getTotalRecord();
+	int recordPerPage = listTO.getRecordPerPage();
+	int totalRecord = listTO.getTotalRecord();
+	
+	int totalPage = listTO.getTotalPage();
+	
+	int blockPerPage = listTO.getBlockPerPage();
+	int startBlock = listTO.getStartBlock();
+	int endBlock = listTO.getEndBlock();
+	
+	StringBuilder navHtml = new StringBuilder();
+	
+	navHtml.append("<li><a class='nav-link ");
+	if(listTO.getStatus().equals("")) {
+		navHtml.append("active");		
+	}
+	navHtml.append("' data-bs-toggle='pill' onclick='location.href=\"inquiryManage?status=\"'>전체</a></li>");
+	
+	navHtml.append("<li><a class='nav-link ");
+	if(listTO.getStatus().equals("0")) {
+		navHtml.append("active");		
+	}	
+	navHtml.append("' data-bs-toggle='pill' onclick='location.href=\"inquiryManage?status=0\"'>미확인</a></li>");
+	
+	navHtml.append("<li><a class='nav-link ");
+	if(listTO.getStatus().equals("1")) {
+		navHtml.append("active");		
+	}	
+	navHtml.append("' data-bs-toggle='pill' onclick='location.href=\"inquiryManage?status=1\"'>처리완료</a></li>");
 
 	StringBuilder iqHtml = new StringBuilder();
 	
-	for(InquiryTO to: inquiry_list) {
+	for(InquiryTO to: listTO.getInquiryLists()) {
 		iqHtml.append("<div class='accordion-item ");
 		if(to.getStatus() == 0) {
 			iqHtml.append("uncheck");	
@@ -80,6 +112,42 @@
 		iqHtml.append("</div>");
 		iqHtml.append("</div>");
 	}
+	
+	StringBuilder pageHtml = new StringBuilder();
+	String searchCondition = "&status=" + listTO.getStatus();
+	
+	if (startBlock != 1) {
+		pageHtml.append("<li class='page-item'>");
+		pageHtml.append("<a href='inquiryManage?cpage=");
+		pageHtml.append(startBlock - blockPerPage);
+		pageHtml.append("&recordPerPage=" + recordPerPage + searchCondition + "' ");
+		pageHtml.append("class='page-link' aria-label='Previous'>");
+		pageHtml.append("<span aria-hidden='true'>«</span>");
+		pageHtml.append("</a>");
+		pageHtml.append("</li>");
+	}
+	
+	for(int i=startBlock; i<=endBlock; i++) {
+		if(i == cpage) {
+			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
+		} else {
+			pageHtml.append("<li class='page-item'><a class='page-link' href='");
+			pageHtml.append("inquiryManage?cpage=" + i);
+			pageHtml.append("&recordPerPage=" + recordPerPage + searchCondition + "' ");
+			pageHtml.append(">" + i + "</a></li>");
+		}
+	}
+	
+	if(endBlock != totalPage) {
+		pageHtml.append("<li class='page-item'>");
+		pageHtml.append("<a href='inquiryManage?cpage=");
+		pageHtml.append(startBlock + blockPerPage);
+		pageHtml.append("&recordPerPage=" + recordPerPage + searchCondition + "' ");
+		pageHtml.append("class='page-link' aria-label='Next'>");
+		pageHtml.append("<span aria-hidden='true'>»</span>");
+		pageHtml.append("</a>");
+		pageHtml.append("</li>");
+	}
 %>
 <!doctype html>
 <html>
@@ -90,21 +158,6 @@
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
-			function totalData() {
-				$('.uncheck').show();
-				$('.complete').show();
-			}
-			
-			function uncheckData() {
-				$('.uncheck').show();
-				$('.complete').hide();
-			}
-			
-			function completeData() {
-				$('.uncheck').hide();
-				$('.complete').show();
-			}
-			
 			function insertAnswer(seq, senderSeq) {
 				let answer = $('#answer' + seq).val();
 				if(answer == "") {
@@ -173,19 +226,27 @@
 							<div class="col-lg-12">
 								<!-- Tabs -->
 								<ul class="nav nav-pills mb-3">
-									<li><a class="nav-link active" data-bs-toggle="pill" onclick='totalData()'>전체</a></li>
-									<li><a class="nav-link" data-bs-toggle="pill" onclick='uncheckData()'>미확인</a></li>
-									<li><a class="nav-link" data-bs-toggle="pill" onclick='completeData()'>답변완료</a></li>
+									<%= navHtml %>
 								</ul>
 								<!-- End Tabs -->
 								<!-- Tab Content -->
 								<div class="tab-content">
+									<div class="mt-3 p-2">
+										총 <%= totalRecord %>건
+									</div>
 									<div class="tab-pane fade show active">
 										<div class="accordion accordion-flush" id="accordionFlushExample">
 											<%= iqHtml %>
 										</div>
 									</div>
 									<!-- End Tab 1 Content -->
+									<div class="container p-2">
+										<nav class="pagination-outer" aria-label="Page navigation">
+											<ul class="pagination">
+												<%= pageHtml %>
+											</ul>
+										</nav>
+									</div>
 								</div>
 							</div>
 						</div>
