@@ -162,7 +162,7 @@
 			}
 			
 			// 댓글 수정함수
-			function modifyComment(cSeq, commentIndex){
+			function modifyComment(cSeq){
 				const cmtId = 'cmtContent' + cSeq;
 				let curContent = $('#' + cmtId).html();
 				let options = 'cmtOptions' + cSeq;
@@ -190,6 +190,7 @@
 					}
 				});
 			}
+			
 		</script>
 		<style>
 			.bottombody{

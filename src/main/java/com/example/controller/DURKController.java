@@ -958,7 +958,6 @@ public class DURKController {
 		updatedComments.setCommentList(commentDAO.boardCommentList(boardSeq));
 		
 		StringBuilder sbReturn = new StringBuilder();
-		int commentIndex = 0;
 		for(CommentTO comment : updatedComments.getCommentList()) {
 			String cWriter = comment.getWriter();
 			String cWdate = comment.getWdate();
@@ -967,13 +966,22 @@ public class DURKController {
 			String cSeq = comment.getSeq();
 			String writerSeq = comment.getMemSeq();
 			
+			// 보고있는사람이 작성자인지 여부
+			boolean isWriter = ( memSeq != null && memSeq.equals(writerSeq) );
+			
+			// 추천버튼 색상
 			String comRecBtnColor = "#4db2b2";
 			int didUserRecommendedThisComment = commentDAO.commentRecCheck(memSeq, cSeq);
 			if(didUserRecommendedThisComment == 1) {
 				comRecBtnColor = "#F08080";
 			}
 
-			sbReturn.append("<span class='dropdown'>");	
+			if(isWriter) {
+				sbReturn.append("<div style='background-color: #f0f0f0; display: block; margin-top: -8px; padding: 0;'>");
+			}else {
+				sbReturn.append("<div style='display: block; margin-top: -8px;'>");
+			}
+			sbReturn.append("<span class='dropdown' style='margin-top: 8px;'>");	
 			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
 			sbReturn.append(cWriter);	
 			sbReturn.append("</a>");
@@ -987,20 +995,22 @@ public class DURKController {
 			sbReturn.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 			sbReturn.append(cRecCnt);		
 			sbReturn.append("</button>");
-			 
-			if(memSeq != null && memSeq.equals(writerSeq)){
-				sbReturn.append("<span id='cmtOptions" + cSeq + "'>");
-				// 삭제버튼
-				sbReturn.append("<button class='btn float-end me-3' style='color: #888888;' onclick='deleteComment(\"" + cSeq + "\")'>");
-				sbReturn.append("<i class=\"fas fa-trash\"></i>");
-				sbReturn.append("</button>");
-				// 수정버튼
-				sbReturn.append("<button class='btn float-end' style='color: #888888;' onclick='modifyComment(\"" + cSeq + "\", \"" + commentIndex + "\")'>");
-				sbReturn.append("<i class=\"fas fa-pencil-alt\"></i>");
-				sbReturn.append("</button>");
-				sbReturn.append("</span>");
+
+			// 옵션
+			sbReturn.append("<span id='cmtOptions" + cSeq + "' class='float-end me-2' style='margin-top: 8px;'>");
+			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
+			sbReturn.append("<i class=\"fas fa-bars\"></i>");	
+			sbReturn.append("</a>");
+			sbReturn.append("<ul class='dropdown-menu'>");
+			// 메뉴버튼: 자기댓글 => 수정/삭제, 남의댓글 => 신고
+			if(isWriter){
+				sbReturn.append("<li><a class='dropdown-item' onclick='modifyComment(\"" + cSeq + "\")'>수정하기</a></li>");	
+				sbReturn.append("<li><a class='dropdown-item' onclick='deleteComment(\"" + cSeq + "\")'>삭제하기</a></li>");
+			}else {
+				sbReturn.append("<li><a class='dropdown-item' onclick='reportComment(\"" + cSeq + "\")'>신고하기</a></li>");	
 			}
-			 
+			sbReturn.append("</ul>");
+			sbReturn.append("</span>");
 			sbReturn.append("<br>");
 			
 			sbReturn.append("<span id='cmtContent" + cSeq + "'>");
@@ -1008,8 +1018,7 @@ public class DURKController {
 			sbReturn.append("</span>");
 			
 			sbReturn.append("<hr class='mt-3 my-2'>");
-			
-			commentIndex ++;
+			sbReturn.append("</div>");
 		 }
 		
 		return sbReturn.toString();
