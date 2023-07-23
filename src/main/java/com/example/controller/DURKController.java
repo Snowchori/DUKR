@@ -812,6 +812,27 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	// 글수정 완료
+	@PostMapping("/freeBoardModifyOk")
+	public int boardModifyOk(HttpServletRequest req) {
+		int result = 0;
+		
+		String boardSeq = req.getParameter("boardSeq");
+		String subject = req.getParameter("subject");
+		String content = req.getParameter("content");
+		String tags = req.getParameter("tags");
+		
+		BoardTO modifiedPost = new BoardTO();
+		modifiedPost.setSeq(boardSeq);
+		modifiedPost.setSubject(subject);
+		modifiedPost.setContent(content);
+		modifiedPost.setTag(tags);
+		
+		result = boardDAO.boardModifyOk(modifiedPost);
+		
+		return result;
+	}
+	
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
 	public String freeboardCommentWrite(HttpServletRequest req){

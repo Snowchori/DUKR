@@ -58,6 +58,10 @@ public interface BoardMapperInter {
 	@Select("select seq, subject, content, tag from board where seq = #{seq}")
 	public BoardTO boardModify(BoardTO to);
 	
+	// 게시글 수정하기
+	@Update("update board set subject=#{subject}, content=#{content}, tag=#{tag} where seq=#{seq}")
+	public int boardModifyOk(BoardTO to);
+	
 	// 게시글의 파일 포함여부 검사
 	@Select("select count(*) from board where content like '%<img src=\"%' and seq=#{seq};")
 	public int hasFile(BoardTO to);

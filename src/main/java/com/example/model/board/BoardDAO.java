@@ -128,11 +128,18 @@ public class BoardDAO {
 		to = boardMapper.boardView(to);
 		return to;
 	}
-	
+		
+	// 게시글 수정화면 띄우기
 	public BoardTO boardModify(BoardTO to) {
 		
 		to = boardMapper.boardModify(to);
 		return to;
+	}
+	
+	// 게시글 수정하기
+	public int boardModifyOk(BoardTO to) {
+		int result = boardMapper.boardModifyOk(to);
+		return result;
 	}
 	
 	// 게시글 추천
