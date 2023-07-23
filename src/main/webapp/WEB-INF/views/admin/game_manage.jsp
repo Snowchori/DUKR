@@ -324,9 +324,6 @@ if(seq != null && !seq.equals("")) {
 				    = selectedElementsCnt + "개 선택";
 			}
 		</script>
-		<style>
-			
-		</style>
 	</head>
 	<body class="bg-secondary text-white">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>

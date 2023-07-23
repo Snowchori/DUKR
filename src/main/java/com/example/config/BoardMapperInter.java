@@ -98,7 +98,7 @@ public interface BoardMapperInter {
 	public int recCount(String boardSeq);
 	
 	// 밴 ip 목록
-	@Select("select seq, bip, bdate from ipban")
+	@Select("select seq, bip, bdate from ipban order by seq desc")
 	public ArrayList<BanTO> banIp();
 	
 	// 밴 ip 해제
