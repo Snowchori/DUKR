@@ -49,6 +49,10 @@ public interface CommentMapperInter {
 	@Delete("delete from comment where seq=#{seq}")
 	public int commentDelete(String seq);
 	
+	// 해당 게시글의 모든 댓글 삭제 처리
+	@Update("update comment set isDel = 1 where boardSeq=#{boardSeq}")
+	public int allCommentDelete(String boardSeq);
+	
 	// 댓글 수정하기
 	@Update("update comment set content=#{content} where seq=#{seq}")
 	public int modifyComment(String seq, String content);
@@ -56,6 +60,10 @@ public interface CommentMapperInter {
 	// 댓글 삭제하고 cmtCnt -1
 	@Update("update board set cmtCnt=cmtCnt-1 where seq=#{seq}")
 	public int boardCmtCntMinus(String seq);
+	
+	// 댓글 전체 삭제처리 board의 cmtCnt 초기화
+	@Update("update board set cmtCnt=0 where seq=#{boardSeq}")
+	public int boardCmtCntReset(String boardSeq);
 	
 	// 댓글 추천카운트 +1
 	@Update("update comment set recCnt=recCnt+1 where seq=#{seq}")
