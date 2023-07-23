@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.example.model.logs.LogListTO;
+import com.example.model.member.MemberListTO;
 import com.example.model.member.MemberTO;
 
 public interface MemberMapperInter {
@@ -90,6 +92,15 @@ public interface MemberMapperInter {
 	// 회원 목록
 	@Select("select seq, id, nickname, email, rate, isAdmin from member")
 	public ArrayList<MemberTO> memberList();
+	
+	// 회원 목록 페이징
+	@Select("select seq, id, nickname, email, rate, isAdmin from member "
+			+ "where nickname like #{keyWord} order by seq desc limit #{skip}, #{recordPerPage}")
+	public ArrayList<MemberTO> userList(MemberListTO listTO);
+	
+	// 회원수 가져오기
+	@Select("select count(*) from member where nickname like #{keyWord}")
+	public int memberListTotal(MemberListTO listTO);
 	
 	// 회원 탈퇴
 	@Delete("delete from member where seq = #{seq}")

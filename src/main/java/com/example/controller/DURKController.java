@@ -43,6 +43,7 @@ import com.example.model.logs.LogListTO;
 import com.example.model.logs.LogsDAO;
 import com.example.model.logs.LogsTO;
 import com.example.model.member.MemberDAO;
+import com.example.model.member.MemberListTO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
 import com.example.model.note.NoteTO;
@@ -560,11 +561,33 @@ public class DURKController {
 			return modelAndView;
 		}
 		
-		ArrayList<MemberTO> user_list = memberDAO.memberList();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String keyWord = (request.getParameter("keyWord") != null && !request.getParameter("keyWord").equals("")) ? "%" + request.getParameter("keyWord") + "%" : "%";
+		
+		MemberListTO listTO = new MemberListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setKeyWord(keyWord);
+		
+		listTO = memberDAO.userList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/user_list");
-		modelAndView.addObject("user_list", user_list);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.config.MemberMapperInter;
 import com.example.config.NoteMapperInter;
+import com.example.model.logs.LogListTO;
 import com.example.model.member.MemberTO;
 
 @Repository
@@ -157,6 +158,17 @@ public class MemberDAO {
 		ArrayList<MemberTO> lists = memberMapper.memberList();
 		
 		return lists;
+	}
+	
+	public MemberListTO userList(MemberListTO listTO) {
+		listTO.setTotalRecord(memberMapper.memberListTotal(listTO));
+		listTO.setSkip();
+		listTO.setMemberLists(memberMapper.userList(listTO));
+		listTO.setTotalPage();
+		listTO.setStartBlock();
+		listTO.setEndBlock();
+		
+		return listTO;
 	}
 	
 	// 회원 탈퇴

@@ -1,4 +1,4 @@
-package com.example.model.logs;
+package com.example.model.member;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import lombok.experimental.Tolerate;
 
 @Setter
 @Getter
-public class LogListTO {
+public class MemberListTO {
 	private int cpage;
 	private int recordPerPage;
 	private int blockPerPage;
@@ -17,12 +17,11 @@ public class LogListTO {
 	private int startBlock;
 	private int endBlock;
 	private int skip;
-	private String logType;
 	private String keyWord;
 	
-	private ArrayList<LogsTO> logLists;
+	private ArrayList<MemberTO> memberLists;
 	
-	public LogListTO() {
+	public MemberListTO() {
 		// TODO Auto-generated constructor stub
 		this.cpage = 1;
 		this.recordPerPage = 10;
