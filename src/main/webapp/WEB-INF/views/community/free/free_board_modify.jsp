@@ -9,13 +9,6 @@
 		cpage = Integer.parseInt(request.getParameter("cpage"));
 	}
 %>
-
-<%
-	MemberTO user = (MemberTO)session.getAttribute("logged_in_user");
-	String memSeq = user.getSeq();
-	//System.out.println(memSeq + writer);
-%>    
-
 <%
 	BoardTO to = (BoardTO)request.getAttribute("to");
 
@@ -25,7 +18,6 @@
 	String writer = to.getWriter();
 	String content = to.getContent();
 	String tags = to.getTag();
-
 %>
     
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
@@ -83,9 +75,7 @@
 						  		data: {
 						  			subject: document.getElementById('subject').value.trim(),
 						  			content: editor.getData(),
-						  			memSeq: <%=memSeq %>,
-						  			writer: <%=writer %>,
-									boardType: 1,
+						  			boardSeq: <%=boardSeq %>,
 						  			tags: document.getElementById('tags').value.trim(),
 						  		},
 						  		success: function(data) {
