@@ -933,6 +933,19 @@ public class DURKController {
 		return result;
 	}
 	
+	@RequestMapping("/freeBoardDeleteOk")
+	public int boardDeleteOK(HttpServletRequest request) {
+				
+		String boardSeq = request.getParameter("seq");
+		int flag = boardDAO.boardDelete(boardSeq);
+
+		if(flag == 0) {
+			flag = commentDAO.allCommentDelete(boardSeq);
+		}
+		
+		return flag;
+	}
+	
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
 	public String freeboardCommentWrite(HttpServletRequest req){

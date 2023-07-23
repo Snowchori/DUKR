@@ -71,6 +71,22 @@ public class CommentDAO {
 		return result;
 	}
 	
+	// 해당 게시글의 모든 댓글 삭제 처리
+	public int allCommentDelete(String boardSeq) {
+		int flag = 1;	// 0 : 정상 , 1 : 비정상
+		int result = commentMapperInter.allCommentDelete(boardSeq);
+
+		if(result >= 0) {
+			result = commentMapperInter.boardCmtCntReset(boardSeq);
+		}
+		
+		if(result == 1 ) {
+			flag = 0;
+		}	
+
+		return flag;
+	}
+	
 	// 댓글 삭제하기
 	public int modifyComment(String seq, String content) {
 		int result = commentMapperInter.modifyComment(seq, content);

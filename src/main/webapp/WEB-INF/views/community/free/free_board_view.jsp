@@ -33,7 +33,7 @@
 	boolean isWriter = true;
 	if(!wSeq.equals(userSeq)){
 		isWriter = false;
-	}
+	}		
 	
 	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
 	String recBtnColor = "btn-secondary";
@@ -190,6 +190,49 @@
 					}
 				});
 			}
+			
+			// 글 삭제
+			function freeBoardDelete(seq){
+				Swal.fire({
+					title: '글을 삭제하시겠습니까?',
+					showDenyButton: true,
+					confirmButtonText: '네',
+					denyButtonText: `아니오`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url:'freeBoardDeleteOk',
+							type:'post',
+				  			data: {
+				  				seq: seq
+				  			},
+				  			success: function(data) {
+					  			if(data == 0) {
+						  			Swal.fire({
+							  			icon: 'success',
+							  			title: '삭제 완료',
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
+							  			willClose: () => {
+							  				location.href='freeBoardList';
+						  				}
+					  				});
+					  			} else {
+						  			Swal.fire({
+							  			icon: 'error',
+							  			title: '삭제 실패',
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
+						  			});
+					  			}
+					  		}
+						});
+					}
+				})
+			}
+			
 		</script>
 		<style>
 			.bottombody{
@@ -297,7 +340,7 @@
 					<button class="btn btn-secondary" style="margin-right: auto;" onclick="location.href='freeBoardList?cpage=<%=cpage %>'">목록</button>
 					
 					<div class="d-flex">
-						<button class="btn btn-secondary mx-3" style="margin-left: auto;" >삭제</button>
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>
 						<%if(isWriter){ %>								
 						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>			
 						<%} %>
