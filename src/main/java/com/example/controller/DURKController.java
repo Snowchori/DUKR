@@ -945,7 +945,7 @@ public class DURKController {
 		
 		return flag;
 	}
-	
+		
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
 	public String freeboardCommentWrite(HttpServletRequest req){
@@ -1010,10 +1010,10 @@ public class DURKController {
 			sbReturn.append("</button>");
 
 			// 옵션
-			sbReturn.append("<span id='cmtOptions" + cSeq + "' class='float-end me-2' style='margin-top: 8px;'>");
-			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
+			sbReturn.append("<span id='cmtOptions" + cSeq + "' class='float-end me-2'>");
+			sbReturn.append("<button class='btn' role='button' data-bs-toggle='dropdown'>");	
 			sbReturn.append("<i class=\"fas fa-bars\"></i>");	
-			sbReturn.append("</a>");
+			sbReturn.append("</button>");
 			sbReturn.append("<ul class='dropdown-menu'>");
 			// 메뉴버튼: 자기댓글 => 수정/삭제, 남의댓글 => 신고
 			if(isWriter){
