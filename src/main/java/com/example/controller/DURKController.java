@@ -609,6 +609,13 @@ public class DURKController {
 		BoardTO to = new BoardTO();
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
+		
+		if(to == null) {
+			modelAndView.setViewName("community/no_board");
+			
+			return modelAndView;
+		}
+		
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
 		
 		if(to.isDel()) {
@@ -736,6 +743,13 @@ public class DURKController {
 		BoardTO to = new BoardTO();
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
+		
+		if(to == null) {
+			modelAndView.setViewName("community/no_board");
+			
+			return modelAndView;
+		}
+		
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
 		
 		if(to.isDel()) {
@@ -1121,6 +1135,13 @@ public class DURKController {
 		BoardTO to = new BoardTO();
 		to.setSeq(seq);
 		to = boardDAO.boardView(to);
+		
+		if(to == null) {
+			modelAndView.setViewName("community/no_board");
+			
+			return modelAndView;
+		}
+		
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
 		
 		if(to.isDel()) {
