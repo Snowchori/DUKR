@@ -411,6 +411,25 @@ public class DURKController {
 		return flag;
 	}
 	
+	@RequestMapping("/boardView")
+	public ModelAndView boardView(HttpServletRequest request) {
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardView(to);
+		
+		String boardType = to.getBoardType();
+		
+		if(boardType.equals("0")) {
+			return announceBoardView(request);
+		} else if(boardType.equals("1")) {
+			return freeBoardView(request);
+		} else if(boardType.equals("2")) {
+			return partyBoardView(request);
+		}
+		
+		return new ModelAndView();
+	}
+	
 	@RequestMapping("/deleteBoardOk")
 	public int deleteBoardOk(HttpServletRequest request) {
 		HttpSession session = request.getSession();

@@ -31,7 +31,7 @@
 		if(to.getStatus() == 0) {
 			if(!to.isBoardDel()) {
 				rpHtml.append("<div class='col-md-3 mb-3'>");
-				rpHtml.append("<input type='button' class='btn btn-dark' value='게시글보기'  onclick=\"location.href='freeBoardView?seq=" + to.getBoardSeq() + "'\"/>");
+				rpHtml.append("<input type='button' class='btn btn-dark' value='게시글보기'  onclick=\"location.href='boardView?seq=" + to.getBoardSeq() + "'\"/>");
 				rpHtml.append("</div>");
 			}
 		} else {
