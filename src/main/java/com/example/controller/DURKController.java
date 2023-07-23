@@ -1020,7 +1020,7 @@ public class DURKController {
 				sbReturn.append("<li><a class='dropdown-item' onclick='modifyComment(\"" + cSeq + "\")'>수정하기</a></li>");	
 				sbReturn.append("<li><a class='dropdown-item' onclick='deleteComment(\"" + cSeq + "\")'>삭제하기</a></li>");
 			}else {
-				sbReturn.append("<li><a class='dropdown-item' onclick='reportComment(\"" + cSeq + "\")'>신고하기</a></li>");	
+				sbReturn.append("<li><a class='dropdown-item' onclick='report(\"" + cSeq + "\", \"comment\")'>신고하기</a></li>");	
 			}
 			sbReturn.append("</ul>");
 			sbReturn.append("</span>");
@@ -1108,11 +1108,9 @@ public class DURKController {
 		// 게시글인지 댓글인지
 		String targetType = req.getParameter("targetType");
 		String subject = null;
-		if(targetType.equals("board")) {
-			subject = req.getParameter("subject");
-		}
 		// 글 또는 댓글 seq
 		String seq = req.getParameter("seq");
+		
 		// 신고자 정보
 		MemberTO userInfo = (MemberTO)req.getSession().getAttribute("logged_in_user");
 		String userSeq = null;
@@ -1121,13 +1119,19 @@ public class DURKController {
 			mav.setViewName("/login/login");
 		}else {
 			userSeq = userInfo.getSeq();
-		}		
-		// 신고글 내용
+		}
+		
+		// 신고글 정보
 		String content = null;
 		String writer = null;
 		if(targetType.equals("board")) {
 			// 게시글인경우 게시글정보
-			
+			BoardTO to = new BoardTO();
+			to.setSeq(seq);
+			to = boardDAO.boardView(to);
+			subject = to.getSubject();
+			content = to.getContent();
+			writer = to.getWriter();
 		}else if(targetType.equals("comment")) {
 			// 댓글인경우 댓글정보
 			CommentTO to = new CommentTO();

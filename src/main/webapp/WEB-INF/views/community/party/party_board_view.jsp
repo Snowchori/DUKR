@@ -267,17 +267,16 @@ if(didUserRec){
 				});
 			}
 			
-			// 댓글 신고
-			function reportComment(cSeq){
+			// 신고
+			function report(seq, type){
 				if(<%=userSeq%> == null){
 					alert('로그인해라');
 				}else{
-					let url = '/report?targetType=comment&seq=' + cSeq;
+					let url = '/report?targetType=' + type + '&seq=' + seq;
 					const pageName = 'DUKR - report';
 					// 팝업 위치설정
 					const screenWidth = window.screen.width;
 					const screenHeight = window.screen.height;
-					//console.log(screenWidth + "/" + screenHeight);
 					const popupLeft = (screenWidth / 2) - 300;
 					const popupTop = (screenHeight / 2) - 400;
 					const spec = 'width=600, height=800, left=' + popupLeft + ', top=' + popupTop;
