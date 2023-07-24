@@ -5,10 +5,13 @@
 	ArrayList<BoardgameTO> reclists = (ArrayList)request.getAttribute("recList");
 	ArrayList<BoardgameTO> favlists = (ArrayList)request.getAttribute("favlist");
 	ArrayList<BoardgameTO> totallists = (ArrayList)request.getAttribute("totallist");
+	ArrayList<BoardgameTO> recently_list = (ArrayList)request.getAttribute("recently_list");
 	
 	StringBuilder recSB = new StringBuilder();
 	StringBuilder favSB = new StringBuilder();
 	StringBuilder totalSB = new StringBuilder();
+	StringBuilder recentSB = new StringBuilder();
+	
 
 	if(reclists.size() > 0) {
 		for(BoardgameTO to : reclists){
@@ -119,63 +122,67 @@
 	}
 	
 	totalSB.append("</div>");
+	
+	
+	
+	for(BoardgameTO to : recently_list){
+		recentSB.append("<li>");
+		recentSB.append("<div class='container'>");
+		recentSB.append("<img class='img-fluid' src='"+ to.getImageUrl()+"' alt='' onclick=\"location.href='gameView?seq=" + to.getSeq() + "'\" />");
+		recentSB.append("</div>");
+		recentSB.append("</li>");
+	}
+	
+	
+    
+    	
+    
+    
 %>
 <!doctype html>
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
-	    <!--  css 파일 -->
+	     <!--  css 파일 -->
 		<link rel="stylesheet" href="assets/css/style.css" />
 	    <!--  jquery cdn -->
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
 	    </script>
 	    <!-- 자바 스크립트 영역 -->
 	    <script type="text/javascript">
-	        $(function() {
-	            var $win = $(window);
-	            var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환합니다.
-	
-	            /*사용자 설정 값 시작*/
-	            var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or numeric(단위:msec)
-	            var easing = 'linear'; // 따라다니는 방법 기본 두가지 linear, swing
-	            var $layer = $('.float_sidebar'); // 레이어 셀렉팅
-	            var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
-	            $layer.css('position', 'relative').css('z-index', '1');
-	            /*사용자 설정 값 끝*/
-	
-	            // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
-	            if (top > 0)
-	                $win.scrollTop(layerTopOffset + top);
-	            else
-	                $win.scrollTop(0);
-	
-	            //스크롤이벤트가 발생하면
-	            $(window).scroll(function() {
-	                yPosition = $win.scrollTop() - 1100; //이부분을 조정해서 화면에 보이도록 맞추세요
-	                if (yPosition < 0) {
-	                    yPosition = 0;
-	                }
-	                $layer.animate({
-	                    "top": yPosition
-	                }, {
-	                    duration: speed,
-	                    easing: easing,
-	                    queue: false
-	                });
-	            });
-	        });
-	
-	        // 퀵메뉴
-	        $(document).ready(function() {
-	            var currentPosition = parseInt($(".quickmenu").css("top"));
-	            $(window).scroll(function() {
-	                var position = $(window).scrollTop();
-	                $(".quickmenu").stop().animate({
-	                    "top": position + currentPosition + "px"
-	                }, 700);
-	            });
-	        });
+	   		
+	    $(document).ready(function() {
+            // 퀵 메뉴를 따라다니도록 설정
+            var quickMenu = $("#quickmenu1");
+            var offset = quickMenu.offset();
+            var topPadding = 20;
+            $(window).scroll(function() {
+                if ($(window).scrollTop() > offset.top) {
+                    quickMenu.stop().animate({
+                        marginTop: $(window).scrollTop() - offset.top + topPadding
+                    });
+                } else {
+                    quickMenu.stop().animate({
+                        marginTop: 0
+                    });
+                }
+            });
+        });
 	    </script>
+	    <style type="text/css">
+	   		div, ul, li {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding:0;margin:0}
+			a {text-decoration:none;}
+
+			.quickmenu {position:absolute;width:130px;top:50%;margin-top:-50px;right:10px;background:#fff;}
+			.quickmenu ul {position:relative;float:left;width:100%;display:inline-block;*display:inline;border:1px solid #ddd;}
+			.quickmenu ul li {float:left;width:100%;border-bottom:1px solid #ddd;text-align:center;display:inline-block;*display:inline;}
+			.quickmenu ul li a {position:relative;float:left;width:100%;height:30px;line-height:30px;text-align:center;color:#999;font-size:9.5pt;}
+			.quickmenu ul li a:hover {color:#000;}
+			.quickmenu ul li:last-child {border-bottom:0;}
+
+			.content {position:relative;min-height:1000px;}
+	    </style>
+	    
 	    <meta charset="utf-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 	    <meta name="description" content="" />
@@ -264,6 +271,18 @@
             	<%=totalSB %>
 	        </div>
 	    </section>
+	    
+	    <!--  퀵메뉴  -->
+	    
+	    <div class="quickmenu" id="quickmenu1">
+		  <ul>
+		  		<li>
+			    <div>최근 본 보드게임</div>
+			    </li>
+			    <%= recentSB %>
+		  </ul>	  
+		</div> 
+	    
 	    <!-- Core theme JS-->
 	    <script src="assets/js/scripts.js"></script>
 	    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->

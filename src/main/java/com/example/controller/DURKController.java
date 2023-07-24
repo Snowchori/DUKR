@@ -105,6 +105,12 @@ public class DURKController {
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
 		
+		ArrayList<BoardgameTO> recently_list = (ArrayList<BoardgameTO>)session.getAttribute("recently_list");
+		if(recently_list == null) {
+			recently_list = new ArrayList<BoardgameTO>();
+			session.setAttribute("recently_list", recently_list);
+		}
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("main");
 		
@@ -127,6 +133,7 @@ public class DURKController {
 		modelAndView.addObject("recList",recList);
 		modelAndView.addObject("favlist", favList);
 		modelAndView.addObject("totallist", totallist);
+		modelAndView.addObject("recently_list", recently_list);
 		return modelAndView;
 	}
 	
@@ -1665,6 +1672,25 @@ public class DURKController {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		ArrayList<BoardgameTO> recently_list = (ArrayList<BoardgameTO>)session.getAttribute("recently_list");
+		if(recently_list == null) {
+			recently_list = new ArrayList<BoardgameTO>();
+			session.setAttribute("recently_list", recently_list);
+		}
+		
+		for(BoardgameTO to: recently_list) {
+			if(to.getTitle().equals(gameTO.getTitle())) {
+				recently_list.remove(to);
+				break;
+			}
+		}
+		
+		recently_list.add(0, gameTO);
+		
+		if(recently_list.size() > 12) {
+			recently_list.remove(recently_list.size()-1);
+		}
 		
 		BoardListTO listTO = new BoardListTO();
 		listTO.setKeyWord(gameTO.getTitle());
