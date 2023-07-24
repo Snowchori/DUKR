@@ -187,7 +187,7 @@
 			}
 			
 			// 글 삭제
-			function freeBoardDelete(seq){
+			function announceBoardDelete(seq){
 				Swal.fire({
 					title: '글을 삭제하시겠습니까?',
 					showDenyButton: true,
@@ -196,7 +196,7 @@
 				}).then((result) => {
 					if (result.isConfirmed) {
 						$.ajax({
-							url:'announceBoardDeleteOk',
+							url:'announceBoardDeleteOK',
 							type:'post',
 				  			data: {
 				  				seq: seq
@@ -356,8 +356,12 @@
 					<button class="btn btn-dark" style="margin-right: auto;" onclick="location.href='announceBoardList?cpage=<%=cpage %>'">목록</button>
 					
 					<div class="d-flex">
-						<button class="btn btn-dark mx-3" style="margin-left: auto;" >삭제</button>								
-						<button class="btn btn-dark" style="margin-left: auto;" onclick="location.href='announceBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>			
+						<%if(isWriter){ %>	
+						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='announceBoardDelete("<%=boardSeq%>")'>삭제</button>											
+						<button class="btn btn-dark" style="margin-left: auto;" onclick="location.href='announceBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>				
+						<%}else { %>
+						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
+						<%} %>
 					</div>
 				</div>
 				<hr class="my-2">

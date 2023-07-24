@@ -972,7 +972,7 @@ public class DURKController {
 		return result;
 	}
 	
-	@RequestMapping("/freeBoardDeleteOk")
+	@RequestMapping( value = {"/freeBoardDeleteOk", "/announceBoardDeleteOK"})
 	public int boardDeleteOK(HttpServletRequest request) {
 				
 		String boardSeq = request.getParameter("seq");
