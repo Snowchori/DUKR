@@ -47,7 +47,7 @@ public class InquiryDAO {
 	public InquiryListTO myInquiryList(InquiryListTO listTO) {
 		listTO.setTotalRecord(inquiryMapper.myInquiryTotal(listTO));
 		listTO.setSkip();
-		listTO.setInquiryList(inquiryMapper.myInquiryList(listTO));
+		listTO.setInquiryLists(inquiryMapper.myInquiryList(listTO));
 		listTO.setTotalPage();
 		listTO.setStartBlock();
 		listTO.setEndBlock();

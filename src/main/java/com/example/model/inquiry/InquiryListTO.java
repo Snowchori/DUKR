@@ -18,8 +18,6 @@ public class InquiryListTO {
 	private int endBlock;
 	private int skip;
 	private String seq;
-	
-	private ArrayList<InquiryTO> inquiryList;
 	private String query;
 	private String status;
 	
