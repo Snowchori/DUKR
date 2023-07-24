@@ -522,6 +522,32 @@ public class DURKController {
 		return flag;
 	}
 	
+	@RequestMapping("/deleteCommentOk")
+	public int deleteCommentOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("댓글삭제");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			commentDAO.commentDelete(request.getParameter("commentSeq"), request.getParameter("boardSeq"));
+			
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("commentSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 댓글 삭제 완료");
+			noteTO.setContent("관리자가 신고글의 댓글을 삭제하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
 	@RequestMapping("/ipBanOk")
 	public int ipBanOk(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -534,16 +560,27 @@ public class DURKController {
 		int flag = reportDAO.reportAnswerWriteOk(to);
 		
 		if(flag == 0) {
-			int check = boardDAO.bipCheck(request.getParameter("boardSeq"));
-			if(check == 0) {
-				boardDAO.ipBan(request.getParameter("boardSeq"));
-			}
-			boardDAO.boardDelete(request.getParameter("boardSeq"));
 			NoteTO noteTO = new NoteTO();
 			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
 			noteTO.setSenderSeq(userInfo.getSeq());
-			noteTO.setSubject("신고글 게시글 ip밴 완료");
-			noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
+			
+			if(request.getParameter("commentSeq")  != null && request.getParameter("commentSeq").equals("")) {
+				int check = boardDAO.bipCheck(request.getParameter("boardSeq"));
+				if(check == 0) {
+					boardDAO.ipBan(request.getParameter("boardSeq"));
+				}
+				boardDAO.boardDelete(request.getParameter("boardSeq"));
+				noteTO.setSubject("신고글 게시글 ip밴 완료");
+				noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
+			} else {
+				int check = commentDAO.bipCheck(request.getParameter("commentSeq"));
+				if(check == 0) {
+					commentDAO.ipBan(request.getParameter("commentSeq"));
+				}
+				commentDAO.commentDelete(request.getParameter("commentSeq"), request.getParameter("boardSeq"));
+				noteTO.setSubject("신고글 댓글 ip밴 완료");
+				noteTO.setContent("관리자가 신고글 댓글의 ip를 밴하였습니다.");
+			}
 			
 			noteDAO.noteSend(noteTO);
 		}
@@ -754,14 +791,6 @@ public class DURKController {
 		
 		return modelAndView;
 	}
-	
-//	@RequestMapping("/announceBoardWriteOk")
-//	public ModelAndView announceBoardWriteOk(HttpServletRequest request) {
-//		ModelAndView modelAndView = new ModelAndView();
-//		modelAndView.setViewName("community/announce/announce_board_write_ok");
-//		
-//		return modelAndView;
-//	}
 	
 	// community/free
 	@RequestMapping("/freeBoardList")

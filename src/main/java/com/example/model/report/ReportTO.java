@@ -17,5 +17,6 @@ public class ReportTO {
 	private String answer;
 	private String processType;
 	private boolean isBoardDel;
+	private boolean isCommentDel;
 	private String targetType;
 }

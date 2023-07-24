@@ -98,4 +98,30 @@ public class CommentDAO {
 		int result = commentMapperInter.modifyComment(seq, content);
 		return result;
 	}
+	
+	// 밴 ip 등록 확인
+	public int bipCheck(String seq) {
+		int flag = 1;
+		String bip = commentMapperInter.getBip(seq);
+		String result = commentMapperInter.bipCheck(bip);
+		
+		if(result == null) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
+	// 밴 ip 등록
+	public int ipBan(String seq) {
+		int flag = 1;
+		String bip = commentMapperInter.getBip(seq);
+		int result = commentMapperInter.ipBan(bip);
+		
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
 }

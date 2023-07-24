@@ -46,7 +46,7 @@ public interface CommentMapperInter {
 	public int commentRecCancel(String memSeq, String cmtSeq);
 	
 	// 댓글 삭제하기
-	@Delete("delete from comment where seq=#{seq}")
+	@Update("update comment set isDel = true where seq=#{seq}")
 	public int commentDelete(String seq);
 	
 	// 해당 게시글의 모든 댓글 삭제 처리
@@ -80,4 +80,16 @@ public interface CommentMapperInter {
 	// seq로 특정댓글 정보 가져오기
 	@Select("select c.seq seq, c.content content, m.nickname writer from comment c inner join member m on c.memSeq=m.seq where c.seq=#{seq}")
 	public CommentTO getCmtInfoBySeq(CommentTO to);
+	
+	// 댓글 ip 가져오기
+	@Select("select wip from comment where seq=#{seq}")
+	public String getBip(String seq);
+	
+	// 밴 ip 등록 확인
+	@Select("select bip from ipban where bip=#{bip}")
+	public String bipCheck(String bip);
+	
+	// 밴 ip 등록
+	@Insert("insert into ipban values(0, #{bip}, now())")
+	public int ipBan(String bip);
 }

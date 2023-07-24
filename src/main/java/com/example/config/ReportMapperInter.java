@@ -11,7 +11,7 @@ import com.example.model.report.ReportTO;
 
 public interface ReportMapperInter {
 	// 신고글 목록 가져오기
-	@Select("select r.seq seq, boardSeq, r.memSeq memSeq, r.content content, status, date_format(rdate, '%Y-%m-%d %T') rdate, m.nickname writer, r.answer answer, processType, b.isDel isBoardDel "
+	@Select("select r.seq seq, boardSeq, commentSeq, r.memSeq memSeq, r.content content, status, date_format(rdate, '%Y-%m-%d %T') rdate, m.nickname writer, r.answer answer, processType, b.isDel isBoardDel "
 			+ "from report r, member m, board b where r.memSeq=m.seq and b.seq=r.boardSeq ${query}"
 			+ " order by seq desc limit #{skip}, #{recordPerPage}")
 	public ArrayList<ReportTO> reportList(ReportListTO listTO);
