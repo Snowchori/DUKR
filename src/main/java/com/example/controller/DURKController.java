@@ -488,6 +488,7 @@ public class DURKController {
 		
 		if(flag == 0) {
 			boardDAO.boardDelete(request.getParameter("boardSeq"));
+			commentDAO.allCommentDelete(request.getParameter("boardSeq"));
 			
 			NoteTO noteTO = new NoteTO();
 			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
@@ -549,6 +550,7 @@ public class DURKController {
 					boardDAO.ipBan(request.getParameter("boardSeq"));
 				}
 				boardDAO.boardDelete(request.getParameter("boardSeq"));
+				commentDAO.allCommentDelete(request.getParameter("boardSeq"));
 				noteTO.setSubject("신고글 게시글 ip밴 완료");
 				noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
 			} else {
