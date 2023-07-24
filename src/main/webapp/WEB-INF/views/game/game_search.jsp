@@ -210,7 +210,7 @@
 								            </tr>
 											<tr>
 								                <td colspan="3" style="text-align: center">
-								                    <button id="sbtn" class="btn btn-primary btn-sm" style="width: 100%;" type="submit">검색</button>
+								                    <button id="sbtn" class="btn btn-dark btn-sm" style="width: 100%;" type="submit">검색</button>
 								                </td>
 								            </tr>
 			        					</tbody>

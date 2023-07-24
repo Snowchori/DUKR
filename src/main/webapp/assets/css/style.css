@@ -916,3 +916,12 @@ header.masthead .masthead-heading {
 .portfolio-modal .close-modal:hover {
 	opacity: 0.3;
 }
+
+.portfolio-link .game_image {
+  	max-width: 300px;
+	max-height: 300px;
+}
+	  
+a.portfolio-link{
+	text-align: center;
+}

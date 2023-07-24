@@ -2,8 +2,6 @@ package com.example.model.logs;
 
 import java.util.ArrayList;
 
-import com.example.model.board.BoardTO;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Tolerate;

@@ -176,23 +176,13 @@
 	            });
 	        });
 	    </script>
-	    <style type="text/css">
-		    .game_image {
-		    	max-width: 300px;
-				max-height: 300px;
-		    }
-		    
-		    a.portfolio-link{
-		    	text-align: center;
-		    }
-	    </style>
 	    <meta charset="utf-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 	    <meta name="description" content="" />
 	    <meta name="author" content="" />
 	    <title>DUKrule?</title>
 	    <!-- Favicon-->
-	    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+	    <link rel="icon" type="image/x-icon" href="assets/img/boardgame.png" />
 	    <!-- Font Awesome icons (free version)-->
 	    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 	    <!-- Google fonts-->
@@ -255,7 +245,7 @@
 	        <div class="container" id="p1">
 	            <div class="text-center">
 	                <h2 class="section-heading text-uppercase title">Recommended games</h2>
-	                <h3 class="section-subheading text-muted">관리자가 엄선한 추천게임 5종 입니다.</h3>
+	                <h3 class="section-subheading text-muted">관리자가 엄선한 추천게임입니다.</h3>
 	            </div>
 	            <div class="row">
 	                <%=recSB %>

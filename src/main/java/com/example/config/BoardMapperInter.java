@@ -51,12 +51,16 @@ public interface BoardMapperInter {
 	public int writeNew(BoardTO to);
 	
 	// seq로 글정보 가저오기
-	@Select("select b.seq seq, memSeq, subject, content, wip, wdate, hit, recCnt, cmtCnt, tag, nickname writer from board b inner join member m on b.memSeq=m.seq where b.seq=#{seq}")
+	@Select("select b.seq seq, memSeq, subject, content, wip, wdate, hit, recCnt, cmtCnt, tag, nickname writer, boardType, isDel from board b inner join member m on b.memSeq=m.seq where b.seq=#{seq}")
 	public BoardTO boardView(BoardTO to);
 	
 	// seq로 글정보 가져오기( 글 수정 ) - 제목, 내용, 태그
 	@Select("select seq, subject, content, tag from board where seq = #{seq}")
 	public BoardTO boardModify(BoardTO to);
+	
+	// 게시글 수정하기
+	@Update("update board set subject=#{subject}, content=#{content}, tag=#{tag} where seq=#{seq}")
+	public int boardModifyOk(BoardTO to);
 	
 	// 게시글의 파일 포함여부 검사
 	@Select("select count(*) from board where content like '%<img src=\"%' and seq=#{seq};")
@@ -94,7 +98,7 @@ public interface BoardMapperInter {
 	public int recCount(String boardSeq);
 	
 	// 밴 ip 목록
-	@Select("select seq, bip, bdate from ipban")
+	@Select("select seq, bip, bdate from ipban order by seq desc")
 	public ArrayList<BanTO> banIp();
 	
 	// 밴 ip 해제

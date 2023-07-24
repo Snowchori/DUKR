@@ -1,7 +1,5 @@
 package com.example.model.inquiry;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -11,11 +9,16 @@ import com.example.config.InquiryMapperInter;
 public class InquiryDAO {
 	@Autowired
 	InquiryMapperInter inquiryMapper;
-
-	public ArrayList<InquiryTO> inquiryList(){
-		ArrayList<InquiryTO> lists = inquiryMapper.inquiryList();
+	
+	public InquiryListTO inquiryList(InquiryListTO listTO) {
+		listTO.setTotalRecord(inquiryMapper.inquiryListTotal(listTO));
+		listTO.setSkip();
+		listTO.setInquiryLists(inquiryMapper.inquiryList(listTO));
+		listTO.setTotalPage();
+		listTO.setStartBlock();
+		listTO.setEndBlock();
 		
-		return lists;
+		return listTO;
 	}
 	
 	public int inquiryAnswerWriteOk(InquiryTO to) {

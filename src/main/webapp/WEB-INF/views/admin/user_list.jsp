@@ -1,14 +1,26 @@
+<%@page import="com.example.model.member.MemberListTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
-	ArrayList<MemberTO> user_list = (ArrayList)request.getAttribute("user_list");
+	MemberListTO listTO = (MemberListTO)request.getAttribute("listTO");
+	
+	int cpage = listTO.getCpage();
+	int totalRecode = listTO.getTotalRecord();
+	int recordPerPage = listTO.getRecordPerPage();
+	int totalRecord = listTO.getTotalRecord();
+	
+	int totalPage = listTO.getTotalPage();
+	
+	int blockPerPage = listTO.getBlockPerPage();
+	int startBlock = listTO.getStartBlock();
+	int endBlock = listTO.getEndBlock();
 	
 	StringBuilder userHtml = new StringBuilder();
 	
-	if(user_list.size() > 0) {
+	if(listTO.getMemberLists().size() > 0) {
 		userHtml.append("<div class='accordion accordion-flush' id='accordionFlushExample'>");
-		for(MemberTO to: user_list) { 
+		for(MemberTO to: listTO.getMemberLists()) { 
 			userHtml.append("<div class='accordion-item'>");
 			userHtml.append("<h2 class='accordion-header' id='flush-heading" + to.getSeq() + "'>");
 			userHtml.append("<button class='accordion-button collapsed' type='button' ");
@@ -62,6 +74,42 @@
 		userHtml.append("<div class='col'>");
 		userHtml.append("현재 회원이 없습니다.");
 		userHtml.append("</div>");
+	}
+	
+	StringBuilder pageHtml = new StringBuilder();
+	String searchCondition = "&keyWord=" + listTO.getKeyWord();
+	
+	if (startBlock != 1) {
+		pageHtml.append("<li class='page-item'>");
+		pageHtml.append("<a href='userList?cpage=");
+		pageHtml.append(startBlock - blockPerPage);
+		pageHtml.append("&recordPerPage=" + recordPerPage + searchCondition + "' ");
+		pageHtml.append("class='page-link' aria-label='Previous'>");
+		pageHtml.append("<span aria-hidden='true'>«</span>");
+		pageHtml.append("</a>");
+		pageHtml.append("</li>");
+	}
+	
+	for(int i=startBlock; i<=endBlock; i++) {
+		if(i == cpage) {
+			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
+		} else {
+			pageHtml.append("<li class='page-item'><a class='page-link' href='");
+			pageHtml.append("userList?cpage=" + i);
+			pageHtml.append("&recordPerPage=" + recordPerPage + searchCondition + "' ");
+			pageHtml.append(">" + i + "</a></li>");
+		}
+	}
+	
+	if(endBlock != totalPage) {
+		pageHtml.append("<li class='page-item'>");
+		pageHtml.append("<a href='userList?cpage=");
+		pageHtml.append(startBlock + blockPerPage);
+		pageHtml.append("&recordPerPage=" + recordPerPage + searchCondition + "' ");
+		pageHtml.append("class='page-link' aria-label='Next'>");
+		pageHtml.append("<span aria-hidden='true'>»</span>");
+		pageHtml.append("</a>");
+		pageHtml.append("</li>");
 	}
 %>
 <!doctype html>
@@ -171,10 +219,26 @@
 					}
 				})
 			}
+			
+			function search() {
+				(async () => {
+					const {value: getName} = await Swal.fire({
+						title: '유저 검색',
+						input: 'text',
+						inputAttributes: {
+							autocapitalize: 'off'
+						},
+						inputPlaceholder: '유저 닉네임',
+						showDenyButton: true,
+						confirmButtonText: '검색',
+						denyButtonText: `취소`
+					})
+					
+					location.href='userList?keyWord=' + getName;
+					
+				})()
+			}
 		</script>
-		<style>
-		
-		</style>
 	</head>
 	<body class="bg-secondary text-white">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
@@ -190,7 +254,18 @@
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
 				<div class="row m-3 p-4 bg-white text-black rounded-5">
+					<div class="mt-3 p-2">
+						총 <%= totalRecord %>명
+						<button type='button' class='btn btn-dark cbtn float-end' onclick='search()'><i class="bi bi-search"></i></button>
+					</div>
 					<%= userHtml %>
+					<div class="container p-2">
+						<nav class="pagination-outer" aria-label="Page navigation">
+							<ul class="pagination">
+								<%= pageHtml %>
+							</ul>
+						</nav>
+					</div>
 				</div>
 			</section>
 			<!-- End gameInfo Section -->

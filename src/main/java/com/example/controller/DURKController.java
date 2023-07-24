@@ -44,6 +44,7 @@ import com.example.model.logs.LogListTO;
 import com.example.model.logs.LogsDAO;
 import com.example.model.logs.LogsTO;
 import com.example.model.member.MemberDAO;
+import com.example.model.member.MemberListTO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
 import com.example.model.note.NoteListTO;
@@ -53,6 +54,7 @@ import com.example.model.party.ApplyTO;
 import com.example.model.party.PartyDAO;
 import com.example.model.party.PartyTO;
 import com.example.model.report.ReportDAO;
+import com.example.model.report.ReportListTO;
 import com.example.model.report.ReportTO;
 
 @RestController
@@ -254,11 +256,41 @@ public class DURKController {
 			return modelAndView;
 		}
 		
-		ArrayList<InquiryTO> inquiry_list = inquiryDAO.inquiryList();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String status = (request.getParameter("status") != null && !request.getParameter("status").equals("")) ? request.getParameter("status") : "";
+		
+		InquiryListTO listTO = new InquiryListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		if(status.equals("0")) {
+			listTO.setQuery(" and status = 0");
+		} else if(status.equals("1")) {
+			listTO.setQuery(" and status = 1");
+		} else {
+			listTO.setQuery("");
+		}
+		
+		listTO.setStatus(status);
+		
+		listTO = inquiryDAO.inquiryList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/inquiry_manage");
-		modelAndView.addObject("inquiry_list", inquiry_list);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}
@@ -297,6 +329,7 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		
 		String cpage = request.getParameter("cpage");
 		String recordPerPage = request.getParameter("recordPerPage");
 		String blockPerPage = request.getParameter("blockPerPage");
@@ -381,11 +414,41 @@ public class DURKController {
 			return modelAndView;
 		}
 		
-		ArrayList<ReportTO> report_list = reportDAO.reportList();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String status = (request.getParameter("status") != null && !request.getParameter("status").equals("")) ? request.getParameter("status") : "";
+		
+		ReportListTO listTO = new ReportListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		if(status.equals("0")) {
+			listTO.setQuery(" and status = 0");
+		} else if(status.equals("1")) {
+			listTO.setQuery(" and status = 1");
+		} else {
+			listTO.setQuery("");
+		}
+		
+		listTO.setStatus(status);
+		
+		listTO = reportDAO.reportList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/report_list");
-		modelAndView.addObject("report_list", report_list);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}
@@ -412,6 +475,25 @@ public class DURKController {
 		}
 		
 		return flag;
+	}
+	
+	@RequestMapping("/boardView")
+	public ModelAndView boardView(HttpServletRequest request) {
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardView(to);
+		
+		String boardType = to.getBoardType();
+		
+		if(boardType.equals("0")) {
+			return announceBoardView(request);
+		} else if(boardType.equals("1")) {
+			return freeBoardView(request);
+		} else if(boardType.equals("2")) {
+			return partyBoardView(request);
+		}
+		
+		return new ModelAndView();
 	}
 	
 	@RequestMapping("/deleteBoardOk")
@@ -481,11 +563,33 @@ public class DURKController {
 			return modelAndView;
 		}
 		
-		ArrayList<MemberTO> user_list = memberDAO.memberList();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		String keyWord = (request.getParameter("keyWord") != null && !request.getParameter("keyWord").equals("")) ? "%" + request.getParameter("keyWord") + "%" : "%";
+		
+		MemberListTO listTO = new MemberListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setKeyWord(keyWord);
+		
+		listTO = memberDAO.userList(listTO);
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("admin/user_list");
-		modelAndView.addObject("user_list", user_list);
+		modelAndView.addObject("listTO", listTO);
 		
 		return modelAndView;
 	}
@@ -590,6 +694,45 @@ public class DURKController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("community/announce/announce_board_view");
 		
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardView(to);
+		
+		if(to == null) {
+			modelAndView.setViewName("community/no_board");
+			
+			return modelAndView;
+		}
+		
+		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
+		
+		if(to.isDel()) {
+			modelAndView.setViewName("community/deleted_board");
+			
+			return modelAndView;
+		}
+		
+		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		
+		// 보고있는 유저의 게시글 추천여부 감지 
+		boolean didUserRec = false;
+		String uSeq = null;
+		
+		if(userInfo != null) {
+			uSeq = userInfo.getSeq();
+			
+			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
+			if(recCheck == 1) {
+				didUserRec = true;
+			}
+		}
+
+		String comments = commentsBuilder(request.getParameter("seq"), uSeq);
+		
+		modelAndView.addObject("to", to);
+		modelAndView.addObject("didUserRec", didUserRec);
+		modelAndView.addObject("comments", comments);
+		
 		return modelAndView;
 	}
 	
@@ -688,7 +831,20 @@ public class DURKController {
 		BoardTO to = new BoardTO();
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardView(to);
+		
+		if(to == null) {
+			modelAndView.setViewName("community/no_board");
+			
+			return modelAndView;
+		}
+		
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
+		
+		if(to.isDel()) {
+			modelAndView.setViewName("community/deleted_board");
+			
+			return modelAndView;
+		}
 
 		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
 		
@@ -758,6 +914,40 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	// 글수정 완료
+	@PostMapping("/freeBoardModifyOk")
+	public int boardModifyOk(HttpServletRequest req) {
+		int result = 0;
+		
+		String boardSeq = req.getParameter("boardSeq");
+		String subject = req.getParameter("subject");
+		String content = req.getParameter("content");
+		String tags = req.getParameter("tags");
+		
+		BoardTO modifiedPost = new BoardTO();
+		modifiedPost.setSeq(boardSeq);
+		modifiedPost.setSubject(subject);
+		modifiedPost.setContent(content);
+		modifiedPost.setTag(tags);
+		
+		result = boardDAO.boardModifyOk(modifiedPost);
+		
+		return result;
+	}
+	
+	@RequestMapping("/freeBoardDeleteOk")
+	public int boardDeleteOK(HttpServletRequest request) {
+				
+		String boardSeq = request.getParameter("seq");
+		int flag = boardDAO.boardDelete(boardSeq);
+
+		if(flag == 0) {
+			flag = commentDAO.allCommentDelete(boardSeq);
+		}
+		
+		return flag;
+	}
+		
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
 	public String freeboardCommentWrite(HttpServletRequest req){
@@ -783,7 +973,6 @@ public class DURKController {
 		updatedComments.setCommentList(commentDAO.boardCommentList(boardSeq));
 		
 		StringBuilder sbReturn = new StringBuilder();
-		int commentIndex = 0;
 		for(CommentTO comment : updatedComments.getCommentList()) {
 			String cWriter = comment.getWriter();
 			String cWdate = comment.getWdate();
@@ -792,13 +981,22 @@ public class DURKController {
 			String cSeq = comment.getSeq();
 			String writerSeq = comment.getMemSeq();
 			
+			// 보고있는사람이 작성자인지 여부
+			boolean isWriter = ( memSeq != null && memSeq.equals(writerSeq) );
+			
+			// 추천버튼 색상
 			String comRecBtnColor = "#4db2b2";
 			int didUserRecommendedThisComment = commentDAO.commentRecCheck(memSeq, cSeq);
 			if(didUserRecommendedThisComment == 1) {
 				comRecBtnColor = "#F08080";
 			}
 
-			sbReturn.append("<span class='dropdown'>");	
+			if(isWriter) {
+				sbReturn.append("<div style='background-color: #f0f0f0; display: block; margin-top: -8px; padding: 0;'>");
+			}else {
+				sbReturn.append("<div style='display: block; margin-top: -8px;'>");
+			}
+			sbReturn.append("<span class='dropdown' style='margin-top: 8px;'>");	
 			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
 			sbReturn.append(cWriter);	
 			sbReturn.append("</a>");
@@ -812,20 +1010,22 @@ public class DURKController {
 			sbReturn.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 			sbReturn.append(cRecCnt);		
 			sbReturn.append("</button>");
-			 
-			if(memSeq != null && memSeq.equals(writerSeq)){
-				sbReturn.append("<span id='cmtOptions" + cSeq + "'>");
-				// 삭제버튼
-				sbReturn.append("<button class='btn float-end me-3' style='color: #888888;' onclick='deleteComment(\"" + cSeq + "\")'>");
-				sbReturn.append("<i class=\"fas fa-trash\"></i>");
-				sbReturn.append("</button>");
-				// 수정버튼
-				sbReturn.append("<button class='btn float-end' style='color: #888888;' onclick='modifyComment(\"" + cSeq + "\", \"" + commentIndex + "\")'>");
-				sbReturn.append("<i class=\"fas fa-pencil-alt\"></i>");
-				sbReturn.append("</button>");
-				sbReturn.append("</span>");
+
+			// 옵션
+			sbReturn.append("<span id='cmtOptions" + cSeq + "' class='float-end me-2'>");
+			sbReturn.append("<button class='btn' role='button' data-bs-toggle='dropdown'>");	
+			sbReturn.append("<i class=\"fas fa-bars\"></i>");	
+			sbReturn.append("</button>");
+			sbReturn.append("<ul class='dropdown-menu'>");
+			// 메뉴버튼: 자기댓글 => 수정/삭제, 남의댓글 => 신고
+			if(isWriter){
+				sbReturn.append("<li><a class='dropdown-item' onclick='modifyComment(\"" + cSeq + "\")'>수정하기</a></li>");	
+				sbReturn.append("<li><a class='dropdown-item' onclick='deleteComment(\"" + cSeq + "\")'>삭제하기</a></li>");
+			}else {
+				sbReturn.append("<li><a class='dropdown-item' onclick='report(\"" + cSeq + "\", \"comment\")'>신고하기</a></li>");	
 			}
-			 
+			sbReturn.append("</ul>");
+			sbReturn.append("</span>");
 			sbReturn.append("<br>");
 			
 			sbReturn.append("<span id='cmtContent" + cSeq + "'>");
@@ -833,8 +1033,7 @@ public class DURKController {
 			sbReturn.append("</span>");
 			
 			sbReturn.append("<hr class='mt-3 my-2'>");
-			
-			commentIndex ++;
+			sbReturn.append("</div>");
 		 }
 		
 		return sbReturn.toString();
@@ -901,6 +1100,57 @@ public class DURKController {
 		}
 		
 		return response;
+	}
+	
+	// 신고 팝업창
+	@RequestMapping("/report")
+	public ModelAndView report(HttpServletRequest req) {
+		ModelAndView mav = new ModelAndView("/community/report_form");
+		
+		// 게시글인지 댓글인지
+		String targetType = req.getParameter("targetType");
+		String subject = null;
+		// 글 또는 댓글 seq
+		String seq = req.getParameter("seq");
+		
+		// 신고자 정보
+		MemberTO userInfo = (MemberTO)req.getSession().getAttribute("logged_in_user");
+		String userSeq = null;
+		if(userInfo == null) {
+			// 로그인하지 않고 신고페이지를 요청할경우 로그인페이지로 
+			mav.setViewName("/login/login");
+		}else {
+			userSeq = userInfo.getSeq();
+		}
+		
+		// 신고글 정보
+		String content = null;
+		String writer = null;
+		if(targetType.equals("board")) {
+			// 게시글인경우 게시글정보
+			BoardTO to = new BoardTO();
+			to.setSeq(seq);
+			to = boardDAO.boardView(to);
+			subject = to.getSubject();
+			content = to.getContent();
+			writer = to.getWriter();
+		}else if(targetType.equals("comment")) {
+			// 댓글인경우 댓글정보
+			CommentTO to = new CommentTO();
+			to.setSeq(seq);
+			to = commentDAO.getCmtInfoBySeq(to);
+			content = to.getContent();
+			writer = to.getWriter();
+		}
+		
+		mav.addObject("targetType", targetType);
+		mav.addObject("subject", subject);
+		mav.addObject("seq", seq);
+		mav.addObject("userSeq", userSeq);
+		mav.addObject("content", content);
+		mav.addObject("writer", writer);
+		
+		return mav;
 	}
 	
 	// ck에디터 이미지 업로드하기@@
@@ -1067,7 +1317,20 @@ public class DURKController {
 		BoardTO to = new BoardTO();
 		to.setSeq(seq);
 		to = boardDAO.boardView(to);
+		
+		if(to == null) {
+			modelAndView.setViewName("community/no_board");
+			
+			return modelAndView;
+		}
+		
 		to.setRecCnt(boardDAO.recCount(to.getSeq()) + "");
+		
+		if(to.isDel()) {
+			modelAndView.setViewName("community/deleted_board");
+			
+			return modelAndView;
+		}
 
 		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
 		String uSeq = null;
@@ -1086,10 +1349,8 @@ public class DURKController {
 		
 		// 보고있는 유저의 게시글 추천여부 감지
 		boolean didUserRec = false;
-		if(request.getSession().getAttribute("logged_in_user") != null) {
-			String userSeq = ((MemberTO)request.getSession().getAttribute("logged_in_user")).getSeq();
-					
-			int recCheck = boardDAO.recCheck(userSeq, request.getParameter("seq"));
+		if(uSeq != null) {
+			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
 			if(recCheck == 1) {
 				didUserRec = true;
 			}
