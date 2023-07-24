@@ -96,35 +96,7 @@ public class DURKController {
 	// main
 	@RequestMapping("/")
 	public ModelAndView root(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
-		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("main");
-		
-		ArrayList<String> recSeqList = gameDAO.gameRecList(); 
-		ArrayList<BoardgameTO> recList = new ArrayList<BoardgameTO>();
-		ArrayList<BoardgameTO> favList = new ArrayList<BoardgameTO>();
-		
-		if(userSeq != null) {
-			ArrayList<String> favSeqList = gameDAO.gameMainFavList(userSeq);
-			
-			for(String seq : favSeqList) {
-				favList.add(gameDAO.gameInfo(seq));
-			}
-		}
-		
-		for(String seq : recSeqList) {
-			recList.add(gameDAO.gameInfo(seq));
-		}
-		
-		ArrayList<BoardgameTO> totallist = gameDAO.gameMainList();
-
-		modelAndView.addObject("recList",recList);
-		modelAndView.addObject("favlist", favList);
-		modelAndView.addObject("totallist", totallist);
-		return modelAndView;
+		return main(request);
 	}
 	
 	@RequestMapping("/main")
@@ -1151,6 +1123,8 @@ public class DURKController {
 		// 신고글 정보
 		String content = null;
 		String writer = null;
+		String boardSeq = null;
+		String commentSeq = null;
 		if(targetType.equals("board")) {
 			// 게시글인경우 게시글정보
 			BoardTO to = new BoardTO();
@@ -1159,6 +1133,7 @@ public class DURKController {
 			subject = to.getSubject();
 			content = to.getContent();
 			writer = to.getWriter();
+			boardSeq = to.getSeq();
 		}else if(targetType.equals("comment")) {
 			// 댓글인경우 댓글정보
 			CommentTO to = new CommentTO();
@@ -1166,16 +1141,44 @@ public class DURKController {
 			to = commentDAO.getCmtInfoBySeq(to);
 			content = to.getContent();
 			writer = to.getWriter();
+			boardSeq = to.getBoardSeq();
+			commentSeq = to.getSeq();
 		}
+		
+		System.out.println("boardSeq : " +  boardSeq);
 		
 		mav.addObject("targetType", targetType);
 		mav.addObject("subject", subject);
-		mav.addObject("seq", seq);
+		mav.addObject("boardseq", boardSeq);
+		mav.addObject("commentSeq", commentSeq);
 		mav.addObject("userSeq", userSeq);
 		mav.addObject("content", content);
 		mav.addObject("writer", writer);
 		
 		return mav;
+	}
+	
+	// 신고 접수
+	@RequestMapping("/newReport")
+	public void newReport(HttpServletRequest req) {
+		String boardSeq = req.getParameter("boardSeq");
+		String commentSeq = req.getParameter("commentSeq");
+		String memSeq = req.getParameter("memSeq");
+		String content = req.getParameter("reason");
+		
+		System.out.println("컨트롤러 - 신고접수");
+		System.out.println(boardSeq);
+		System.out.println(commentSeq);
+		
+		ReportTO to = new ReportTO();
+		to.setBoardSeq(boardSeq);
+		to.setCommentSeq(commentSeq);
+		to.setMemSeq(memSeq);
+		to.setContent(content);
+		
+		int result = reportDAO.newReport(to);
+		
+		//return result;
 	}
 	
 	// ck에디터 이미지 업로드하기@@

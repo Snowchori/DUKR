@@ -78,7 +78,7 @@ public interface CommentMapperInter {
 	public int getRecCnt(String seq);
 	
 	// seq로 특정댓글 정보 가져오기
-	@Select("select c.seq seq, c.content content, m.nickname writer from comment c inner join member m on c.memSeq=m.seq where c.seq=#{seq}")
+	@Select("select c.seq seq, c.content content, c.boardSeq boardSeq, m.nickname writer from comment c inner join member m on c.memSeq=m.seq where c.seq=#{seq}")
 	public CommentTO getCmtInfoBySeq(CommentTO to);
 	
 	// 댓글 ip 가져오기

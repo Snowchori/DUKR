@@ -2,6 +2,7 @@ package com.example.config;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -23,4 +24,8 @@ public interface ReportMapperInter {
 	// 신고글 전체수 가져오기
 	@Select("select count(*) from report r, member m, board b where r.memSeq=m.seq and b.seq=r.boardSeq ${query}")
 	public int reportListTotal(ReportListTO listTO);
+	
+	// 신고글 등록
+	@Insert("insert into report values(0, #{boardSeq}, #{commentSeq}, #{memSeq}, #{content}, 0, now(), '', '')")
+	public int newReport(ReportTO to);
 }
