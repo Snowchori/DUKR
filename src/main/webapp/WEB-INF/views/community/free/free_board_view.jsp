@@ -47,11 +47,7 @@
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 		<!-- Template Main CSS File -->
-<<<<<<< HEAD
 		<link href="assets/css/style.css" rel="stylesheet">
-=======
-	 	<link href="assets/css/style.css" rel="stylesheet">
->>>>>>> 755d218d0a283c73bb28d6ff39ae6f01d4965111
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
 			window.onload = function(){
