@@ -23,7 +23,7 @@
 	//문의 목록 html
 	StringBuilder inquiryHTML = new StringBuilder();
 	inquiryHTML.append("<table class='table'>");
-	for(InquiryTO inquiryTO : listTO.getInquiryList()) {
+	for(InquiryTO inquiryTO : listTO.getInquiryLists()) {
 		inquiryHTML.append("<tr onclick='location.href=\"/adminView?seq="+inquiryTO.getSeq()+"\"'>");
 		if(inquiryTO.getStatus() == 1) {
 			inquiryHTML.append("<td style='width: 10px;'><i class='bi bi-check-square h1'></i></i></td>");
