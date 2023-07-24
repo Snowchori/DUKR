@@ -1,10 +1,10 @@
-<%@page import="com.example.model.inquiry.InquiryTO"%>
-<%@page import="com.example.model.inquiry.InquiryListTO"%>
+<%@page import="com.example.model.note.NoteTO"%>
+<%@page import="com.example.model.note.NoteListTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
-	InquiryListTO listTO = (InquiryListTO)request.getAttribute("listTO");
+	NoteListTO listTO = (NoteListTO)request.getAttribute("myNoteList");
 
 	int cpage = listTO.getCpage();
 	int totalRecode = listTO.getTotalRecord();
@@ -20,21 +20,20 @@
 	String search = (request.getParameter("search") != null) ? request.getParameter("search") : "";
 	String select = (request.getParameter("select") != null) ? request.getParameter("select") : "0";
 	
-	//문의 목록 html
-	StringBuilder inquiryHTML = new StringBuilder();
-	inquiryHTML.append("<table class='table'>");
-	for(InquiryTO inquiryTO : listTO.getInquiryList()) {
-		inquiryHTML.append("<tr onclick='location.href=\"/adminView?seq="+inquiryTO.getSeq()+"\"'>");
-		if(inquiryTO.getStatus() == 1) {
-			inquiryHTML.append("<td style='width: 10px;'><i class='bi bi-check-square h1'></i></i></td>");
+	//받은 쪽지 html
+	StringBuilder getNoteHTML = new StringBuilder();
+	for(NoteTO noteTO : listTO.getNoteList()) {
+		getNoteHTML.append("<div class='row mt-3'>");
+		getNoteHTML.append("<div class='col-md-12'>");
+		getNoteHTML.append("<div class='form-check'>");
+		getNoteHTML.append("<input class='form-check-input' type='checkbox' id='"+noteTO.getSeq()+"'>");
+		if(noteTO.getStatus() == 0) {
+			getNoteHTML.append("<label class='form-check-label' onclick=\"location.href='/mailGetView?seq="+noteTO.getSeq()+"'\"><i class='bi bi-envelope'></i> 발신자 : "+noteTO.getSenderSeq()+" | 제목 : "+noteTO.getSubject()+" </label>");
 		} else {
-			inquiryHTML.append("<td style='width: 10px;'><i class='bi bi-square h1'></i></i></td>");
+			getNoteHTML.append("<label class='form-check-label' onclick=\"location.href='/mailGetView?seq="+noteTO.getSeq()+"'\"><i class=\"bi bi-envelope-open\"></i> 발신자 : "+noteTO.getSenderSeq()+" | 제목 : "+noteTO.getSubject()+" </label>");
 		}
-		inquiryHTML.append("<td>&nbsp&nbsp<span class='badge bg-secondary'>"+inquiryTO.getInquiryType()+"</span>&nbsp&nbsp "+inquiryTO.getSubject()+"</br>");
-		inquiryHTML.append("<small>&nbsp&nbsp&nbsp&nbsp "+inquiryTO.getWriter()+" &nbsp&nbsp "+inquiryTO.getWdate()+"</small>");
-		inquiryHTML.append("</td></tr>");
+		getNoteHTML.append("</div><hr class='my-1'></div></div>");
 	}
-	inquiryHTML.append("</table>");
 	
 	//페이징
 		StringBuilder pageHtml = new StringBuilder();
@@ -80,6 +79,53 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
+			function deleteMail() {
+		        var selectedIds = [];
+
+		        var checkboxes = document.querySelectorAll(".form-check-input");
+
+		        checkboxes.forEach(function (checkbox) {
+		            if (checkbox.checked) {
+		                selectedIds.push(checkbox.id);
+		            }
+		        });
+		        $.ajax({
+					url: "mailDeleteOK",
+	                   type: "post",
+	                   contentType: "application/json",
+	                   data: JSON.stringify(selectedIds),
+					success : function(data) {
+						//0 성공 / 1 오류 및 실패
+						if(data == 0) {
+							Swal.fire({
+	                            title : '쪽지 삭제 성공',
+	                            text  : '쪽지를 삭제하였습니다',
+	                            icon  : 'success',
+	                            showCancelButton : false,
+	                            confirmButtonText : '확인',
+	                            timer : 1500,
+	                            timerProgressBar : true,
+	                            willClose : () => {
+	                            window.location.href = '';
+	                            }
+	                        });
+						} else {
+							Swal.fire({
+	                            title : '쪽지 삭제 실패',
+	                            text  : '쪽지 삭제에 실패하였습니다',
+	                            icon  : 'error',
+	                            showCancelButton : false,
+	                            confirmButtonText : '확인',
+	                            timer : 1500,
+	                            timerProgressBar : true,
+	                            willClose : () => {
+	                            window.location.href = '';
+	                            }
+	                        });
+						} 
+					}
+				});
+			}
 		</script>
 		<link href="assets/css/style.css" rel="stylesheet">
 		<style type="text/css">
@@ -128,18 +174,28 @@
 					<div class="col-6 col-lg-3" onClick="location.href='/myparty'"><div>참여신청한 모임</div></div>
 				</div>
 			</div>
+			<br/>
 			<!-- 버튼 디자인 -->
 	  		<!-- 마이페이지 정보페이지 디자인 -->
-	  		<div class="container my-4">
-    			<div class="d-flex justify-content-end">
+			<!-- 상단버튼 -->
+			<div class="container my-4">
+    			<div class="d-flex justify-content-between">
         			<div>
-						<button type="button" class="btn btn-dark" onclick="location.href='/adminWrite'">문의글 작성하기</button>
+            			<button class="btn btn-dark" onclick="location.href='/mail'">받은 쪽지함</button>
+            			<button class="btn btn-dark" onclick="location.href='/mailSend'">보낸 쪽지함</button>
+        			</div>
+        			<div>
+            			<button class="btn btn-danger" onclick="deleteMail()">쪽지 삭제</button>
+            			<button class="btn btn-dark" onclick="location.href='/mailWrite'">쪽지 보내기</button>
         			</div>
     			</div>
 			</div>
-			<div class="container">
-				<%=inquiryHTML %>
+			<!-- 상단버튼 -->
+			<!-- 받은 쪽지 -->
+			<div class="container mt-5">
+				<%=getNoteHTML %>			
 			</div>
+			<!-- 받은 쪽지 -->
 		</main>
 		<footer class="container-fluid d-flex justify-content-center bg-light">
 			<div class="container demo mx-5 p-2">

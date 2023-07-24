@@ -1,6 +1,22 @@
+<%@page import="com.example.model.inquiry.InquiryTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<%
+	InquiryTO inquiryTO = (InquiryTO)request.getAttribute("inquiryTO");
+
+	String status = "";
+	if(inquiryTO.getStatus() == 0) {
+		status = "문의 진행중";
+	} else {
+		status = "답변 완료";
+	}
+	
+	String answer = "";
+	if(inquiryTO.getAnswer() != null) {
+		answer = inquiryTO.getAnswer();
+	}
+%>
 <!doctype html>
 <html>
 	<head>
@@ -62,15 +78,19 @@
 					<form action="" class="row" style="width: 100%;" method="post">
 						<div class="col-md-6 mb-3">
 							<label for="subject" class="form-label">문의 제목</label>
-							<input type="text" class="form-control" placeholder="제목을 입력하세요" name="subject" id="subject" readonly="readonly"/>
+							<input type="text" class="form-control" value="<%=inquiryTO.getSubject() %>" name="subject" id="subject" readonly="readonly"/>
 						</div>
-						<div class="col-md-3 mb-3">
+						<div class="col-md-2 mb-3">
 							<label for="content" class="form-label">문의 사항</label>
-							<input type="text" class="form-control" placeholder="문의 사항" name="subject" id="subject" readonly="readonly"/>
+							<input type="text" class="form-control" value="<%=inquiryTO.getInquiryType() %>" name="subject" id="subject" readonly="readonly"/>
 						</div>
-						<div class="col-md-3 mb-3">
+						<div class="col-md-2 mb-3">
 							<label for="content" class="form-label">문의 확인 여부</label>
-							<input type="text" class="form-control" placeholder="문의 확인 여부" name="subject" id="subject" readonly="readonly"/>
+							<input type="text" class="form-control" value="<%=status %>" name="subject" id="subject" readonly="readonly"/>
+						</div>
+						<div class="col-md-2 mb-3">
+							<label for="content" class="form-label">작성 날짜</label>
+							<input type="text" class="form-control" value="<%=inquiryTO.getWdate() %>" name="wdate" id="wdate" readonly="readonly"/>
 						</div>
 						<div class="col-12 mb-3">
 							<label for="content" class="form-label">내용</label>
@@ -82,7 +102,7 @@
 								placeholder="내용을 입력하세요"
 								style="resize: none;"
 								readonly="readonly"
-							></textarea>
+							><%=inquiryTO.getContent() %></textarea>
 						</div>
 						<div class="col-12 mb-3">
 							<label for="content" class="form-label">관리자 답변</label>
@@ -91,13 +111,10 @@
 								name="content"
 								id="content"
 								rows="15"
-								placeholder="내용을 입력하세요"
+								placeholder="아직 답변이 작성되지 않았습니다"
 								style="resize: none;"
 								readonly="readonly"
-							></textarea>
-						</div>
-						<div class="col-12 mb-3">
-							<input type="button" class="btn btn-primary float-end" value="전송" onclick=""/>
+							><%=answer %></textarea>
 						</div>
 					</form>
 				</div>

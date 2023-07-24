@@ -13,4 +13,5 @@ public class NoteTO {
 	private String subject;
 	private String content;
 	private int status;
+	private String nickname;
 }

@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,6 +47,7 @@ import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberListTO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
+import com.example.model.note.NoteListTO;
 import com.example.model.note.NoteTO;
 import com.example.model.party.ApiPartyTO;
 import com.example.model.party.ApplyTO;
@@ -933,6 +935,19 @@ public class DURKController {
 		return result;
 	}
 	
+	@RequestMapping("/freeBoardDeleteOk")
+	public int boardDeleteOK(HttpServletRequest request) {
+				
+		String boardSeq = request.getParameter("seq");
+		int flag = boardDAO.boardDelete(boardSeq);
+
+		if(flag == 0) {
+			flag = commentDAO.allCommentDelete(boardSeq);
+		}
+		
+		return flag;
+	}
+		
 	// 댓글쓰기
 	@PostMapping("/freeboardCommentWrite")
 	public String freeboardCommentWrite(HttpServletRequest req){
@@ -958,7 +973,6 @@ public class DURKController {
 		updatedComments.setCommentList(commentDAO.boardCommentList(boardSeq));
 		
 		StringBuilder sbReturn = new StringBuilder();
-		int commentIndex = 0;
 		for(CommentTO comment : updatedComments.getCommentList()) {
 			String cWriter = comment.getWriter();
 			String cWdate = comment.getWdate();
@@ -967,13 +981,22 @@ public class DURKController {
 			String cSeq = comment.getSeq();
 			String writerSeq = comment.getMemSeq();
 			
+			// 보고있는사람이 작성자인지 여부
+			boolean isWriter = ( memSeq != null && memSeq.equals(writerSeq) );
+			
+			// 추천버튼 색상
 			String comRecBtnColor = "#4db2b2";
 			int didUserRecommendedThisComment = commentDAO.commentRecCheck(memSeq, cSeq);
 			if(didUserRecommendedThisComment == 1) {
 				comRecBtnColor = "#F08080";
 			}
 
-			sbReturn.append("<span class='dropdown'>");	
+			if(isWriter) {
+				sbReturn.append("<div style='background-color: #f0f0f0; display: block; margin-top: -8px; padding: 0;'>");
+			}else {
+				sbReturn.append("<div style='display: block; margin-top: -8px;'>");
+			}
+			sbReturn.append("<span class='dropdown' style='margin-top: 8px;'>");	
 			sbReturn.append("<a href='#' role='button' data-bs-toggle='dropdown'>");	
 			sbReturn.append(cWriter);	
 			sbReturn.append("</a>");
@@ -987,20 +1010,22 @@ public class DURKController {
 			sbReturn.append("<i class='fas fa-thumbs-up'></i>&nbsp;");		
 			sbReturn.append(cRecCnt);		
 			sbReturn.append("</button>");
-			 
-			if(memSeq != null && memSeq.equals(writerSeq)){
-				sbReturn.append("<span id='cmtOptions" + cSeq + "'>");
-				// 삭제버튼
-				sbReturn.append("<button class='btn float-end me-3' style='color: #888888;' onclick='deleteComment(\"" + cSeq + "\")'>");
-				sbReturn.append("<i class=\"fas fa-trash\"></i>");
-				sbReturn.append("</button>");
-				// 수정버튼
-				sbReturn.append("<button class='btn float-end' style='color: #888888;' onclick='modifyComment(\"" + cSeq + "\", \"" + commentIndex + "\")'>");
-				sbReturn.append("<i class=\"fas fa-pencil-alt\"></i>");
-				sbReturn.append("</button>");
-				sbReturn.append("</span>");
+
+			// 옵션
+			sbReturn.append("<span id='cmtOptions" + cSeq + "' class='float-end me-2'>");
+			sbReturn.append("<button class='btn' role='button' data-bs-toggle='dropdown'>");	
+			sbReturn.append("<i class=\"fas fa-bars\"></i>");	
+			sbReturn.append("</button>");
+			sbReturn.append("<ul class='dropdown-menu'>");
+			// 메뉴버튼: 자기댓글 => 수정/삭제, 남의댓글 => 신고
+			if(isWriter){
+				sbReturn.append("<li><a class='dropdown-item' onclick='modifyComment(\"" + cSeq + "\")'>수정하기</a></li>");	
+				sbReturn.append("<li><a class='dropdown-item' onclick='deleteComment(\"" + cSeq + "\")'>삭제하기</a></li>");
+			}else {
+				sbReturn.append("<li><a class='dropdown-item' onclick='report(\"" + cSeq + "\", \"comment\")'>신고하기</a></li>");	
 			}
-			 
+			sbReturn.append("</ul>");
+			sbReturn.append("</span>");
 			sbReturn.append("<br>");
 			
 			sbReturn.append("<span id='cmtContent" + cSeq + "'>");
@@ -1008,8 +1033,7 @@ public class DURKController {
 			sbReturn.append("</span>");
 			
 			sbReturn.append("<hr class='mt-3 my-2'>");
-			
-			commentIndex ++;
+			sbReturn.append("</div>");
 		 }
 		
 		return sbReturn.toString();
@@ -1076,6 +1100,57 @@ public class DURKController {
 		}
 		
 		return response;
+	}
+	
+	// 신고 팝업창
+	@RequestMapping("/report")
+	public ModelAndView report(HttpServletRequest req) {
+		ModelAndView mav = new ModelAndView("/community/report_form");
+		
+		// 게시글인지 댓글인지
+		String targetType = req.getParameter("targetType");
+		String subject = null;
+		// 글 또는 댓글 seq
+		String seq = req.getParameter("seq");
+		
+		// 신고자 정보
+		MemberTO userInfo = (MemberTO)req.getSession().getAttribute("logged_in_user");
+		String userSeq = null;
+		if(userInfo == null) {
+			// 로그인하지 않고 신고페이지를 요청할경우 로그인페이지로 
+			mav.setViewName("/login/login");
+		}else {
+			userSeq = userInfo.getSeq();
+		}
+		
+		// 신고글 정보
+		String content = null;
+		String writer = null;
+		if(targetType.equals("board")) {
+			// 게시글인경우 게시글정보
+			BoardTO to = new BoardTO();
+			to.setSeq(seq);
+			to = boardDAO.boardView(to);
+			subject = to.getSubject();
+			content = to.getContent();
+			writer = to.getWriter();
+		}else if(targetType.equals("comment")) {
+			// 댓글인경우 댓글정보
+			CommentTO to = new CommentTO();
+			to.setSeq(seq);
+			to = commentDAO.getCmtInfoBySeq(to);
+			content = to.getContent();
+			writer = to.getWriter();
+		}
+		
+		mav.addObject("targetType", targetType);
+		mav.addObject("subject", subject);
+		mav.addObject("seq", seq);
+		mav.addObject("userSeq", userSeq);
+		mav.addObject("content", content);
+		mav.addObject("writer", writer);
+		
+		return mav;
 	}
 	
 	// ck에디터 이미지 업로드하기@@
@@ -1274,10 +1349,8 @@ public class DURKController {
 		
 		// 보고있는 유저의 게시글 추천여부 감지
 		boolean didUserRec = false;
-		if(request.getSession().getAttribute("logged_in_user") != null) {
-			String userSeq = ((MemberTO)request.getSession().getAttribute("logged_in_user")).getSeq();
-					
-			int recCheck = boardDAO.recCheck(userSeq, request.getParameter("seq"));
+		if(uSeq != null) {
+			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
 			if(recCheck == 1) {
 				didUserRec = true;
 			}
@@ -2200,6 +2273,10 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
+		
+		InquiryTO inquiryTO = inquiryDAO.inquiryView(userSeq);
+		
+		modelAndView.addObject("inquiryTO", inquiryTO);
 		modelAndView.setViewName("mypage/myadmin/mypage_admin_view");
 		
 		return modelAndView;
@@ -2223,6 +2300,28 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/adminWriteOK")
+	public int adminwriteOK(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		// 0 성공 / 1 실패 및 오류
+		if(userSeq == null) {
+			return 1;
+		}
+		InquiryTO inquiryTO = new InquiryTO();
+		
+		inquiryTO.setSubject(request.getParameter("subject"));
+		inquiryTO.setContent(request.getParameter("content"));
+		inquiryTO.setInquiryType(request.getParameter("inquiryType"));
+		inquiryTO.setSenderSeq(userSeq);
+		
+		int flag = inquiryDAO.inquiryWrite(inquiryTO);
+		
+		return flag;
+	}
+	
 	@RequestMapping("/admin")
 	public ModelAndView admin(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -2236,13 +2335,37 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
+		
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		InquiryListTO listTO = new InquiryListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = inquiryDAO.myInquiryList(listTO);
+		
+		modelAndView.addObject("listTO", listTO);
 		modelAndView.setViewName("mypage/myadmin/mypage_admin");
 		
 		return modelAndView;
 	}
 	
 	// mypage/mymail
-	@RequestMapping("/mailGetview")
+	@RequestMapping("/mailGetView")
 	public ModelAndView mailgetview(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
@@ -2255,12 +2378,20 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_getview");
+		
+		String seq = request.getParameter("seq");
+		NoteTO noteTO = noteDAO.getNoteView(seq);
+		if(noteTO.getStatus() == 0) {
+			noteDAO.noteStatusChange(seq);
+		}
+		
+		modelAndView.addObject("noteTO", noteTO);
+		modelAndView.setViewName("mypage/mynote/mypage_note_getview");
 		
 		return modelAndView;
 	}
 	
-	@RequestMapping("/mailSendview")
+	@RequestMapping("/mailSendView")
 	public ModelAndView mailsendview(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
@@ -2273,7 +2404,15 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_sendview");
+		
+		String seq = request.getParameter("seq");
+		NoteTO noteTO = noteDAO.getNoteView(seq);
+		if(noteTO.getStatus() == 0) {
+			noteDAO.noteStatusChange(seq);
+		}
+		
+		modelAndView.addObject("noteTO", noteTO);
+		modelAndView.setViewName("mypage/mynote/mypage_note_sendview");
 		
 		return modelAndView;
 	}
@@ -2289,12 +2428,42 @@ public class DURKController {
 			modelAndView.setViewName("mypage/no_login");
 			
 			return modelAndView;
+
 		}
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_write");
+		modelAndView.setViewName("mypage/mynote/mypage_note_write");
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("mailWriteOK")
+	public int mailWriteOK(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			return 1;
+		}
+		String receiverSeq = memberDAO.seqSearchToNickname(request.getParameter("nickname"));
+		if(receiverSeq == null || receiverSeq.equals("")) {
+			return 2;
+		}
+		NoteTO noteTO = new NoteTO();
+		
+		noteTO.setSenderSeq(userSeq);
+		noteTO.setReceiverSeq(receiverSeq);
+		noteTO.setSubject(request.getParameter("subject"));
+		noteTO.setContent(request.getParameter("content"));
+		
+		int flag = noteDAO.noteSend(noteTO);
+		
+		if(flag == 1) {
+			flag = 0;
+		}
+		
+		return flag;
 	}
 	
 	@RequestMapping("/mail")
@@ -2309,9 +2478,99 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail");
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		NoteListTO listTO = new NoteListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = noteDAO.mynoteGetList(listTO);
+		
+		modelAndView.addObject("myNoteList",listTO);
+		modelAndView.setViewName("mypage/mynote/mypage_Getnote");
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/mailSend")
+	public ModelAndView mailSend(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		
+		NoteListTO listTO = new NoteListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = noteDAO.mynoteSendList(listTO);
+		
+		modelAndView.addObject("myNoteList",listTO);
+		modelAndView.setViewName("mypage/mynote/mypage_Sendnote");
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/mailDeleteOK")
+	public int mailDelete(HttpServletRequest request, @RequestBody List<Integer> selectedIds) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		//0 성공 / 1 실패
+		if(userSeq == null) {
+			
+			return 1;
+		}
+		int flag = 0;
+		for(int seq : selectedIds) {
+			flag = noteDAO.noteDelte(Integer.toString(seq));
+		}
+		
+		if(flag == 1) {
+			flag = 0;
+		}
+		
+		return flag;
 	}
 }

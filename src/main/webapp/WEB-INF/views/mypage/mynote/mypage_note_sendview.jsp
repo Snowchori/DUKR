@@ -1,6 +1,10 @@
+<%@page import="com.example.model.note.NoteTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<%
+	NoteTO noteTO = (NoteTO)request.getAttribute("noteTO");
+%>
 <!doctype html>
 <html>
 	<head>
@@ -42,7 +46,7 @@
 			</div>
 		</header>
 		<main>
-	  		<!-- 버튼 디자인 -->
+			<!-- 버튼 디자인 -->
 			<div class="container mt-3">
 				<div class="row g-1 text-center selection">
 					<div class="col-6 col-lg-3" onClick="location.href='/mypage'"><div>회원 정보 변경</div></div>
@@ -63,15 +67,15 @@
 					<form action="" class="row" style="width: 100%;" method="post">
 						<div class="col-md-6 mb-3">
 							<label for="subject" class="form-label">제목</label>
-							<input type="text" class="form-control" placeholder="제목을 입력하세요" name="subject" id="subject" readonly="readonly"/>
+							<input type="text" class="form-control" value="<%=noteTO.getSubject() %>" name="subject" id="subject" readonly="readonly"/>
 						</div>
 						<div class="col-md-3 mb-3">
-							<label for="content" class="form-label">보낸 유저</label>
-							<input type="text" class="form-control" placeholder="닉네임을 입력하세요" name="subject" id="nickname" readonly="readonly"/>
+							<label for="content" class="form-label">받은 유저</label>
+							<input type="text" class="form-control" value="<%=noteTO.getReceiverSeq() %>" name="subject" id="nickname" readonly="readonly"/>
 						</div>
 						<div class="col-md-3 mb-3">
-							<label for="content" class="form-label">수신일</label>
-							<input type="text" class="form-control" placeholder="날짜" name="subject" id="maildate" readonly="readonly"/>
+							<label for="content" class="form-label">발신일</label>
+							<input type="text" class="form-control" value="<%=noteTO.getWdate() %>" name="subject" id="maildate" readonly="readonly"/>
 						</div>
 						<div class="col-12 mb-3">
 							<label for="content" class="form-label">내용</label>
@@ -80,10 +84,9 @@
 								name="content"
 								id="content"
 								rows="15"
-								placeholder="내용을 입력하세요"
 								style="resize: none;"
 								readonly="readonly"
-							></textarea>
+							><%=noteTO.getContent() %></textarea>
 						</div>
 						<div class="col-12 mb-3">
 							<input type="button" class="btn btn-primary float-end" value="전송" onclick=""/>
@@ -93,7 +96,7 @@
 			</div>
 		</main>
 		<footer>
-	    	<!-- 최하단 디자인 영역 -->
+			<!-- 최하단 디자인 영역 -->
 		</footer>
 	</body>
 </html>

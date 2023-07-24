@@ -1,4 +1,4 @@
-package com.example.model.inquiry;
+package com.example.model.note;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import lombok.experimental.Tolerate;
 
 @Getter
 @Setter
-public class InquiryListTO {
+public class NoteListTO {
 	private int cpage;
 	private int recordPerPage;
 	private int blockPerPage;
@@ -18,12 +18,10 @@ public class InquiryListTO {
 	private int endBlock;
 	private int skip;
 	private String seq;
-	private String query;
-	private String status;
 	
-	private ArrayList<InquiryTO> inquiryLists;
+	private ArrayList<NoteTO> noteList;
 	
-	public InquiryListTO() {
+	public NoteListTO() {
 		// TODO Auto-generated constructor stub
 		this.cpage = 1;
 		this.recordPerPage = 10;

@@ -25,6 +25,12 @@ public class CommentDAO {
 		return listTO;
 	}
 	
+	// seq로 특정 댓글정보 가져오기
+	public CommentTO getCmtInfoBySeq(CommentTO to) {
+		to = commentMapperInter.getCmtInfoBySeq(to);
+		return to;
+	}
+	
 	// 자유게시판 뷰 - 댓글목록
 	public ArrayList<CommentTO> boardCommentList(String boardSeq){
 		ArrayList<CommentTO> commentList = commentMapperInter.boardCommentList(boardSeq);
@@ -69,6 +75,22 @@ public class CommentDAO {
 		int result = commentMapperInter.commentDelete(commentSeq);
 		commentMapperInter.boardCmtCntMinus(boardSeq);
 		return result;
+	}
+	
+	// 해당 게시글의 모든 댓글 삭제 처리
+	public int allCommentDelete(String boardSeq) {
+		int flag = 1;	// 0 : 정상 , 1 : 비정상
+		int result = commentMapperInter.allCommentDelete(boardSeq);
+
+		if(result >= 0) {
+			result = commentMapperInter.boardCmtCntReset(boardSeq);
+		}
+		
+		if(result == 1 ) {
+			flag = 0;
+		}	
+
+		return flag;
 	}
 	
 	// 댓글 삭제하기

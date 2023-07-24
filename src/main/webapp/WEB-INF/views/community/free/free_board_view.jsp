@@ -33,7 +33,7 @@
 	boolean isWriter = true;
 	if(!wSeq.equals(userSeq)){
 		isWriter = false;
-	}
+	}		
 	
 	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
 	String recBtnColor = "btn-secondary";
@@ -162,7 +162,7 @@
 			}
 			
 			// 댓글 수정함수
-			function modifyComment(cSeq, commentIndex){
+			function modifyComment(cSeq){
 				const cmtId = 'cmtContent' + cSeq;
 				let curContent = $('#' + cmtId).html();
 				let options = 'cmtOptions' + cSeq;
@@ -175,7 +175,6 @@
 			function modifyCommentOk(cmtSeq){
 				const cmtId = 'modifiedCmt' + cmtSeq;
 				const modifiedContent = $('#' + cmtId).val();
-				//console.log(modifiedContent);
 				$.ajax({
 					url: '/modifyComment',
 					type: 'POST',
@@ -189,6 +188,70 @@
 						$('#comments').html(result);
 					}
 				});
+			}
+			
+			// 글 삭제
+			function freeBoardDelete(seq){
+				Swal.fire({
+					title: '글을 삭제하시겠습니까?',
+					showDenyButton: true,
+					confirmButtonText: '네',
+					denyButtonText: `아니오`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url:'freeBoardDeleteOk',
+							type:'post',
+				  			data: {
+				  				seq: seq
+				  			},
+				  			success: function(data) {
+					  			if(data == 0) {
+						  			Swal.fire({
+							  			icon: 'success',
+							  			title: '삭제 완료',
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
+							  			willClose: () => {
+							  				location.href='freeBoardList?cpage=<%=cpage%>';
+						  				}
+					  				});
+					  			} else {
+						  			Swal.fire({
+							  			icon: 'error',
+							  			title: '삭제 실패',
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
+						  			});
+					  			}
+					  		}
+						});
+					}
+				})
+			}
+			
+			// 신고
+			function report(seq, type){
+				if(<%=userSeq%> == null){
+					alert('로그인해라');
+				}else{
+					let url = '/report?targetType=' + type + '&seq=' + seq;
+					const pageName = 'DUKR - report';
+					// 팝업 위치설정
+					const screenWidth = window.screen.width;
+					const screenHeight = window.screen.height;
+					const popupLeft = (screenWidth / 2) - 300;
+					const popupTop = (screenHeight / 2) - 400;
+					const spec = 'width=600, height=800, left=' + popupLeft + ', top=' + popupTop;
+					
+					let popup = window.open(url, pageName, spec);
+					
+					if(!popup) {
+						alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요');
+		            }
+				} 
 			}
 		</script>
 		<style>
@@ -297,10 +360,11 @@
 					<button class="btn btn-secondary" style="margin-right: auto;" onclick="location.href='freeBoardList?cpage=<%=cpage %>'">목록</button>
 					
 					<div class="d-flex">
-						<button class="btn btn-secondary mx-3" style="margin-left: auto;" >삭제</button>
-						<%if(isWriter){ %>								
-						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>			
+						<%if(isWriter){ %>	
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
+						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>				
 						<%} %>
+						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
 					</div>
 				</div>
 				<hr class="my-2">
@@ -318,7 +382,7 @@
 						<button id="cmtWbtn" class="btn btn-secondary" style="margin-left: auto;">댓글쓰기</button>
 					</div>
 				</div>
-			</div>
+			</div> 
 			
 		</main>
 		<footer>
