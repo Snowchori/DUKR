@@ -8,6 +8,7 @@ import lombok.Setter;
 public class ReportTO {
 	private String seq;
 	private String boardSeq;
+	private String commentSeq;
 	private String memSeq;
 	private String writer;
 	private String content;
@@ -16,4 +17,5 @@ public class ReportTO {
 	private String answer;
 	private String processType;
 	private boolean isBoardDel;
+	private String targetType;
 }
