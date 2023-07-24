@@ -223,7 +223,7 @@
 			<div class="container" align="center">
 				<form action="/signupOk" method="post" name="signup_frm">
 					<input type="hidden" name="isDupl" id="isDupl" value="1"/>
-					<div class="col-md-3 mt-3">
+					<div class="col-md-3 my-5">
 						<div class="input-group">
 							<input class="form-control" type="email" id="id" name="id" placeholder="아이디"> &nbsp;
 							<span class="input-group-btn">
@@ -271,7 +271,7 @@
 						<br>	
 						<input type="hidden" name='isEmailValid' id="isEmailValid" value="0"/>
 						<div class="d-grid gap-2">
-							<input class="btn btn-primary btn-lg" id="signup_submit" type="button" value="가입하기" />
+							<input class="btn btn-dark btn-lg" id="signup_submit" type="button" value="가입하기" />
 						</div>
 					</div>
 				</form>

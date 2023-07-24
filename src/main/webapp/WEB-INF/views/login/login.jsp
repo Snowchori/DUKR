@@ -89,7 +89,7 @@
 			</div>
 		</header>
 		<main>
-			<div name="login-wrap" class="container" align="center">
+			<div name="login-wrap" class="container my-5" align="center">
 				<div class="col-md-3 mt-3">
 					<form action="loginOk" method="post" name="login_frm">
 		    			<input class="form-control" type="email" name="id" placeholder="아이디" /><br> 
@@ -111,12 +111,12 @@
 		    			</div>
 		    			<br><br>		
 		    			<div class="d-grid gap-2">
-		        			<input class="btn btn-primary btn-lg" type="button" id="login_submit" value="로그인" />
+		        			<input class="btn btn-dark btn-lg" type="button" id="login_submit" value="로그인" />
 		    			</div>
 		    		</form>
 		    		<br>
 					<div class="d-grid gap-2">
-		    			<a class="btn btn-primary btn-lg" href="/signup">회원가입</a>
+		    			<a class="btn btn-dark btn-lg" href="/signup">회원가입</a>
 					</div>
 		    	</div>
 		    	<br>
