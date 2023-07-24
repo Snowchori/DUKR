@@ -1078,24 +1078,20 @@ public class DURKController {
 		if(memSeq.equals("") || memSeq.equals("null")) {
 			response = "0";
 		}else {
-			if(req.getParameter("writerSeq").equals(memSeq)) {
-				response = "3";
-			}else {
-				int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
+			int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
 			
-				if(recCheck == 0) {
-					commentDAO.commentRec(memSeq, cmtSeq);
-					response = "1";
+			if(recCheck == 0) {
+				commentDAO.commentRec(memSeq, cmtSeq);
+				response = "1";
 					
-					String updatedComments = commentsBuilder(boardSeq, memSeq); 
-					response += updatedComments;
-				}else {
-					commentDAO.commentRecCancel(memSeq, cmtSeq);
-					response = "2";
+				String updatedComments = commentsBuilder(boardSeq, memSeq); 
+				response += updatedComments;
+			}else {
+				commentDAO.commentRecCancel(memSeq, cmtSeq);
+				response = "2";
 					
-					String updatedComments = commentsBuilder(boardSeq, memSeq);
-					response += updatedComments;
-				}
+				String updatedComments = commentsBuilder(boardSeq, memSeq);
+				response += updatedComments;
 			}
 		}
 		
@@ -1222,21 +1218,15 @@ public class DURKController {
 		if(userSeq == "") {
 			response = 2;
 		}else {
-			if(isWriter.equals("true")) {
-				// 본인게시글을 추천한 경우
-				response = 4;
+			int recCheck = boardDAO.recCheck(userSeq, boardSeq);
+			if(recCheck == 1) {
+				// 이미 추천한 게시글인 경우, 추천해제
+				boardDAO.boardRecommendCancel(userSeq, boardSeq);
+				response = 3;
 			}else {
-				int recCheck = boardDAO.recCheck(userSeq, boardSeq);
-			
-				if(recCheck == 1) {
-					// 이미 추천한 게시글인 경우, 추천해제
-					boardDAO.boardRecommendCancel(userSeq, boardSeq);
-					response = 3;
-				}else {
-					// 추천 성공
-					boardDAO.boardRecommend(userSeq, boardSeq);
-					response = 1;
-				}
+				// 추천 성공
+				boardDAO.boardRecommend(userSeq, boardSeq);
+				response = 1;
 			}
 		}
 		
@@ -1541,7 +1531,7 @@ public class DURKController {
 		int isRec = Integer.parseInt(request.getParameter("isRec"));
 		
 		int flag = 2;
-		// 1: 해제 2: 추가
+		// 1: 해제 2: 추가	
 		if(isRec == 1) {
 			flag = gameDAO.gameRecommendDeleteOk(userSeq, seq);
 		} else if(isRec == 2) {
