@@ -231,7 +231,7 @@
 			// 신고
 			function report(seq, type){
 				if(<%=userSeq%> == null){
-					alert('로그인해라');
+					alert('먼저 로그인 해야합니다');
 				}else{
 					let url = '/report?targetType=' + type + '&seq=' + seq;
 					const pageName = 'DUKR - report';

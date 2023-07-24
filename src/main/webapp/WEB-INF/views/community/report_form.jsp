@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%
 	String targetType = (String)request.getAttribute("targetType");
 	String subject = (String)request.getAttribute("subject");
@@ -14,36 +14,62 @@
 <head>
 <meta charset="EUC-KR">
 <title>Insert title here</title>
+<%@ include file="/WEB-INF/views/include/head_setting.jspf" %> 
 <script type="text/javascript">
 	window.onload = function(){
 		document.getElementById('reportSubmitBtn').onclick = function(){
-			document.reportFrm.submit();
-			//window.close(); 
+			const reason = $('#reason').val();
+			console.log("reason:" + reason);
+			
+			$.ajax({
+				url: '/newReport',
+				type: 'POST',
+				data: {
+					subject: "<%=subject%>",
+					memSeq: <%=userSeq %>,
+					boardSeq: <%=boardSeq %>,
+					commentSeq: <%=commentSeq %>,
+					writer: "<%=writer %>",
+					reason: reason
+				},
+				success: function(result){
+					Swal.fire({
+						icon: 'success',
+						title: 'ì‹ ê³ ì‚¬í•­ì´ ì ‘ìˆ˜ë˜ì—ˆìŠµë‹ˆë‹¤',
+						confirmButtonText: 'í™•ì¸',
+						//timer : 1500,
+						timerProgressBar : true,
+						willClose: () => {
+							window.close();
+						}
+					});
+				}	
+			});
 		};
 	};
 </script>
 </head>
 <body>
 	<br>
-	½Å°í
+	ì‹ ê³ 
 	<hr><br>
 	<form name="reportFrm" action="/newReport" method="POST">
 		<%if(targetType.equals("board")){ %>
-		Á¦¸ñ : <input class="" name="subject" readonly="readonly" value="<%=subject %>"/>
+		ì œëª© : <input class="" name="subject" readonly="readonly" value="<%=subject %>"/>
 		<br><hr><br>
 		<%} %>
-		<input type="hidden" name="memSeq" value=<%=userSeq %>/>
-		<input type="hidden" name="boardSeq" value=<%=boardSeq %>/>
-		<input type="hidden" name="commentSeq" value=<%=commentSeq %>/>
-		ÀÛ¼ºÀÚ : <input class="" name="writer" readonly="readonly" value="<%=writer %>"/>
+		<input type="hidden" name="memSeq" value=<%=userSeq %> />
+		<input type="hidden" name="boardSeq" value=<%=boardSeq %> />
+		<input type="hidden" name="commentSeq" value=<%=commentSeq %> />
+		ì‘ì„±ì : <input class="" name="writer" readonly="readonly" value="<%=writer %>" />
 		<br>
-		³»¿ë<br> 
-		<input class="" name="content" readonly="readonly" value="<%=content %>"/>
+		ë‚´ìš©<br> 
+		<input class="" name="content" readonly="readonly" value="<%=content %>" />
 		<br>
-		½Å°í»çÀ¯ <br>
-		<input type="text" name="reason" style="display: block;" rows="5"/>
+		ì‹ ê³ ì‚¬ìœ  <br>
+		<input type="text" name="reason" id="reason" style="display: block;" rows="5"/>
 		<br>
-		<input type="button" id="reportSubmitBtn" value="Á¦Ãâ"/>
+		<input type="button" id="reportSubmitBtn" value="ì œì¶œ"/>
 	</form>
 </body>
 </html>
