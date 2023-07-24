@@ -773,6 +773,31 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	// 공지사항 수정
+	@RequestMapping("/announceBoardModify")
+	public ModelAndView announceBoardModify(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+				
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+					
+			return modelAndView;
+		}
+				
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardModify(to);
+					
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("to", to);
+				
+		modelAndView.setViewName("community/announce/announce_board_modify");		
+		return modelAndView;
+	}	
+	
 	// community/free
 	@RequestMapping("/freeBoardList")
 	public ModelAndView freeBoardList(HttpServletRequest request) {
@@ -925,7 +950,7 @@ public class DURKController {
 	}
 	
 	// 글수정 완료
-	@PostMapping("/freeBoardModifyOk")
+	@PostMapping( value = {"/freeBoardModifyOk", "/announceBoardModifyOk"})
 	public int boardModifyOk(HttpServletRequest req) {
 		int result = 0;
 		
@@ -1191,7 +1216,7 @@ public class DURKController {
 	}
 	
 	// ck에디터 이미지 업로드하기@@
-	@PostMapping( value= { "/upload/freeboard", "/upload/announce" })
+	@PostMapping( value = { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
 		Boolean uploadResult = false;
 		
