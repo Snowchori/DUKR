@@ -2274,7 +2274,7 @@ public class DURKController {
 		}
 		ModelAndView modelAndView = new ModelAndView();
 		
-		InquiryTO inquiryTO = inquiryDAO.inquiryView(userSeq);
+		InquiryTO inquiryTO = inquiryDAO.inquiryView(request.getParameter("seq"));
 		
 		modelAndView.addObject("inquiryTO", inquiryTO);
 		modelAndView.setViewName("mypage/myadmin/mypage_admin_view");
