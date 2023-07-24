@@ -368,8 +368,9 @@
 						<%if(isWriter){ %>	
 						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
 						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>				
-						<%} %>
+						<%}else { %>
 						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
+						<%} %>
 					</div>
 				</div>
 				<hr class="my-2">

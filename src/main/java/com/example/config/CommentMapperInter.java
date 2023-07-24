@@ -22,7 +22,7 @@ public interface CommentMapperInter {
 	public ArrayList<CommentTO> mycommentWrite(CommentListTO listTO);
 	
 	// 자유게시판 뷰 - 댓글목록 가져오기
-	@Select("select c.seq seq, boardSeq, memSeq, content, wdate, recCnt, wip, isDel, nickname writer from comment c inner join member m on c.memSeq=m.seq where boardSeq=#{boardSeq}")
+	@Select("select c.seq seq, boardSeq, memSeq, content, wdate, recCnt, wip, isDel, nickname writer from comment c inner join member m on c.memSeq=m.seq where boardSeq=#{boardSeq} and isDel=false")
 	public ArrayList<CommentTO> boardCommentList(String boardSeq);
 	
 	// 자유게시판 뷰 - 댓글쓰기
