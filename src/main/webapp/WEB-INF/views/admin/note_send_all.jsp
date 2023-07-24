@@ -68,7 +68,7 @@
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
-					<h1 class="title">전제 쪽지 보내기</h1>
+					<h1 class="title"><span class="hover" onclick="location.href='noteSendAll'">전체 쪽지 보내기</span></h1>
 					<p class="lead fw-normal text-white-50 mb-0">Send Premise Note</p>
 				</div>
 			</div>

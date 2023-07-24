@@ -187,16 +187,11 @@ public class BoardDAO {
 		return flag;
 	}
 	
-	// 게시글 지우기
-	public int boardDeleteAll(String seq) {
-		int flag = 1;
-		int result = boardMapper.boardDeleteAll(seq);
+	// 회원 게시글 목록
+	public ArrayList<String> userBoardList(String seq) {
+		ArrayList<String> seqs = boardMapper.userBoardList(seq);
 		
-		if(result == 1) {
-			flag = 0;
-		}
-		
-		return flag;
+		return seqs;
 	}
 	
 	// 게시글 지우기

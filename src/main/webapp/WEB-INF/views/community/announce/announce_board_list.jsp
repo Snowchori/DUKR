@@ -24,7 +24,7 @@
 	StringBuilder boardHtml = new StringBuilder();
 	
 	for(BoardTO list: listTO.getBoardLists()) {
-		boardHtml.append("<tr onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "\"'>");
+		boardHtml.append("<tr onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "&cpage="+ cpage +"\"'>");
 		boardHtml.append("<td class='board-img'><i class='bi bi-megaphone");
 		boardHtml.append(" h1 icon'></i></td>");
 		boardHtml.append("<td><span class='badge bg-secondary'>");

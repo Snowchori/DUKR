@@ -38,7 +38,7 @@
 	}
 	
 	for(BoardTO list: listTO.getBoardLists()) {
-		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq() + "\"'>");
+		boardHtml.append("<tr onclick='location.href=\"freeBoardView?seq=" + list.getSeq()+ "&cpage=" + cpage + "\"'>");
 		boardHtml.append("<td class='board-img'>");
 		if(!list.isHasFile()) {
 			boardHtml.append("<i class='bi bi-file-earmark-text h1'></i>");

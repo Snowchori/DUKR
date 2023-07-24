@@ -330,7 +330,7 @@ if(seq != null && !seq.equals("")) {
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
-					<h1 class="title">보드게임 관리</h1>
+					<h1 class="title"><span class="hover" onclick="location.href='gameManage'">보드게임 관리</span></h1>
 					<p class="lead fw-normal text-white-50 mb-0">Boardgame Manage</p>
 				</div>
 			</div>
