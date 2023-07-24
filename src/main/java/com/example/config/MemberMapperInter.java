@@ -109,4 +109,8 @@ public interface MemberMapperInter {
 	// 닉네임 변경
 	@Update("update member set nickname=#{nickname} where seq=#{seq}")
 	public int nicknameChangeOk(MemberTO to);
+	
+	// 닉네임으로 해당유저 seq가져오기(메일전송에 필요)
+	@Select("select seq from member where nickname=#{nickname}")
+	public String seqSearchToNickname(String nickname);
 }

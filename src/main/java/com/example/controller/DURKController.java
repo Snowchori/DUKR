@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,6 +49,7 @@ import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberListTO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
+import com.example.model.note.NoteListTO;
 import com.example.model.note.NoteTO;
 import com.example.model.party.ApiPartyTO;
 import com.example.model.party.ApplyTO;
@@ -96,35 +98,7 @@ public class DURKController {
 	// main
 	@RequestMapping("/")
 	public ModelAndView root(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
-		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("main");
-		
-		ArrayList<String> recSeqList = gameDAO.gameRecList(); 
-		ArrayList<BoardgameTO> recList = new ArrayList<BoardgameTO>();
-		ArrayList<BoardgameTO> favList = new ArrayList<BoardgameTO>();
-		
-		if(userSeq != null) {
-			ArrayList<String> favSeqList = gameDAO.gameMainFavList(userSeq);
-			
-			for(String seq : favSeqList) {
-				favList.add(gameDAO.gameInfo(seq));
-			}
-		}
-		
-		for(String seq : recSeqList) {
-			recList.add(gameDAO.gameInfo(seq));
-		}
-		
-		ArrayList<BoardgameTO> totallist = gameDAO.gameMainList();
-
-		modelAndView.addObject("recList",recList);
-		modelAndView.addObject("favlist", favList);
-		modelAndView.addObject("totallist", totallist);
-		return modelAndView;
+		return main(request);
 	}
 	
 	@RequestMapping("/main")
@@ -133,6 +107,12 @@ public class DURKController {
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
 		
+		ArrayList<BoardgameTO> recently_list = (ArrayList<BoardgameTO>)session.getAttribute("recently_list");
+		if(recently_list == null) {
+			recently_list = new ArrayList<BoardgameTO>();
+			session.setAttribute("recently_list", recently_list);
+		}
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("main");
 		
@@ -155,6 +135,7 @@ public class DURKController {
 		modelAndView.addObject("recList",recList);
 		modelAndView.addObject("favlist", favList);
 		modelAndView.addObject("totallist", totallist);
+		modelAndView.addObject("recently_list", recently_list);
 		return modelAndView;
 	}
 	
@@ -522,6 +503,32 @@ public class DURKController {
 		return flag;
 	}
 	
+	@RequestMapping("/deleteCommentOk")
+	public int deleteCommentOk(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		ReportTO to = new ReportTO();
+		to.setSeq(request.getParameter("seq"));
+		to.setAnswer(request.getParameter("answer"));
+		to.setProcessType("댓글삭제");
+		
+		int flag = reportDAO.reportAnswerWriteOk(to);
+		
+		if(flag == 0) {
+			commentDAO.commentDelete(request.getParameter("commentSeq"), request.getParameter("boardSeq"));
+			
+			NoteTO noteTO = new NoteTO();
+			noteTO.setReceiverSeq(request.getParameter("commentSeq"));
+			noteTO.setSenderSeq(userInfo.getSeq());
+			noteTO.setSubject("신고글 댓글 삭제 완료");
+			noteTO.setContent("관리자가 신고글의 댓글을 삭제하였습니다.");
+			
+			noteDAO.noteSend(noteTO);
+		}
+		
+		return flag;
+	}
+	
 	@RequestMapping("/ipBanOk")
 	public int ipBanOk(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -534,16 +541,27 @@ public class DURKController {
 		int flag = reportDAO.reportAnswerWriteOk(to);
 		
 		if(flag == 0) {
-			int check = boardDAO.bipCheck(request.getParameter("boardSeq"));
-			if(check == 0) {
-				boardDAO.ipBan(request.getParameter("boardSeq"));
-			}
-			boardDAO.boardDelete(request.getParameter("boardSeq"));
 			NoteTO noteTO = new NoteTO();
 			noteTO.setReceiverSeq(request.getParameter("senderSeq"));
 			noteTO.setSenderSeq(userInfo.getSeq());
-			noteTO.setSubject("신고글 게시글 ip밴 완료");
-			noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
+			
+			if(request.getParameter("commentSeq")  != null && request.getParameter("commentSeq").equals("")) {
+				int check = boardDAO.bipCheck(request.getParameter("boardSeq"));
+				if(check == 0) {
+					boardDAO.ipBan(request.getParameter("boardSeq"));
+				}
+				boardDAO.boardDelete(request.getParameter("boardSeq"));
+				noteTO.setSubject("신고글 게시글 ip밴 완료");
+				noteTO.setContent("관리자가 신고글 게시글의 ip를 밴하였습니다.");
+			} else {
+				int check = commentDAO.bipCheck(request.getParameter("commentSeq"));
+				if(check == 0) {
+					commentDAO.ipBan(request.getParameter("commentSeq"));
+				}
+				commentDAO.commentDelete(request.getParameter("commentSeq"), request.getParameter("boardSeq"));
+				noteTO.setSubject("신고글 댓글 ip밴 완료");
+				noteTO.setContent("관리자가 신고글 댓글의 ip를 밴하였습니다.");
+			}
 			
 			noteDAO.noteSend(noteTO);
 		}
@@ -754,14 +772,6 @@ public class DURKController {
 		
 		return modelAndView;
 	}
-	
-//	@RequestMapping("/announceBoardWriteOk")
-//	public ModelAndView announceBoardWriteOk(HttpServletRequest request) {
-//		ModelAndView modelAndView = new ModelAndView();
-//		modelAndView.setViewName("community/announce/announce_board_write_ok");
-//		
-//		return modelAndView;
-//	}
 	
 	// community/free
 	@RequestMapping("/freeBoardList")
@@ -1078,24 +1088,20 @@ public class DURKController {
 		if(memSeq.equals("") || memSeq.equals("null")) {
 			response = "0";
 		}else {
-			if(req.getParameter("writerSeq").equals(memSeq)) {
-				response = "3";
-			}else {
-				int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
+			int recCheck = commentDAO.commentRecCheck(memSeq, cmtSeq);
 			
-				if(recCheck == 0) {
-					commentDAO.commentRec(memSeq, cmtSeq);
-					response = "1";
+			if(recCheck == 0) {
+				commentDAO.commentRec(memSeq, cmtSeq);
+				response = "1";
 					
-					String updatedComments = commentsBuilder(boardSeq, memSeq); 
-					response += updatedComments;
-				}else {
-					commentDAO.commentRecCancel(memSeq, cmtSeq);
-					response = "2";
+				String updatedComments = commentsBuilder(boardSeq, memSeq); 
+				response += updatedComments;
+			}else {
+				commentDAO.commentRecCancel(memSeq, cmtSeq);
+				response = "2";
 					
-					String updatedComments = commentsBuilder(boardSeq, memSeq);
-					response += updatedComments;
-				}
+				String updatedComments = commentsBuilder(boardSeq, memSeq);
+				response += updatedComments;
 			}
 		}
 		
@@ -1126,6 +1132,8 @@ public class DURKController {
 		// 신고글 정보
 		String content = null;
 		String writer = null;
+		String boardSeq = null;
+		String commentSeq = null;
 		if(targetType.equals("board")) {
 			// 게시글인경우 게시글정보
 			BoardTO to = new BoardTO();
@@ -1134,6 +1142,7 @@ public class DURKController {
 			subject = to.getSubject();
 			content = to.getContent();
 			writer = to.getWriter();
+			boardSeq = to.getSeq();
 		}else if(targetType.equals("comment")) {
 			// 댓글인경우 댓글정보
 			CommentTO to = new CommentTO();
@@ -1141,16 +1150,44 @@ public class DURKController {
 			to = commentDAO.getCmtInfoBySeq(to);
 			content = to.getContent();
 			writer = to.getWriter();
+			boardSeq = to.getBoardSeq();
+			commentSeq = to.getSeq();
 		}
+		
+		System.out.println("boardSeq : " +  boardSeq);
 		
 		mav.addObject("targetType", targetType);
 		mav.addObject("subject", subject);
-		mav.addObject("seq", seq);
+		mav.addObject("boardseq", boardSeq);
+		mav.addObject("commentSeq", commentSeq);
 		mav.addObject("userSeq", userSeq);
 		mav.addObject("content", content);
 		mav.addObject("writer", writer);
 		
 		return mav;
+	}
+	
+	// 신고 접수
+	@RequestMapping("/newReport")
+	public void newReport(HttpServletRequest req) {
+		String boardSeq = req.getParameter("boardSeq");
+		String commentSeq = req.getParameter("commentSeq");
+		String memSeq = req.getParameter("memSeq");
+		String content = req.getParameter("reason");
+		
+		System.out.println("컨트롤러 - 신고접수");
+		System.out.println(boardSeq);
+		System.out.println(commentSeq);
+		
+		ReportTO to = new ReportTO();
+		to.setBoardSeq(boardSeq);
+		to.setCommentSeq(commentSeq);
+		to.setMemSeq(memSeq);
+		to.setContent(content);
+		
+		int result = reportDAO.newReport(to);
+		
+		//return result;
 	}
 	
 	// ck에디터 이미지 업로드하기@@
@@ -1222,21 +1259,15 @@ public class DURKController {
 		if(userSeq == "") {
 			response = 2;
 		}else {
-			if(isWriter.equals("true")) {
-				// 본인게시글을 추천한 경우
-				response = 4;
+			int recCheck = boardDAO.recCheck(userSeq, boardSeq);
+			if(recCheck == 1) {
+				// 이미 추천한 게시글인 경우, 추천해제
+				boardDAO.boardRecommendCancel(userSeq, boardSeq);
+				response = 3;
 			}else {
-				int recCheck = boardDAO.recCheck(userSeq, boardSeq);
-			
-				if(recCheck == 1) {
-					// 이미 추천한 게시글인 경우, 추천해제
-					boardDAO.boardRecommendCancel(userSeq, boardSeq);
-					response = 3;
-				}else {
-					// 추천 성공
-					boardDAO.boardRecommend(userSeq, boardSeq);
-					response = 1;
-				}
+				// 추천 성공
+				boardDAO.boardRecommend(userSeq, boardSeq);
+				response = 1;
 			}
 		}
 		
@@ -1550,7 +1581,7 @@ public class DURKController {
 		int isRec = Integer.parseInt(request.getParameter("isRec"));
 		
 		int flag = 2;
-		// 1: 해제 2: 추가
+		// 1: 해제 2: 추가	
 		if(isRec == 1) {
 			flag = gameDAO.gameRecommendDeleteOk(userSeq, seq);
 		} else if(isRec == 2) {
@@ -1652,6 +1683,25 @@ public class DURKController {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		ArrayList<BoardgameTO> recently_list = (ArrayList<BoardgameTO>)session.getAttribute("recently_list");
+		if(recently_list == null) {
+			recently_list = new ArrayList<BoardgameTO>();
+			session.setAttribute("recently_list", recently_list);
+		}
+		
+		for(BoardgameTO to: recently_list) {
+			if(to.getTitle().equals(gameTO.getTitle())) {
+				recently_list.remove(to);
+				break;
+			}
+		}
+		
+		recently_list.add(0, gameTO);
+		
+		if(recently_list.size() > 12) {
+			recently_list.remove(recently_list.size()-1);
+		}
 		
 		BoardListTO listTO = new BoardListTO();
 		listTO.setKeyWord(gameTO.getTitle());
@@ -2282,6 +2332,10 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
+		
+		InquiryTO inquiryTO = inquiryDAO.inquiryView(request.getParameter("seq"));
+		
+		modelAndView.addObject("inquiryTO", inquiryTO);
 		modelAndView.setViewName("mypage/myadmin/mypage_admin_view");
 		
 		return modelAndView;
@@ -2305,6 +2359,28 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/adminWriteOK")
+	public int adminwriteOK(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		// 0 성공 / 1 실패 및 오류
+		if(userSeq == null) {
+			return 1;
+		}
+		InquiryTO inquiryTO = new InquiryTO();
+		
+		inquiryTO.setSubject(request.getParameter("subject"));
+		inquiryTO.setContent(request.getParameter("content"));
+		inquiryTO.setInquiryType(request.getParameter("inquiryType"));
+		inquiryTO.setSenderSeq(userSeq);
+		
+		int flag = inquiryDAO.inquiryWrite(inquiryTO);
+		
+		return flag;
+	}
+	
 	@RequestMapping("/admin")
 	public ModelAndView admin(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -2318,13 +2394,37 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
+		
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		InquiryListTO listTO = new InquiryListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = inquiryDAO.myInquiryList(listTO);
+		
+		modelAndView.addObject("listTO", listTO);
 		modelAndView.setViewName("mypage/myadmin/mypage_admin");
 		
 		return modelAndView;
 	}
 	
 	// mypage/mymail
-	@RequestMapping("/mailGetview")
+	@RequestMapping("/mailGetView")
 	public ModelAndView mailgetview(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
@@ -2337,12 +2437,20 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_getview");
+		
+		String seq = request.getParameter("seq");
+		NoteTO noteTO = noteDAO.getNoteView(seq);
+		if(noteTO.getStatus() == 0) {
+			noteDAO.noteStatusChange(seq);
+		}
+		
+		modelAndView.addObject("noteTO", noteTO);
+		modelAndView.setViewName("mypage/mynote/mypage_note_getview");
 		
 		return modelAndView;
 	}
 	
-	@RequestMapping("/mailSendview")
+	@RequestMapping("/mailSendView")
 	public ModelAndView mailsendview(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
@@ -2355,7 +2463,15 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_sendview");
+		
+		String seq = request.getParameter("seq");
+		NoteTO noteTO = noteDAO.getNoteView(seq);
+		if(noteTO.getStatus() == 0) {
+			noteDAO.noteStatusChange(seq);
+		}
+		
+		modelAndView.addObject("noteTO", noteTO);
+		modelAndView.setViewName("mypage/mynote/mypage_note_sendview");
 		
 		return modelAndView;
 	}
@@ -2371,12 +2487,42 @@ public class DURKController {
 			modelAndView.setViewName("mypage/no_login");
 			
 			return modelAndView;
+
 		}
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_write");
+		modelAndView.setViewName("mypage/mynote/mypage_note_write");
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("mailWriteOK")
+	public int mailWriteOK(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			return 1;
+		}
+		String receiverSeq = memberDAO.seqSearchToNickname(request.getParameter("nickname"));
+		if(receiverSeq == null || receiverSeq.equals("")) {
+			return 2;
+		}
+		NoteTO noteTO = new NoteTO();
+		
+		noteTO.setSenderSeq(userSeq);
+		noteTO.setReceiverSeq(receiverSeq);
+		noteTO.setSubject(request.getParameter("subject"));
+		noteTO.setContent(request.getParameter("content"));
+		
+		int flag = noteDAO.noteSend(noteTO);
+		
+		if(flag == 1) {
+			flag = 0;
+		}
+		
+		return flag;
 	}
 	
 	@RequestMapping("/mail")
@@ -2391,9 +2537,99 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail");
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		NoteListTO listTO = new NoteListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = noteDAO.mynoteGetList(listTO);
+		
+		modelAndView.addObject("myNoteList",listTO);
+		modelAndView.setViewName("mypage/mynote/mypage_Getnote");
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/mailSend")
+	public ModelAndView mailSend(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		
+		NoteListTO listTO = new NoteListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = noteDAO.mynoteSendList(listTO);
+		
+		modelAndView.addObject("myNoteList",listTO);
+		modelAndView.setViewName("mypage/mynote/mypage_Sendnote");
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/mailDeleteOK")
+	public int mailDelete(HttpServletRequest request, @RequestBody List<Integer> selectedIds) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		//0 성공 / 1 실패
+		if(userSeq == null) {
+			
+			return 1;
+		}
+		int flag = 0;
+		for(int seq : selectedIds) {
+			flag = noteDAO.noteDelte(Integer.toString(seq));
+		}
+		
+		if(flag == 1) {
+			flag = 0;
+		}
+		
+		return flag;
 	}
 }

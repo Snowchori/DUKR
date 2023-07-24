@@ -54,7 +54,11 @@
 		} else {
 			rpHtml.append("[처리완료] ");
 		}
-		rpHtml.append("게시글신고 - " + to.getWriter());
+		if(to.getCommentSeq() != null) {
+			rpHtml.append("댓글신고 - " + to.getWriter());
+		} else {
+			rpHtml.append("게시글신고 - " + to.getWriter());
+		}
 		rpHtml.append("</button>");
 		rpHtml.append("</h2>");
 		rpHtml.append("<div id='flush-collapse" + to.getSeq() + "' class='accordion-collapse collapse' aria-labelledby='flush-heading" + to.getSeq() + "' data-bs-parent='#accordionFlushExample'>");
@@ -63,7 +67,13 @@
 		if(to.getStatus() == 0) {
 			if(!to.isBoardDel()) {
 				rpHtml.append("<div class='col-md-3 mb-3'>");
-				rpHtml.append("<input type='button' class='btn btn-dark' value='게시글보기'  onclick=\"location.href='boardView?seq=" + to.getBoardSeq() + "'\"/>");
+				if(to.getCommentSeq() != null) {
+					if(!to.isCommentDel()) {
+						rpHtml.append("<input type='button' class='btn btn-dark' value='댓글보기'  onclick=\"location.href='boardView?seq=" + to.getBoardSeq() + "&commentSeq=" + to.getCommentSeq() + "'\"/>");
+					}
+				} else {
+					rpHtml.append("<input type='button' class='btn btn-dark' value='게시글보기'  onclick=\"location.href='boardView?seq=" + to.getBoardSeq() + "'\"/>");	
+				}
 				rpHtml.append("</div>");
 			}
 		} else {
@@ -105,6 +115,8 @@
 			rpHtml.append(to.getAnswer());			
 		} else if(to.isBoardDel()) {
 			rpHtml.append("이미 삭제된 게시글입니다.");
+		} else if(to.isCommentDel()) {
+			rpHtml.append("이미 삭제된 댓글입니다.");
 		}
 		rpHtml.append("</textarea>");
 		rpHtml.append("</div>");
@@ -114,12 +126,23 @@
 			rpHtml.append(to.getSeq() + ", " + to.getMemSeq());
 			rpHtml.append(")'/>");
 			if(!to.isBoardDel()) {
-				rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='게시글삭제' onclick='deleteBoard(");
-				rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq());
-				rpHtml.append(")'/>");
-				rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='ip밴' onclick='ipBan(");
-				rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq());
-				rpHtml.append(")'/>");
+				if(to.getCommentSeq() != null) {
+					if(!to.isCommentDel()) {
+						rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='댓글삭제' onclick='deleteComment(");
+						rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq() + ", " + to.getCommentSeq());
+						rpHtml.append(")'/>");
+						rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='ip밴' onclick='ipBan(");
+						rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq() + ", " + to.getCommentSeq());
+						rpHtml.append(")'/>");
+					}
+				} else {
+					rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='게시글삭제' onclick='deleteBoard(");
+					rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq());
+					rpHtml.append(")'/>");
+					rpHtml.append("<input type='button' class='btn btn-dark float-end mx-2' value='ip밴' onclick='ipBan(");
+					rpHtml.append(to.getSeq() + ", " + to.getMemSeq() + ", " + to.getBoardSeq() + ", \"\"");
+					rpHtml.append(")'/>");
+				}
 			}
 			rpHtml.append("</div>");
 		}
@@ -274,7 +297,7 @@
 				}
 			}
 			
-			function ipBan(seq, senderSeq, boardSeq) {
+			function deleteComment(seq, senderSeq, boardSeq, commentSeq) {
 				let answer = $('#answer' + seq).val();
 				if(answer == "") {
 					Swal.fire({
@@ -286,7 +309,63 @@
 		  			});
 				} else {
 					Swal.fire({
-						title: '게시글을 삭제하고 게시글의 ip를 밴합니다.',
+						title: '댓글만 삭제합니다',
+						showDenyButton: true,
+						confirmButtonText: '네',
+						denyButtonText: `아니오`,
+					}).then((result) => {
+						if (result.isConfirmed) {
+							$.ajax({
+					  			url:'deleteCommentOk',
+					  			type:'post',
+					  			data: {
+					  				seq: seq,
+					  				senderSeq: senderSeq,
+					  				answer: answer,
+					  				boardSeq: boardSeq,
+					  				commentSeq: commentSeq
+					  			},
+					  			success: function(data) {
+						  			if(data == 0) {
+							  			Swal.fire({
+								  			icon: 'success',
+								  			title: '삭제 완료',
+								  			confirmButtonText: '확인',
+								  			timer: 1500,
+								  			timerProgressBar : true,
+								  			willClose: () => {
+								  				location.href='reportList';
+							  				}
+						  				});
+						  			} else {
+							  			Swal.fire({
+								  			icon: 'error',
+								  			title: '삭제 실패',
+								  			confirmButtonText: '확인',
+								  			timer: 1500,
+								  			timerProgressBar : true,
+							  			});
+						  			}
+						  		}
+						  	});
+						}
+					})
+				}
+			}
+			
+			function ipBan(seq, senderSeq, boardSeq, commentSeq) {
+				let answer = $('#answer' + seq).val();
+				if(answer == "") {
+					Swal.fire({
+			  			icon: 'error',
+			  			title: '답변을 입력하세요.',
+			  			confirmButtonText: '확인',
+			  			timer: 1500,
+			  			timerProgressBar : true
+		  			});
+				} else {
+					Swal.fire({
+						title: '게시글/댓글을 삭제하고<br>게시글/댓글의 ip를 밴합니다.',
 						showDenyButton: true,
 						confirmButtonText: '네',
 						denyButtonText: `아니오`,
@@ -299,7 +378,8 @@
 					  				seq: seq,
 					  				senderSeq: senderSeq,
 					  				answer: answer,
-					  				boardSeq: boardSeq
+					  				boardSeq: boardSeq,
+					  				commentSeq: commentSeq
 					  			},
 					  			success: function(data) {
 						  			if(data == 0) {

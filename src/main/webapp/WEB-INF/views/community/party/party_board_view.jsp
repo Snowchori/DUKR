@@ -86,8 +86,6 @@ if(didUserRec){
 								$('#recBtn').removeClass('btn-primary').addClass('btn-secondary');
 
 								alert('게시글 추천을 취소했습니다');
-							}else if(res == 4){
-								alert('본인 게시글은 추천할 수 없습니다');
 							}else if(res == 0){
 								alert('알 수 없는 추천 오류');
 							}else{
@@ -211,8 +209,6 @@ if(didUserRec){
 							$('#comments').html(updatedComments);
 						}else if(res == 2){
 							$('#comments').html(updatedComments);
-						}else if(res == 3){
-							alert('본인의 댓글은 추천할수 없습니다');
 						}
 					},
 				});
@@ -399,8 +395,9 @@ if(didUserRec){
 						<%if(isWriter){ %>	
 						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
 						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage='null'&seq=<%=boardSeq %>'">수정</button>				
-						<%} %>
+						<%}else{%>
 						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
+						<%} %>
 					</div>
 				</div>
 				<hr class="my-2">

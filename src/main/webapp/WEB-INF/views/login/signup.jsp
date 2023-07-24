@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,12 +9,11 @@
 		<!-- jQuery -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<!-- javascript -->
+		<%@ include file="/WEB-INF/views/include/agreement.jspf" %>
 		<script type="text/javascript">
-			function changeDropdownItem(item) {
-				document.getElementById('dropdownMenuButton1').innerHTML = item;
-			}
-			
 			window.onload = function(){
+				$('#agreement').html(agreement);
+				
 				document.getElementById("signup_submit").onclick = function(){
 					if(document.signup_frm.id.value.trim() == ""){
 						Swal.fire('아이디를 입력해주세요');
@@ -41,6 +41,9 @@
 						return false;
 					} else if(document.signup_frm.answer.value.trim() == ""){
 						Swal.fire('힌트 답변을 작성하세요');
+						return false;
+					} else if(!$('#agreementCheck').is(':checked')){
+						Swal.fire('약관에 동의해야 합니다');
 						return false;
 					} else {
 						$.ajax({
@@ -223,7 +226,7 @@
 			<div class="container" align="center">
 				<form action="/signupOk" method="post" name="signup_frm">
 					<input type="hidden" name="isDupl" id="isDupl" value="1"/>
-					<div class="col-md-3 mt-3">
+					<div class="col-md-3 my-5">
 						<div class="input-group">
 							<input class="form-control" type="email" id="id" name="id" placeholder="아이디"> &nbsp;
 							<span class="input-group-btn">
@@ -270,8 +273,16 @@
 						</div>
 						<br>	
 						<input type="hidden" name='isEmailValid' id="isEmailValid" value="0"/>
+						
+						<!-- 이용약관 -->
+						<textarea id='agreement' class='form-control' rows="3" readonly="readonly"></textarea>
+						<br>
+						<label for="agreementCheck">약관 동의</label>
+						<input type="checkbox" id="agreementCheck">
+						<br><br>
+						
 						<div class="d-grid gap-2">
-							<input class="btn btn-primary btn-lg" id="signup_submit" type="button" value="가입하기" />
+							<input class="btn btn-dark btn-lg" id="signup_submit" type="button" value="가입하기" />
 						</div>
 					</div>
 				</form>
