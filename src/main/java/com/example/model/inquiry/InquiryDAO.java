@@ -28,4 +28,34 @@ public class InquiryDAO {
 		
 		return flag;
 	}
+	
+	// 유저 문의 작성
+	public int inquiryWrite(InquiryTO to) {
+		int flag = inquiryMapper.inquiryWrite(to);
+		
+		if(flag == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
+	// 마이페이지 문의 내역 목록 보기
+	public InquiryListTO myInquiryList(InquiryListTO listTO) {
+		listTO.setTotalRecord(inquiryMapper.myInquiryTotal(listTO));
+		listTO.setSkip();
+		listTO.setInquiryList(inquiryMapper.myInquiryList(listTO));
+		listTO.setTotalPage();
+		listTO.setStartBlock();
+		listTO.setEndBlock();
+		
+		return listTO;
+	}
+	
+	//a 마이페이지 문의 글 보기
+	public InquiryTO inquiryView(String seq) {
+		InquiryTO inquiryTO = inquiryMapper.inquiryView(seq);
+		
+		return inquiryTO;
+	}
 }

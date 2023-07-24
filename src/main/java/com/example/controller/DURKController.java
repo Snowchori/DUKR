@@ -17,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,6 +38,7 @@ import com.example.model.comment.CommentTO;
 import com.example.model.evaluation.EvaluationDAO;
 import com.example.model.evaluation.EvaluationTO;
 import com.example.model.inquiry.InquiryDAO;
+import com.example.model.inquiry.InquiryListTO;
 import com.example.model.inquiry.InquiryTO;
 import com.example.model.logs.LogListTO;
 import com.example.model.logs.LogsDAO;
@@ -44,6 +46,7 @@ import com.example.model.logs.LogsTO;
 import com.example.model.member.MemberDAO;
 import com.example.model.member.MemberTO;
 import com.example.model.note.NoteDAO;
+import com.example.model.note.NoteListTO;
 import com.example.model.note.NoteTO;
 import com.example.model.party.ApiPartyTO;
 import com.example.model.party.ApplyTO;
@@ -2009,6 +2012,10 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
+		
+		InquiryTO inquiryTO = inquiryDAO.inquiryView(userSeq);
+		
+		modelAndView.addObject("inquiryTO", inquiryTO);
 		modelAndView.setViewName("mypage/myadmin/mypage_admin_view");
 		
 		return modelAndView;
@@ -2032,6 +2039,28 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/adminWriteOK")
+	public int adminwriteOK(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		// 0 성공 / 1 실패 및 오류
+		if(userSeq == null) {
+			return 1;
+		}
+		InquiryTO inquiryTO = new InquiryTO();
+		
+		inquiryTO.setSubject(request.getParameter("subject"));
+		inquiryTO.setContent(request.getParameter("content"));
+		inquiryTO.setInquiryType(request.getParameter("inquiryType"));
+		inquiryTO.setSenderSeq(userSeq);
+		
+		int flag = inquiryDAO.inquiryWrite(inquiryTO);
+		
+		return flag;
+	}
+	
 	@RequestMapping("/admin")
 	public ModelAndView admin(HttpServletRequest request) {
 		HttpSession session = request.getSession();
@@ -2045,13 +2074,37 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
+		
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		InquiryListTO listTO = new InquiryListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = inquiryDAO.myInquiryList(listTO);
+		
+		modelAndView.addObject("listTO", listTO);
 		modelAndView.setViewName("mypage/myadmin/mypage_admin");
 		
 		return modelAndView;
 	}
 	
 	// mypage/mymail
-	@RequestMapping("/mailGetview")
+	@RequestMapping("/mailGetView")
 	public ModelAndView mailgetview(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
@@ -2064,12 +2117,20 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_getview");
+		
+		String seq = request.getParameter("seq");
+		NoteTO noteTO = noteDAO.getNoteView(seq);
+		if(noteTO.getStatus() == 0) {
+			noteDAO.noteStatusChange(seq);
+		}
+		
+		modelAndView.addObject("noteTO", noteTO);
+		modelAndView.setViewName("mypage/mynote/mypage_note_getview");
 		
 		return modelAndView;
 	}
 	
-	@RequestMapping("/mailSendview")
+	@RequestMapping("/mailSendView")
 	public ModelAndView mailsendview(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
@@ -2082,7 +2143,15 @@ public class DURKController {
 			return modelAndView;
 		}
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_sendview");
+		
+		String seq = request.getParameter("seq");
+		NoteTO noteTO = noteDAO.getNoteView(seq);
+		if(noteTO.getStatus() == 0) {
+			noteDAO.noteStatusChange(seq);
+		}
+		
+		modelAndView.addObject("noteTO", noteTO);
+		modelAndView.setViewName("mypage/mynote/mypage_note_sendview");
 		
 		return modelAndView;
 	}
@@ -2098,12 +2167,42 @@ public class DURKController {
 			modelAndView.setViewName("mypage/no_login");
 			
 			return modelAndView;
+
 		}
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail_write");
+		modelAndView.setViewName("mypage/mynote/mypage_note_write");
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("mailWriteOK")
+	public int mailWriteOK(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			return 1;
+		}
+		String receiverSeq = memberDAO.seqSearchToNickname(request.getParameter("nickname"));
+		if(receiverSeq == null || receiverSeq.equals("")) {
+			return 2;
+		}
+		NoteTO noteTO = new NoteTO();
+		
+		noteTO.setSenderSeq(userSeq);
+		noteTO.setReceiverSeq(receiverSeq);
+		noteTO.setSubject(request.getParameter("subject"));
+		noteTO.setContent(request.getParameter("content"));
+		
+		int flag = noteDAO.noteSend(noteTO);
+		
+		if(flag == 1) {
+			flag = 0;
+		}
+		
+		return flag;
 	}
 	
 	@RequestMapping("/mail")
@@ -2118,9 +2217,99 @@ public class DURKController {
 			
 			return modelAndView;
 		}
+		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mymail/mypage_mail");
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		NoteListTO listTO = new NoteListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = noteDAO.mynoteGetList(listTO);
+		
+		modelAndView.addObject("myNoteList",listTO);
+		modelAndView.setViewName("mypage/mynote/mypage_Getnote");
 		
 		return modelAndView;
+	}
+	
+	@RequestMapping("/mailSend")
+	public ModelAndView mailSend(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		if(userSeq == null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+			
+			return modelAndView;
+		}
+		
+		ModelAndView modelAndView = new ModelAndView();
+		String cpage = request.getParameter("cpage");
+		String recordPerPage = request.getParameter("recordPerPage");
+		String blockPerPage = request.getParameter("blockPerPage");
+		
+		
+		NoteListTO listTO = new NoteListTO();
+		
+		if(cpage != null && !cpage.equals("")) {
+			listTO.setCpage(Integer.parseInt(cpage));
+		}
+		
+		if(recordPerPage != null && !recordPerPage.equals("")) {
+			listTO.setRecordPerPage(Integer.parseInt(recordPerPage));
+		}
+		
+		if(blockPerPage != null && !blockPerPage.equals("")) {
+			listTO.setBlockPerPage(Integer.parseInt(blockPerPage));
+		}
+		
+		listTO.setSeq(userSeq);
+		
+		listTO = noteDAO.mynoteSendList(listTO);
+		
+		modelAndView.addObject("myNoteList",listTO);
+		modelAndView.setViewName("mypage/mynote/mypage_Sendnote");
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping("/mailDeleteOK")
+	public int mailDelete(HttpServletRequest request, @RequestBody List<Integer> selectedIds) {
+		HttpSession session = request.getSession();
+		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
+		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
+		
+		//0 성공 / 1 실패
+		if(userSeq == null) {
+			
+			return 1;
+		}
+		int flag = 0;
+		for(int seq : selectedIds) {
+			flag = noteDAO.noteDelte(Integer.toString(seq));
+		}
+		
+		if(flag == 1) {
+			flag = 0;
+		}
+		
+		return flag;
 	}
 }

@@ -189,4 +189,10 @@ public class MemberDAO {
 		
 		return flag;
 	}
+	
+	// 닉네임으로 해당유저 seq가져오기(메일전송에 필요)
+	public String seqSearchToNickname(String nickname) {
+		String seq = memberMapper.seqSearchToNickname(nickname);
+		return seq;
+	}
 }

@@ -8,6 +8,57 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
+			function noteSend(){
+				$.ajax({
+					url: "mailWriteOK",
+	                   type: "post",
+	                   data: {
+	                   	nickname : $('#nickname').val().trim(),
+	                       subject : $('#subject').val(),
+	                       content : $('#content').val()
+	                   },
+					success : function(data) {
+						//0 성공 / 1 오류 및 실패 / 2 닉네임 존재 x
+						if(data == 0) {
+							Swal.fire({
+	                            title : '쪽지 전송 성공',
+	                            text  : '쪽지를 전송하였습니다',
+	                            icon  : 'success',
+	                            showCancelButton : false,
+	                            confirmButtonText : '확인',
+	                            timer : 1500,
+	                            timerProgressBar : true,
+	                            willClose : () => {
+	                            window.location.href = '/mailSend';
+	                            }
+	                        });
+						} else if(data == 1) {
+							Swal.fire({
+	                            title : '쪽지 전송 실패',
+	                            text  : '쪽지 전송에 실패하였습니다',
+	                            icon  : 'error',
+	                            showCancelButton : false,
+	                            confirmButtonText : '확인',
+	                            timer : 1500,
+	                            timerProgressBar : true,
+	                            willClose : () => {
+	                            window.location.href = '/mailSend';
+	                            }
+	                        });
+						} else {
+							Swal.fire({
+	                            title : '쪽지 전송 실패',
+	                            text  : '존재하지 않는 수신자 닉네임 입니다',
+	                            icon  : 'error',
+	                            showCancelButton : false,
+	                            confirmButtonText : '확인',
+	                            timer : 1500,
+	                            timerProgressBar : true,
+	                        });
+						}
+					}
+				});
+			}
 		</script>
 		<style type="text/css">
 			@font-face {
@@ -42,7 +93,7 @@
 			</div>
 		</header>
 		<main>
-			<!-- 버튼 디자인 -->
+	  		<!-- 버튼 디자인 -->
 			<div class="container mt-3">
 				<div class="row g-1 text-center selection">
 					<div class="col-6 col-lg-3" onClick="location.href='/mypage'"><div>회원 정보 변경</div></div>
@@ -57,21 +108,16 @@
 			</div>
 			<!-- 버튼 디자인 -->
 	  		<!-- 마이페이지 정보페이지 디자인 -->
-			<!-- Tabs -->
 			<div class="container-fluid mt-5 pt-5 d-flex justify-content-center bottombody">
 				<div class="container d-flex justify-content-around bg-light rounded-5 formframe">
 					<form action="" class="row" style="width: 100%;" method="post">
 						<div class="col-md-6 mb-3">
 							<label for="subject" class="form-label">제목</label>
-							<input type="text" class="form-control" placeholder="제목을 입력하세요" name="subject" id="subject" readonly="readonly"/>
+							<input type="text" class="form-control" placeholder="제목을 입력하세요" name="subject" id="subject"/>
 						</div>
-						<div class="col-md-3 mb-3">
-							<label for="content" class="form-label">받은 유저</label>
-							<input type="text" class="form-control" placeholder="닉네임을 입력하세요" name="subject" id="nickname" readonly="readonly"/>
-						</div>
-						<div class="col-md-3 mb-3">
-							<label for="content" class="form-label">발신일</label>
-							<input type="text" class="form-control" placeholder="날짜" name="subject" id="maildate" readonly="readonly"/>
+						<div class="col-md-6 mb-3">
+							<label for="content" class="form-label">유저 닉네임</label>
+							<input type="text" class="form-control" placeholder="닉네임을 입력하세요" name="subject" id="nickname"/>
 						</div>
 						<div class="col-12 mb-3">
 							<label for="content" class="form-label">내용</label>
@@ -82,18 +128,17 @@
 								rows="15"
 								placeholder="내용을 입력하세요"
 								style="resize: none;"
-								readonly="readonly"
 							></textarea>
 						</div>
 						<div class="col-12 mb-3">
-							<input type="button" class="btn btn-primary float-end" value="전송" onclick=""/>
+							<input type="button" class="btn btn-primary float-end" value="전송" onclick="noteSend()"/>
 						</div>
 					</form>
 				</div>
 			</div>
 		</main>
 		<footer>
-			<!-- 최하단 디자인 영역 -->
+	    	<!-- 최하단 디자인 영역 -->
 		</footer>
 	</body>
 </html>

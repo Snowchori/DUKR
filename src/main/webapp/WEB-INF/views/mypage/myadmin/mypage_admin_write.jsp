@@ -7,6 +7,47 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
+		function adminWrite(){
+			$.ajax({
+				url: "adminWriteOK",
+                   type: "post",
+                   data: {
+                       subject : $('#subject').val(),
+                       content : $('#content').val(),
+                       inquiryType : $('#inquirySelect').val()
+                   },
+				success : function(data) {
+					//0 성공 / 1 오류 및 실패
+					if(data == 0) {
+						Swal.fire({
+                            title : '문의 작성 성공',
+                            text  : '최대한 빠른시간안에 답변드겠습니다 감사합니다',
+                            icon  : 'success',
+                            showCancelButton : false,
+                            confirmButtonText : '확인',
+                            timer : 1500,
+                            timerProgressBar : true,
+                            willClose : () => {
+                            	window.location.href = '/admin';
+                            }
+                        });
+					} else {
+						Swal.fire({
+                            title : '문의 작성 실패',
+                            text  : '문의 작성에 실패하였습니다',
+                            icon  : 'error',
+                            showCancelButton : false,
+                            confirmButtonText : '확인',
+                            timer : 1500,
+                            timerProgressBar : true,
+                            willClose : () => {
+                                window.location.href = '/admin';
+                            }
+                        });
+					}
+				}
+			});
+		}
 		</script>
 		<style type="text/css">
 			@font-face {
@@ -65,7 +106,7 @@
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="content" class="form-label">문의 사항</label>
-							<select class="form-select">
+							<select class="form-select" id="inquirySelect">
 								<option value="신고">신고</option>
 								<option value="건의">건의</option>
 								<option value="버그제보">버그제보</option>
@@ -83,7 +124,7 @@
 							></textarea>
 						</div>
 						<div class="col-12 mb-3">
-							<input type="button" class="btn btn-primary float-end" value="전송" onclick=""/>
+							<input type="button" class="btn btn-primary float-end" value="전송" onclick="adminWrite()"/>
 						</div>
 					</form>
 				</div>
