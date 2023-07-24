@@ -36,7 +36,7 @@
 	}		
 	
 	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
-	String recBtnColor = "btn-secondary";
+	String recBtnColor = "btn-dark";
 	if(didUserRec){
 		recBtnColor = "btn-primary";
 	}
@@ -70,14 +70,14 @@
 								alert('먼저 로그인 해야합니다');
 							}else if(res == 3){
 								$('#viewRecCnt').html(updatedRecCnt);
-								$('#recBtn').removeClass('btn-primary').addClass('btn-secondary');
+								$('#recBtn').removeClass('btn-primary').addClass('btn-dark');
 
 								alert('게시글 추천을 취소했습니다');	
 							}else if(res == 0){
 								alert('알 수 없는 추천 오류');
 							}else{
 								$('#viewRecCnt').html(updatedRecCnt);
-								$('#recBtn').removeClass('btn-secondary').addClass('btn-primary');
+								$('#recBtn').removeClass('btn-dark').addClass('btn-primary');
 
 								alert('글을 추천했습니다');
 							}
@@ -352,14 +352,14 @@
 				</div>
 				
 				<div class="d-flex">
-					<button class="btn btn-secondary" style="margin-right: auto;" onclick="location.href='freeBoardList?cpage=<%=cpage %>'">목록</button>
+					<button class="btn btn-dark" style="margin-right: auto;" onclick="location.href='freeBoardList?cpage=<%=cpage %>'">목록</button>
 					
 					<div class="d-flex">
 						<%if(isWriter){ %>	
-						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
-						<button class="btn btn-secondary" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>				
+						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
+						<button class="btn btn-dark" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage=<%=cpage %>&seq=<%=boardSeq%>'">수정</button>				
 						<%}else { %>
-						<button class="btn btn-secondary mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
+						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
 						<%} %>
 					</div>
 				</div>
@@ -375,7 +375,7 @@
 					
 					<textarea id="cContent" name="cContent" class="form-control" rows="3" style="resize: none;"></textarea>
 					<div class="d-flex" style="margin-top: 10px;">
-						<button id="cmtWbtn" class="btn btn-secondary" style="margin-left: auto;">댓글쓰기</button>
+						<button id="cmtWbtn" class="btn btn-dark" style="margin-left: auto;">댓글쓰기</button>
 					</div>
 				</div>
 			</div> 
