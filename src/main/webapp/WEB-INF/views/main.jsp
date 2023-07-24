@@ -5,10 +5,13 @@
 	ArrayList<BoardgameTO> reclists = (ArrayList)request.getAttribute("recList");
 	ArrayList<BoardgameTO> favlists = (ArrayList)request.getAttribute("favlist");
 	ArrayList<BoardgameTO> totallists = (ArrayList)request.getAttribute("totallist");
+	ArrayList<BoardgameTO> recently_list = (ArrayList)request.getAttribute("recently_list");
 	
 	StringBuilder recSB = new StringBuilder();
 	StringBuilder favSB = new StringBuilder();
 	StringBuilder totalSB = new StringBuilder();
+	StringBuilder recentSB = new StringBuilder();
+	
 
 	if(reclists.size() > 0) {
 		for(BoardgameTO to : reclists){
@@ -119,6 +122,22 @@
 	}
 	
 	totalSB.append("</div>");
+	
+	
+	
+	for(BoardgameTO to : recently_list){
+		recentSB.append("<li>");
+		recentSB.append("<div class='container'>");
+		recentSB.append("<img class='img-fluid' src='"+ to.getImageUrl()+"' alt='' onclick=\"location.href='gameView?seq=" + to.getSeq() + "'\" />");
+		recentSB.append("</div>");
+		recentSB.append("</li>");
+	}
+	
+	
+    
+    	
+    
+    
 %>
 <!doctype html>
 <html>
@@ -253,26 +272,14 @@
 	        </div>
 	    </section>
 	    
+	    <!--  퀵메뉴  -->
+	    
 	    <div class="quickmenu" id="quickmenu1">
 		  <ul>
 		  		<li>
 			    <div>최근 본 보드게임</div>
 			    </li>
-			    <li>
-			    <div class="container">
-			    	<img class="img-fluid" src="./images/game1.jpg" alt=""/>
-			    </div>
-			    </li>
-			    <li>
-			    <div class="container">
-			    	<img class="img-fluid" src="./images/game5.jpg" alt=""/>
-			    </div>
-			    </li>
-			    <li>
-			     <div class="container">
-			    	<img class="img-fluid" src="./images/game6.jpg" alt=""/>
-			    </div>
-			    </li>
+			    <%= recentSB %>
 		  </ul>	  
 		</div> 
 	    
