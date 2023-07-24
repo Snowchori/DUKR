@@ -6,13 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Tolerate;
 
-<<<<<<< HEAD
 @Getter
 @Setter
-=======
-@Setter
-@Getter
->>>>>>> 546b3e15758c6735d7239761854d18791db5f3df
 public class InquiryListTO {
 	private int cpage;
 	private int recordPerPage;
@@ -22,16 +17,13 @@ public class InquiryListTO {
 	private int startBlock;
 	private int endBlock;
 	private int skip;
-<<<<<<< HEAD
 	private String seq;
 	
 	private ArrayList<InquiryTO> inquiryList;
-=======
 	private String query;
 	private String status;
 	
 	private ArrayList<InquiryTO> inquiryLists;
->>>>>>> 546b3e15758c6735d7239761854d18791db5f3df
 	
 	public InquiryListTO() {
 		// TODO Auto-generated constructor stub
