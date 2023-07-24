@@ -22,10 +22,14 @@ public interface PartyMapperInter {
 	String meetsuffix = "select boardSeq, address, location, date_format(wdate, '%m/%d') date, loccode, left(loccode, 2) loccode2, latitude, longitude "
 			+ "from party where wdate > now() and desired > participants and loccode ";
 	String meetprefix = "order by address, wdate";
-	@Select(meetsuffix + "= #{loccode} " + meetprefix)
-	ArrayList<ApiPartyTO> getPartiesBySi(String sival);
+	
 	@Select(meetsuffix + "like #{loccode} " + meetprefix)
 	ArrayList<ApiPartyTO> getPartiesByDo(String doval);
+	@Select(meetsuffix + "= #{loccode} " + meetprefix)
+	ArrayList<ApiPartyTO> getPartiesBySi(String sival);
+	
+	@Select("select boardSeq, address, location, wdate date, loccode, left(loccode, 2) loccode2, latitude, longitude, status from party inner join apply on boardSeq=partySeq and senderSeq=#{userSeq} where status!=-1 " + meetprefix)
+	ArrayList<ApiPartyTO> getUserParties(String userSeq);
 	
 	/* 모임 등록 */
 	@Insert("insert into party values(0, #{boardSeq}, #{address}, #{detail}, #{location}, #{date}, #{desired}, 0, #{loccode}, #{latitude}, #{longitude})")

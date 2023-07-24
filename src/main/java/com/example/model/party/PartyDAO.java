@@ -17,16 +17,22 @@ public class PartyDAO {
 	private BoardMapperInter boardMapper;
 	
 	/* 모임 정보 반환 */
-	public ArrayList<ApiPartyTO> getParties(String loccode) {
+	public ArrayList<ApiPartyTO> getParties(int type, String value) {
 		ArrayList<ApiPartyTO> data = null;
-		
-		if(loccode.length() == 5) {
-			data = partyMapper.getPartiesBySi(loccode);
-		}else {
-			if(loccode.equals("0")) {
-				loccode = "";
-			}
-			data = partyMapper.getPartiesByDo(loccode + "%");
+
+		// 0: 도(시) 검색 / 1: 시/군(구) 검색 / 2: 유저 검색
+		switch(type) {
+			case 0:
+				if(value.equals("0")) {
+					value = "";
+				}
+				data = partyMapper.getPartiesByDo(value + "%");
+				break;
+			case 1:
+				data = partyMapper.getPartiesBySi(value);
+				break;
+			case 2:
+				data = partyMapper.getUserParties(value);
 		}
 		
 		return data;

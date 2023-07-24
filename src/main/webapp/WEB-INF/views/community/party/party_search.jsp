@@ -56,7 +56,7 @@
 
 				// 로드뷰 마커 생성
 				const markImage = new kakao.maps.MarkerImage(
-						'https://t1.daumcdn.net/localimg/localimages/07/2018/pc/roadview_minimap_wk_2018.png',
+						'/assets/img/kakao/roadview_minimap_wk_2018.png',
 						new kakao.maps.Size(26, 46),
 						{
 							spriteSize: new kakao.maps.Size(1666, 168),
@@ -80,6 +80,7 @@
 				let infos = [];
 				let minfos = [];
 				let rvinfos = [];
+				
 				/* 조건 변경 시 지도 이동을 위해 마커가 위치한 좌표와 지역코드를 저장할 배열 */
 				let points = [];
 				let infoContents = [];
@@ -208,7 +209,6 @@
 							kakao.maps.event.addListener(rvmarker, 'click', function(){
 								rvinfowindow.open(rv, rvmarker);
 							});
-							
 							infowindow.open(mmap, mmarker);
 							rvinfowindow.open(rv, rvmarker);
 							
@@ -220,7 +220,7 @@
 				}
 
 				function loadMeet(){
-					fetch('/api/party.json?loccode=0')
+					fetch('/api/party.json/prvcode/0')
 					.then(response => response.json())
 					.then(jsonData => {
 						datas = jsonData;
@@ -389,10 +389,10 @@
 					}
 				}
 				
-				document.getElementById('roadviewControl').onclick = activeRoadview;
-				document.getElementById('mdbtn').onclick = activeRoadview;
+				control.onclick = activeRoadview;
+				document.getElementById('modal-close').onclick = activeRoadview;
 				
-				document.getElementById('mroadviewControl').onclick = () => {
+				mcontrol.onclick = () => {
 					mcontrol.classList.toggle('active');
 					if(mcontrol.classList.contains('active')){
 						toggleOverlay(true);
@@ -541,7 +541,7 @@
 				border-radius: 0.5em;
 			}
 			.mapinfo{
-				width:180px;
+				width:190px;
 				text-align:center;
 			}
 			.refresh{
@@ -592,7 +592,7 @@
 			<!-- 메인 요소 -->
 			<div class="d-flex justify-content-center">
 				<div class="container-fluid row py-5 mapframe">
-					<div id="map" class="col mb-3 border border-5" style="width:1100px;height:600px;">
+					<div id="map" class="col mb-3 border border-5" style="height:600px;">
 						<div id="roadviewControl" data-bs-toggle="modal" data-bs-target="#myModal"></div>
 					</div>
 					<div id="map-side" class="col-lg-3 align-self-center">
@@ -625,7 +625,7 @@
 					<!-- Modal Header -->
 					<div class="modal-header">
 						<h5 class="modal-title" style="font-family: SBAggroB;">로드뷰</h5>
-						<button type="button" id="mdbtn" class="btn-close" data-bs-dismiss="modal"></button>
+						<button type="button" id="modal-close" class="btn-close" data-bs-dismiss="modal"></button>
 					</div>
 	
 					<!-- Modal body -->

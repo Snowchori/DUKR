@@ -14,4 +14,5 @@ public class ApiPartyTO {
 	private String loccode2;
 	private String latitude;
 	private String longitude;
+	private String status;
 }

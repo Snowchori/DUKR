@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -1441,7 +1443,7 @@ public class DURKController {
 		return model;
 	}
 
-	@GetMapping("api/geoCodes.json")
+	@GetMapping("/api/geoCodes.json")
 	public ModelAndView getGeocodes(HttpServletRequest request) {
 		String prvcode = request.getParameter("prvcode") != null ? request.getParameter("prvcode") : "";
 
@@ -1450,13 +1452,22 @@ public class DURKController {
 		return model;
 	}
 
-	@GetMapping("api/party.json")
-	public ArrayList<ApiPartyTO> getParties(HttpServletRequest request) {
+	@GetMapping("/api/party.json/{type}/{value}")
+	public ArrayList<ApiPartyTO> partyApi(HttpServletRequest request, @PathVariable Map<String, String> param) {
 		ArrayList<ApiPartyTO> data = null;
 		
-		String loccode = request.getParameter("loccode") != null ? request.getParameter("loccode") : "";
+		String type = param.get("type");
+		String value = param.get("value");
 		
-		data = partyDAO.getParties(loccode);
+		// 0: 도(시) 검색 / 1: 시/군(구) 검색 / 2: 유저 검색
+		if(type.equals("prvcode")) {
+			data = partyDAO.getParties(0, value);
+		}else if(type.equals("sggcode")) {
+			data = partyDAO.getParties(1, value);
+		}else if(type.equals("user")) {
+			data= partyDAO.getParties(2, value);
+		}
+		
 		return data;
 	}
 
