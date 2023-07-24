@@ -245,7 +245,7 @@
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
-					<h1 class="title">유저 목록</h1>
+					<h1 class="title"><span class="hover" onclick="location.href='userList'">유저 목록</span></h1>
 					<p class="lead fw-normal text-white-50 mb-0">User List</p>
 				</div>
 			</div>

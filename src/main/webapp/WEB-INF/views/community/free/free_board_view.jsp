@@ -47,7 +47,7 @@
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 		<!-- Template Main CSS File -->
-	 	<link href="assets/css/style.css" rel="stylesheet">
+		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
 			window.onload = function(){
@@ -254,7 +254,6 @@
 			.bottombody{
 				max-width: 992px;
 			}
-			
 			.subject_info{
 				display: flex;
 			}
