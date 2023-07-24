@@ -73,8 +73,6 @@
 								$('#recBtn').removeClass('btn-primary').addClass('btn-secondary');
 
 								alert('게시글 추천을 취소했습니다');	
-							}else if(res == 4){
-								alert('본인 게시글은 추천할 수 없습니다');
 							}else if(res == 0){
 								alert('알 수 없는 추천 오류');
 							}else{
@@ -135,8 +133,6 @@
 							$('#comments').html(updatedComments);
 						}else if(res == 2){
 							$('#comments').html(updatedComments);
-						}else if(res == 3){
-							alert('본인의 댓글은 추천할수 없습니다');
 						}
 					},
 				});
