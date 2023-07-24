@@ -2,7 +2,6 @@ package com.example.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -620,7 +618,11 @@ public class DURKController {
 		int flag = memberDAO.userDeleteOk(to);
 		
 		if(flag == 0) {
-			boardDAO.boardDeleteAll(to.getSeq());
+			ArrayList<String> seqs = boardDAO.userBoardList(to.getSeq());
+			for(String seq: seqs) {
+				boardDAO.boardDelete(seq);
+				commentDAO.allCommentDelete(seq);
+			}
 		}
 		
 		return flag;

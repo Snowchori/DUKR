@@ -47,7 +47,7 @@
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 		<!-- Template Main CSS File -->
-		<!-- <link href="assets/css/style.css" rel="stylesheet"> -->
+		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript" >
 			window.onload = function(){
@@ -251,19 +251,6 @@
 			}
 		</script>
 		<style>
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-			.title {
-			    font-family: 'SBAggroB';
-			}
-			.bottombody{
-				max-width: 992px;
-			}
-			
 			.subject_info{
 				display: flex;
 			}
