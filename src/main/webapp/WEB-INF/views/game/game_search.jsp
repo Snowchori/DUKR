@@ -55,33 +55,7 @@
 	    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
 	    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
 		
-		<style type="text/css">						
-					
-		    .list-tsearch {
-		    	margin-top:20px;
-				display:inline-block;
-		    }
-		
-		    .list-tsearch table {
-		        border: none;
-		        border-collapse: separate;
-  				border-spacing: 10px;
-		    }
-		
-		    .list-tsearch table td, .list-tsearch table th {
-		    	width: min-content;
-		        padding: 3px 5px;
-		        line-height: 30px;
-		        text-align: left;
-		    }
-		    
-		    .list-tsearch th {
-				text-align:center;
-			}
-			
-		    .list-tsearch .btn-danger {
-		        color: #ffffff;
-		    }
+		<style type="text/css">
 		    
 		    /* 전체 버튼 */
 		    .btn {
@@ -97,14 +71,7 @@
 				color: #444444;
 				border-color: #ddd;
 			}
-			
-			#content_wrapper {
-			    width: 100%;
-			    display: flex;
-			    flex-direction: column;
-			    gap: 20px;
-			}
-			
+ 										
 	        #list-wrap {
 			    width: 100%;
 			    display: flex;
@@ -453,7 +420,7 @@
 				</script>
 				
 				<!-- 조건에 맞는 게임 리스트 -->				
-				<section class="page-section" id="portfolio">
+				<section class="page-section bg-light" id="portfolio">
 			        <div class="container" id="p1">
 			            <div class="text-center">
 			                <h2 class="searchResult section-heading text-uppercase">검색결과</h2>
