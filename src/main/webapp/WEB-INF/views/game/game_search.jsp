@@ -24,7 +24,7 @@
 		stx = request.getParameter("stx");
 	}
 
-	boolean chkSearch = (boolean)request.getAttribute("chkSearch");
+	boolean chkSearch = (request.getAttribute("chkSearch") != null) ? (boolean)request.getAttribute("chkSearch") : false;
 	ArrayList<BoardgameTO> lists = (ArrayList)request.getAttribute("lists");
 	
 	StringBuilder sbHtml = new StringBuilder();
