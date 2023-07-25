@@ -223,11 +223,6 @@
 	    
 	    <meta charset="utf-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	    <meta name="description" content="" />
-	    <meta name="author" content="" />
-	    <title>DUKrule?</title>
-	    <!-- Favicon-->
-	    <link rel="icon" type="image/x-icon" href="assets/img/boardgame.png" />
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
@@ -259,13 +254,13 @@
 		    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
 		        <div class="carousel-inner">
 		            <div class="carousel-item active" data-bs-interval="4000">
-		                <img src="assets/img/carousel1.jpg" class="d-block w-100" alt="...">
+		                <img src="assets/img/carousel/carousel1.jpg" class="d-block w-100" alt="...">
 		            </div>
 		            <div class="carousel-item" data-bs-interval="4000">
-		                <img src="assets/img/carousel2.jpg" class="d-block w-100" alt="...">
+		                <img src="assets/img/carousel/carousel2.jpg" class="d-block w-100" alt="...">
 		            </div>
 		            <div class="carousel-item">
-		                <img src="assets/img/carousel3.jpg" class="d-block w-100" alt="...">
+		                <img src="assets/img/carousel/carousel3.jpg" class="d-block w-100" alt="...">
 		            </div>
 		        </div>
 		        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
