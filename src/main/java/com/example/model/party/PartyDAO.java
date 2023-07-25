@@ -95,4 +95,10 @@ public class PartyDAO {
 		
 		return flag;
 	}
+	
+	// 모임정보 수정
+	public int partyModifyOk(PartyTO to) {
+		int result = partyMapper.partyModifyOk(to);
+		return result;
+	}
 }

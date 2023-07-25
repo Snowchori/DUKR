@@ -6,10 +6,12 @@
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
 	BoardTO boardTo = (BoardTO)request.getAttribute("boardTo");
+	String bSeq = boardTo.getSeq();
 	String subject = boardTo.getSubject();
 	String content = boardTo.getContent();
 	
 	PartyTO partyTo = (PartyTO)request.getAttribute("partyTo");
+	String pSeq = partyTo.getSeq();
 	String totalAddress = partyTo.getAddress();
 	String address = "";
 	String extra = "";
@@ -19,12 +21,16 @@
 	}else{
 		address = totalAddress;
 	}
+	String tag = address.split(" ")[0];
 	String detail = partyTo.getDetail();
 	String location = partyTo.getLocation();
 	String date = partyTo.getDate();
 	date = date.substring(0, 16);
 	date = date.replace(" ", "T");
 	String desired = partyTo.getDesired();
+	String locCode = partyTo.getLoccode();
+	String latitude = partyTo.getLatitude();
+	String longitude = partyTo.getLongitude();
 %>
 <%
 	/* 선택 가능한 최소, 최대 날짜 계산 */
@@ -176,7 +182,11 @@
 				const desId = 'des' + '<%=desired %>';
 				$('#' + desId).prop("selected", true);
 				$('#date').val("<%=date %>");
-				
+				$('#tag').val("<%=tag %>");
+				$('#latitude').val("<%=latitude %>");
+				$('#longitude').val("<%=longitude %>");
+				$('#loccode').val("<%=locCode %>");
+
 				/* 데이터 유효성 검사 */
 				// 제목
 				const subject = document.getElementById('subject');
@@ -193,9 +203,22 @@
 				
 				let subject_ok = false;
 				let date_ok = false;
-				let adr_ok = false;
+				let adr_ok = true;
 				let detail_ok = false;
 				let loc_ok = false;
+				
+				subject_ok = true;
+				subject.classList.remove('is-invalid');
+				subject.classList.add('is-valid');
+				date_ok = true;
+				date.classList.remove('is-invalid');
+				date.classList.add('is-valid');
+				detail_ok = true;
+				detail.classList.remove('is-invalid');
+				detail.classList.add('is-valid');
+				loc_ok = true;
+				location.classList.remove('is-invalid');
+				location.classList.add('is-valid');
 				
 				subject.addEventListener('input', () => {
 					if(subject.value.length >= 2){
@@ -279,7 +302,7 @@
 							break;
 						default: 
 							$.ajax({
-								url:'partyBoardRegisterOk',
+								url:'/partyBoardModifyOk',
 								type:'post',
 								data: {
 									subject: document.getElementById('subject').value.trim(),
@@ -293,7 +316,9 @@
 									desired: document.getElementById('desired').value.trim(),
 									loccode: document.getElementById('loccode').value.trim(),
 									latitude: document.getElementById('latitude').value.trim(),
-									longitude: document.getElementById('longitude').value.trim()
+									longitude: document.getElementById('longitude').value.trim(),
+									boardSeq: <%=bSeq %>,
+									partySeq: <%=pSeq %>
 								},
 								success: function(data) {
 									if(data == 0) {
@@ -380,7 +405,7 @@
 		<main>
 			<!-- 메인 요소 -->
 			<div class="container-fluid my-4 bottombody">
-				<form action="partyBoardRegisterOk" class="row" id="rfrm" name="rfrm" method="post">
+				<form action="partyBoardModifyOk" class="row" id="rfrm" name="rfrm" method="post">
 					<input type="hidden" id="tag" name="tag"/>
 					<input type="hidden" id="latitude" name="latitude"/>
 					<input type="hidden" id="longitude" name="longitude"/>

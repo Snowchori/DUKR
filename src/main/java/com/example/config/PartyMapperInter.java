@@ -32,7 +32,7 @@ public interface PartyMapperInter {
 	ArrayList<ApiPartyTO> getUserParties(String userSeq);
 	
 	// 게시글에 해당하는 모임정보
-	@Select("select seq, boardSeq, address, location, wdate date, detail, location, desired from party where boardSeq=#{boardSeq}")
+	@Select("select seq, boardSeq, address, location, wdate date, detail, location, desired, locCode, latitude, longitude from party where boardSeq=#{boardSeq}")
 	public PartyTO getPartyByBoardSeq(PartyTO to);
 	
 	/* 모임 등록 */
@@ -50,4 +50,8 @@ public interface PartyMapperInter {
 	/* 모임 신청 | 취소*/
 	@Update("update apply set status=#{status} where senderSeq=#{senderSeq} and partySeq=#{partySeq}")
 	int togglePartyOK(ApplyTO to);
+	
+	// 모임정보 수정
+	@Update("update party set address=#{address}, detail=#{detail}, location=#{location}, wdate=#{date}, desired=#{desired}, loccode=#{loccode}, latitude=#{latitude}, longitude=#{longitude} where seq=#{seq}")
+	public int partyModifyOk(PartyTO to); 
 }
