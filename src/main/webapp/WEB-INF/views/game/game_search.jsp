@@ -24,7 +24,7 @@
 		stx = request.getParameter("stx");
 	}
 
-	boolean chkSearch = (request.getAttribute("chkSearch") != null) ? (boolean)request.getAttribute("chkSearch") : false;
+	boolean chkSearch = (boolean)request.getAttribute("chkSearch");
 	ArrayList<BoardgameTO> lists = (ArrayList)request.getAttribute("lists");
 	
 	StringBuilder sbHtml = new StringBuilder();
@@ -235,7 +235,7 @@
 						var selectedButton = e.target;
 						var data = selectedButton.getAttribute('data-value');
 						
-						 // 어떤정렬인지 알려주기 위한 data를 input[name=sst]로 값을 보내주어야 함.		 
+						 // 어떤정렬인지 알려주기 위한 data를 input[name=sort]로 값을 보내주어야 함.		 
 						 document.querySelector('input[name=sort]').value = data;
 						 
 						 // 버튼 선택을 표현하기 위해 버튼클래스 변경
@@ -380,7 +380,7 @@
 					function keepSort(){
 						var searchedSort = "<%=sort%>";	// 이전에 검색했던 정렬 조건 값
 						var sorts = document.querySelectorAll('span.s-sort');
-						
+																
 						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
 						document.querySelector('span.s-sort.btn-danger').classList.replace('btn-danger', 'btn-default');
 						
@@ -388,16 +388,14 @@
 							var data = i.getAttribute('data-value');
 							
 							if(data == searchedSort){
-
-								// 정렬 조건 유지하기 위한 data를 input[name=sst]로 값을 보내주어야 함.
-								// document.querySelector('input[name=sort]').value = data;
-
 								// 선택된 버튼 표현
 								i.classList.add('btn-danger');
 								i.classList.remove('btn-default');
 							}
 						});
 						
+						// 어떤정렬인지 알려주기 위한 data를 input[name=sort]로 값을 보내주어야 함.		 
+						document.querySelector('input[name=sort]').value = searchedSort;
 					}
 					
 					// 인원 조건 유지
@@ -417,10 +415,11 @@
 									i.classList.add('btn-danger');
 									i.classList.remove('btn-default');
 								}
-							});
-
-							
+							});							
 						});
+						
+						// 선택된 값들 input[name=players]에 저장
+						document.querySelector('input[name=players]').value = searchedPlayers.join(',');
 					}
 					
 					// 장르 조건 유지
@@ -441,10 +440,11 @@
 									i.classList.add('btn-danger');
 									i.classList.remove('btn-default');
 								}
-							});
-
-							
+							});							
 						});
+						
+						// 선택된 값들 input[name=genre]에 저장
+						document.querySelector('input[name=genre]').value = searchedGenre.join(',');
 					}
 					
 					keepGenre();				
