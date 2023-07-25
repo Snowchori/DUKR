@@ -876,3 +876,7 @@ ul, #myUL {
 a.portfolio-link{
 	text-align: center;
 }
+
+.main_image {
+	max-width: 80vw;
+}

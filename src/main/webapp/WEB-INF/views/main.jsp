@@ -178,9 +178,9 @@
 	<body id="page-top">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 	    <!-- Masthead-->
-	    <header class="masthead">
+	    <header class="masthead bg-secondary">
 	        <div class="container d-flex align-self-center">
-	            <img src="assets/img/logos/boardgame.png">
+	            <img class="main_image" src="assets/img/logos/boardgame.png">
 	        </div>
 	    </header>
 	    <!-- Navigation-->
