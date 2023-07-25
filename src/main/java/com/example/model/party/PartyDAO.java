@@ -16,7 +16,7 @@ public class PartyDAO {
 	@Autowired
 	private BoardMapperInter boardMapper;
 	
-	/* 모임 정보 반환 */
+	/* 모임 정보 리스트 반환 */
 	public ArrayList<ApiPartyTO> getParties(int type, String value) {
 		ArrayList<ApiPartyTO> data = null;
 
@@ -36,6 +36,13 @@ public class PartyDAO {
 		}
 		
 		return data;
+	}
+	
+	/* 모임 정보 반환 */
+	public PartyTO getParty(String boardSeq, String userSeq) {
+		PartyTO pto = partyMapper.getParty(boardSeq, userSeq);
+		
+		return pto;
 	}
 	
 	/* 모임 등록 */

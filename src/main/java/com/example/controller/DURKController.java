@@ -1371,9 +1371,17 @@ public class DURKController {
 		String seq = request.getParameter("seq");
 		String commentSeq = request.getParameter("commentSeq");
 		
+		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+		String uSeq = null;
+		if(userInfo != null) {
+			uSeq = userInfo.getSeq();
+		}
+		
 		BoardTO to = new BoardTO();
 		to.setSeq(seq);
 		to = boardDAO.boardView(to);
+		
+		PartyTO pto = partyDAO.getParty(seq, uSeq);
 		
 		if(to == null) {
 			modelAndView.setViewName("community/no_board");
@@ -1389,24 +1397,17 @@ public class DURKController {
 			return modelAndView;
 		}
 
-		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
-		String uSeq = null;
-		
-		int status = 0;
-		if(userInfo != null) {
-			ApplyTO ato = new ApplyTO();
-			ato.setPartySeq(seq);
-			ato.setSenderSeq(userInfo.getSeq());
-			status = partyDAO.isApplied(ato);
-			
-			uSeq = userInfo.getSeq();
-		}
 
 		String comments = commentsBuilder(seq, uSeq, commentSeq);
 		
-		// 보고있는 유저의 게시글 추천여부 감지
+		// 보고있는 유저의 게시글 추천여부 & 작성자 여부 감지
+		boolean isWriter = false;
 		boolean didUserRec = false;
 		if(uSeq != null) {
+			if(uSeq.equals(to.getMemSeq())) {
+				isWriter = true;
+			}
+			
 			int recCheck = boardDAO.recCheck(uSeq, request.getParameter("seq"));
 			if(recCheck == 1) {
 				didUserRec = true;
@@ -1414,7 +1415,8 @@ public class DURKController {
 		}
 		
 		modelAndView.addObject("to", to);
-		modelAndView.addObject("status", status);
+		modelAndView.addObject("pto", pto);
+		modelAndView.addObject("isWriter", isWriter);
 		modelAndView.addObject("didUserRec", didUserRec);
 		modelAndView.addObject("comments", comments);
 		

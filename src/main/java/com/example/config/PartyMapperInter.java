@@ -18,7 +18,7 @@ import com.example.model.party.PartyTO;
 @Mapper
 public interface PartyMapperInter {
 	
-	/* 모임 정보 반환 */
+	/* 모임 정보 리스트 반환 */
 	String meetsuffix = "select boardSeq, address, location, date_format(wdate, '%m/%d') date, loccode, left(loccode, 2) loccode2, latitude, longitude "
 			+ "from party where wdate > now() and desired > participants and loccode ";
 	String meetprefix = "order by address, wdate";
@@ -28,6 +28,12 @@ public interface PartyMapperInter {
 	@Select(meetsuffix + "= #{loccode} " + meetprefix)
 	ArrayList<ApiPartyTO> getPartiesBySi(String sival);
 	
+	/* 모임 정보 반환 */
+	@Select("select address, detail, location, wdate date, desired, participants, latitude, longitude, ifnull(status, 0) status "
+			+ "from (select * from party where boardSeq=#{boardSeq}) party left join (select senderSeq, status from apply where partySeq=#{boardSeq}) apply on senderSeq=#{userSeq}")
+	PartyTO getParty(String boardSeq, String userSeq);
+	
+	/* 특정 유저 신청 모임 리스트 반환 */
 	@Select("select boardSeq, address, location, wdate date, loccode, left(loccode, 2) loccode2, latitude, longitude, status from party inner join apply on boardSeq=partySeq and senderSeq=#{userSeq} where status!=-1 " + meetprefix)
 	ArrayList<ApiPartyTO> getUserParties(String userSeq);
 	

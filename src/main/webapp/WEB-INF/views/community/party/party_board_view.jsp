@@ -1,3 +1,4 @@
+<%@page import="com.example.model.party.PartyTO"%>
 <%@page import="org.springframework.beans.factory.annotation.Autowired"%>
 <%@page import="com.example.model.comment.CommentDAO"%>
 <%@page import="com.example.model.party.ApplyTO"%>
@@ -8,38 +9,58 @@
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf"%>
 
 <%
-BoardTO to = (BoardTO) request.getAttribute("to");
-
-String boardSeq = to.getSeq();
-
-String subject = to.getSubject();
-String writer = to.getWriter();
-String memSeq = to.getMemSeq();
-String content = to.getContent();
-String wdate = to.getWdate();
-String wip = to.getWip();
-String hit = to.getHit();
-String recCnt = to.getRecCnt();
-String cmtCnt = to.getCmtCnt();
+	BoardTO to = (BoardTO)request.getAttribute("to");
+	
+	String boardSeq = to.getSeq();
+	
+	String subject = to.getSubject();
+	String writer = to.getWriter();
+	String memSeq = to.getMemSeq();
+	String content = to.getContent();
+	String wdate = to.getWdate();
+	String wip = to.getWip();
+	String hit = to.getHit();
+	String recCnt = to.getRecCnt();
+	String cmtCnt = to.getCmtCnt();
+%>
+<%
+	PartyTO pto = (PartyTO)request.getAttribute("pto");
+	
+	String address = pto.getAddress();
+	String detail = pto.getDetail();
+	String location = pto.getLocation();
+	String date = pto.getDate();
+	String desired = pto.getDesired();
+	String participants = pto.getParticipants();
+	String latitude = pto.getLatitude();
+	String longitude = pto.getLongitude();
+	int status = Integer.parseInt(pto.getStatus());
+	System.out.println(address);
+	
+	StringBuilder partyAddress = new StringBuilder("[" + location + "] ").append(address).append("<span class='slash'> - </span>").append(detail);
 %>
 <%
 	String comments = (String)request.getAttribute("comments");
 %>
 <%
-int status = (int)request.getAttribute("status");
-String strApply = "";
-boolean isWriter = true;
+	boolean isWriter = (boolean)request.getAttribute("isWriter");
 
-if(!memSeq.equals(userSeq)){
-	strApply = "&nbsp;<button id='appBtn' class='btn btn-success'><i id='appIcon' class='bi bi-patch-check'></i>&nbsp;<span id='appText'>참여신청</span></button>";
-	isWriter = false;
-}
-
-boolean didUserRec = (boolean)request.getAttribute("didUserRec");
-String recBtnColor = "btn-secondary";
-if(didUserRec){
-	recBtnColor = "btn-primary";
-}
+	String strApply = "";
+	StringBuilder delmodBtn = null;
+	StringBuilder reportBtn = null;
+	if(!isWriter){
+		strApply = "&nbsp;<button id='appBtn' class='btn btn-success'><i id='appIcon' class='bi bi-patch-check'></i>&nbsp;<span id='appText'>참여신청</span></button>";
+		reportBtn = new StringBuilder("<button class='btn btn-secondary mx-3' style='margin-left: auto;' onclick='report(").append(boardSeq).append(", \"board\")'>신고</button>");
+	}else{
+		delmodBtn = new StringBuilder("<button class='btn btn-secondary mx-3' style='margin-left: auto;' onclick='freeBoardDelete(").append(boardSeq).append(")'>삭제</button>")											
+		.append("<button class='btn btn-secondary' style='margin-left: auto;' onclick='location.href=\"freeBoardModify?cpage='null'&seq=").append(boardSeq).append("\">수정</button>");
+	}
+	
+	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
+	String recBtnColor = "btn-secondary";
+	if(didUserRec){
+		recBtnColor = "btn-primary";
+	}
 %>
 <!doctype html>
 <html>
@@ -47,11 +68,34 @@ if(didUserRec){
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf"%>
 		<!-- Template Main CSS File -->
 		<link href="assets/css/style.css" rel="stylesheet">
+		<!-- kakao Map API -->
+		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62a899b99d2f71a7e481ba3867c742b7&libraries=services,clusterer"></script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
-			window.onload = function() {
+			$(() => {
 				const bseq = <%= boardSeq %>, useq = <%= userSeq %>, isWriter = <%= isWriter %>;
 				let status = <%= status %>;
+				
+				// 지도 생성
+				const container = document.getElementById('map'),
+				position = new kakao.maps.LatLng(<%=latitude%>, <%=longitude%>),
+				options = {
+					center: position,
+					level: 6
+				};
+				let map = new kakao.maps.Map(container, options);
+				const marker = new kakao.maps.Marker({
+					map: map,
+					position: position
+				});
+				
+				document.getElementById('linkMap').onclick = function(){
+					const center = map.getCenter(),
+					lat = center.getLat(),
+					lng = center.getLng();
+					console.log('https://map.kakao.com/link/map/' + encodeURIComponent('<%=address%>') + ',' + lat + ',' + lng);
+					window.open('https://map.kakao.com/link/map/' + encodeURIComponent('<%=address%>') + ',' + lat + ',' + lng);
+				}
 				
 				function loggedin(){
 					if (useq !== null) {
@@ -186,7 +230,7 @@ if(didUserRec){
 					
 				}
 
-			};
+			});
 			
 			// 댓글 추천함수
 			function recommendComment(wSeq, mSeq, cSeq){
@@ -281,7 +325,7 @@ if(didUserRec){
 					
 					if(!popup) {
 						alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요');
-		            }
+					}
 				} 
 			}
 		</script>
@@ -322,14 +366,29 @@ if(didUserRec){
 			justify-content: flex-end;
 		}
 		
+		.party_info{
+			color: #888888;
+		}
+		.party_info.address{
+			cursor: pointer;
+		}
+		#map{
+			border-radius: 0.5em;
+		}
+		.screen_out {display:block;overflow:hidden;position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;text-indent:-9999px;}
+    	.wrap_button {position:absolute;right:15px;top:12px;z-index:2}
+		.btn_comm {float:left;display:block;width:70px;height:27px;background:url(/assets/img/kakao/sample_button_control.png) no-repeat;}
+		.btn_linkMap {background-position:0 0;}
+		.btn_resetMap {background-position:-69px 0;}
+		
 		@media (max-width: 575px){
-			.subject_info{
+			.subject_info, .party_info{
 				font-size: 14px;
 			}
 		}
 		
 		@media (min-width: 576px){
-			.subject_info{
+			.subject_info, .party_info{
 				font-size: 16px;
 			}
 		}
@@ -352,7 +411,7 @@ if(didUserRec){
 
 				<div class="subject">
 					<b><%=subject%></b>
-					<div class="subject_info mt-2" style="color: #888888;">
+					<div class="subject_info party_info mt-2">
 						<div class="main_info">
 							<div class="dropdown">
 								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
@@ -375,7 +434,15 @@ if(didUserRec){
 					</div>
 				</div>
 
-				<hr class="my-4">
+				<hr class="mt-4 mb-2">
+					<span class="party_info address" id="loadmap"><%= partyAddress %></span>
+					<div id="map" class="border border-5" style="height: 400px; display: block;">
+						<div class="wrap_button">
+							<a href="javascript:void(0);" class="btn_comm btn_linkMap" id="linkMap" target="_blank"><span class="screen_out">로드뷰 크게보기</span></a>
+							<a href="javascript:void(0);" class="btn_comm btn_resetMap" id="resetMap"><span class="screen_out">로드뷰 크게보기</span></a>
+						</div>
+					</div>
+				<hr class="mb-4 mt-2">
 
 				<div class="content">
 					<%=content%>
