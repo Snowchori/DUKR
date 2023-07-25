@@ -324,7 +324,7 @@
 									if(data == 0) {
 										Swal.fire({
 											icon: 'success',
-											title: '글쓰기 완료',
+											title: '글 수정 완료',
 											confirmButtonText: '확인',
 											willClose: () => {
 												document.location.href='partyBoardList';
@@ -333,7 +333,7 @@
 									} else {
 										Swal.fire({
 											icon: 'error',
-											title: '글쓰기 실패',
+											title: '글 수정 실패',
 											confirmButtonText: '확인'
 										});
 									}
