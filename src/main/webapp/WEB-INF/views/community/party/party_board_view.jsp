@@ -46,14 +46,14 @@
 	boolean isWriter = (boolean)request.getAttribute("isWriter");
 
 	String strApply = "";
-	StringBuilder delmodBtn = null;
-	StringBuilder reportBtn = null;
+	StringBuilder delmodBtn = new StringBuilder();
+	StringBuilder reportBtn = new StringBuilder();
 	if(!isWriter){
 		strApply = "&nbsp;<button id='appBtn' class='btn btn-success'><i id='appIcon' class='bi bi-patch-check'></i>&nbsp;<span id='appText'>참여신청</span></button>";
-		reportBtn = new StringBuilder("<button class='btn btn-secondary mx-3' style='margin-left: auto;' onclick='report(").append(boardSeq).append(", \"board\")'>신고</button>");
+		reportBtn.append("<button class='btn btn-dark mx-3' style='margin-left: auto;' onclick='report(").append(boardSeq).append(", \"board\")'>신고</button>");
 	}else{
-		delmodBtn = new StringBuilder("<button class='btn btn-secondary mx-3' style='margin-left: auto;' onclick='freeBoardDelete(").append(boardSeq).append(")'>삭제</button>")											
-		.append("<button class='btn btn-secondary' style='margin-left: auto;' onclick='location.href=\"freeBoardModify?cpage='null'&seq=").append(boardSeq).append("\">수정</button>");
+		delmodBtn.append("<button class='btn btn-dark mx-3' style='margin-left: auto;' onclick='freeBoardDelete(").append(boardSeq).append(")'>삭제</button>")											
+		.append("<button class='btn btn-dark' style='margin-left: auto;' onclick='location.href=\"partyBoardModify?seq=").append(boardSeq).append("\"'>수정</button>");
 	}
 	
 	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
@@ -459,12 +459,8 @@
 					<button class="btn btn-dark" style="margin-right: auto;" onclick="location.href='partyBoardList?cpage='">목록</button>
 					
 					<div class="d-flex">
-						<%if(isWriter){ %>	
-						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
-						<button class="btn btn-dark" style="margin-left: auto;" onclick="location.href='partyBoardModify?seq=<%=boardSeq %>'">수정</button>				
-						<%}else{%>
-						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
-						<%} %>
+						<%= reportBtn %>
+						<%= delmodBtn %>
 					</div>
 				</div>
 				<hr class="my-2">
