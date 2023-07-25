@@ -428,8 +428,6 @@ public class BoardgameDAO {
 			String gameCategories = Jsoup.connect("https://api.geekdo.com/xmlapi/boardgame/" + to.getSeq()).get().select("boardgamecategory").text();
 			String gameCategory = "";
 			
-			System.out.println("GameCategories : " + gameCategories);
-			
 			for(int i = 0; i < genreKOR.length; i++) {
 				for(String selectedGenre : selectedGenres) {
 					

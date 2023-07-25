@@ -1232,9 +1232,9 @@ public class DURKController {
 			upload.transferTo(new File(newFileName));
 			uploadResult = true;
 		} catch (IllegalStateException e) {
-			System.out.println("파일 업로드 오류 - " + e.getMessage());
+			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("파일 업로드 오류 - " + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		String url = "./upload/" + newFileName;
@@ -1275,7 +1275,6 @@ public class DURKController {
 	// 글 추천
 	@PostMapping("/rec")
 	public int recommend(HttpServletRequest req) {
-		System.out.println();
 		int response = 0;
 		
 		String boardSeq = req.getParameter("boardSeq");
@@ -1801,7 +1800,7 @@ public class DURKController {
         LogsTO logTO = new LogsTO();
         logTO.setMemSeq(to.getSeq());
         logTO.setLog("로그인");
-        logTO.setRemarks("");
+        logTO.setRemarks("카카오");
         logTO.setLogType("1");
         
         logsDAO.logsWriteOk(logTO);
@@ -1827,7 +1826,7 @@ public class DURKController {
 			LogsTO logTO = new LogsTO();
 	        logTO.setMemSeq(to.getSeq());
 	        logTO.setLog("로그인");
-	        logTO.setRemarks("");
+	        logTO.setRemarks("일반");
 	        logTO.setLogType("1");
 	        
 	        logsDAO.logsWriteOk(logTO);
@@ -1888,7 +1887,6 @@ public class DURKController {
 			String content = "귀하의 아이디는 " + id + " 입니다";
 			
 			this.mailSender1(toEmail, toName, subject, content);
-			System.out.println("전송완료");
 		}
 		
 		return mav;
@@ -1904,7 +1902,6 @@ public class DURKController {
 		simpleMailMessage.setSentDate(new Date());
 		
 		javaMailSender.send(simpleMailMessage);
-		System.out.println("전송완료");
 	}
 	
 	// 아이디/비밀번호 찾기
@@ -2009,12 +2006,10 @@ public class DURKController {
 	@ResponseBody
 	public String emailDuplCheck(HttpServletRequest req) {
 		String email = req.getParameter("email");
-		System.out.println(email);
 		String responseText = "possible";
 		
 		// 이메일 중복확인
 		int count = memberDAO.emailDuplCheck(email);
-		System.out.println("count - " + count);
 		
 		if(count != 0) {
 			responseText = "impossible";
@@ -2029,7 +2024,6 @@ public class DURKController {
 				String subject = "DUKR 이메일 인증";
 				String content = "귀하의 이메일 인증 코드는 " + code + " 입니다.";
 				mailSender1(email, email, subject, content);
-				System.out.println("메일전송 스레드 종료");
 			});
 			thread.start();
 		}
@@ -2045,11 +2039,7 @@ public class DURKController {
 		String responseText = "invalid";
 		String answer = (String)req.getSession().getAttribute("emailCode");
 		
-		System.out.println("emailCode - " + emailCode);
-		System.out.println("answer - " + answer);
-		
 		if(emailCode.equals(answer)) {
-			System.out.println("valid@@@@@");
 			responseText = "valid";
 			req.getSession().removeAttribute("emailCode");
 		}

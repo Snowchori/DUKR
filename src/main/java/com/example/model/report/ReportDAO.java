@@ -35,7 +35,6 @@ public class ReportDAO {
 	// 신고 접수
 	public int newReport(ReportTO to) {
 		int result = reportMapper.newReport(to);
-		System.out.println("신고접수");
 		return result;
 	}
 }
