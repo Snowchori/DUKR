@@ -38,6 +38,12 @@ public class PartyDAO {
 		return data;
 	}
 	
+	// 게시글에 해당하는 모임정보
+	public PartyTO getPartyByBoardSeq(PartyTO to) {
+		to = partyMapper.getPartyByBoardSeq(to);
+		return to;
+	}
+	
 	/* 모임 등록 */
 	public int registerPartyOk(BoardTO bto, PartyTO mto) {
 		int flag = 1;

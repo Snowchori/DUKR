@@ -1,8 +1,31 @@
+<%@page import="com.example.model.party.PartyTO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Calendar"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<%
+	BoardTO boardTo = (BoardTO)request.getAttribute("boardTo");
+	String subject = boardTo.getSubject();
+	String content = boardTo.getContent();
+	
+	PartyTO partyTo = (PartyTO)request.getAttribute("partyTo");
+	String totalAddress = partyTo.getAddress();
+	String address = "";
+	String extra = "";
+	if(totalAddress.contains("(")){
+		address = totalAddress.split("\\(")[0];
+		extra = "(" + totalAddress.split("\\(")[1];
+	}else{
+		address = totalAddress;
+	}
+	String detail = partyTo.getDetail();
+	String location = partyTo.getLocation();
+	String date = partyTo.getDate();
+	date = date.substring(0, 16);
+	date = date.replace(" ", "T");
+	String desired = partyTo.getDesired();
+%>
 <%
 	/* 선택 가능한 최소, 최대 날짜 계산 */
 	Calendar cal = Calendar.getInstance();
@@ -143,6 +166,16 @@
 					}).embed(element_layer);
 				}
 				
+				// 수정 전 기본정보 로드
+				$('#subject').val("<%=subject %>");
+				$('#address').val("<%=address %>");
+				$('#extra').val("<%=extra %>");
+				$('#detail').val("<%=detail %>");
+				$('#location').val("<%=location %>");
+				$('#content').val('<%=content %>');
+				const desId = 'des' + '<%=desired %>';
+				$('#' + desId).prop("selected", true);
+				$('#date').val("<%=date %>");
 				
 				/* 데이터 유효성 검사 */
 				// 제목
@@ -385,13 +418,13 @@
 					<div class="col-md-6 mb-3">
 						<label for="desired" class="form-label">희망인원 수 <span class="essential">*</span></label>
 						<select class="form-select" id="desired" name="desired">
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
+							<option id="des2" value="2">2</option>
+							<option id="des3" value="3">3</option>
+							<option id="des4" value="4">4</option>
+							<option id="des5" value="5">5</option>
+							<option id="des6" value="6">6</option>
+							<option id="des7" value="7">7</option>
+							<option id="des8" value="8">8</option>
 						</select>
 					</div> 
 					<div class="col-12 mb-3">

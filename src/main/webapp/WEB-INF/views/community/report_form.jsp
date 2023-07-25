@@ -12,7 +12,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 <%@ include file="/WEB-INF/views/include/head_setting.jspf" %> 
 <script type="text/javascript">
@@ -48,6 +48,11 @@
 		};
 	};
 </script>
+<style type="text/css">
+	img {
+		width: 100%;
+	}
+</style>
 </head>
 <body>
 	<br>
@@ -69,7 +74,7 @@
 		<br>
 	</div>
 	<br>
-	<b style="padding-left: 40px">신고사유</b> <br>
+	<b style="padding-left: 40px;">신고사유</b> <br>
 	<div class="container">
   		<div class="row justify-content-center">
     		<div class="col-14">

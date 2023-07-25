@@ -31,6 +31,10 @@ public interface PartyMapperInter {
 	@Select("select boardSeq, address, location, wdate date, loccode, left(loccode, 2) loccode2, latitude, longitude, status from party inner join apply on boardSeq=partySeq and senderSeq=#{userSeq} where status!=-1 " + meetprefix)
 	ArrayList<ApiPartyTO> getUserParties(String userSeq);
 	
+	// 게시글에 해당하는 모임정보
+	@Select("select seq, boardSeq, address, location, wdate date, detail, location, desired from party where boardSeq=#{boardSeq}")
+	public PartyTO getPartyByBoardSeq(PartyTO to);
+	
 	/* 모임 등록 */
 	@Insert("insert into party values(0, #{boardSeq}, #{address}, #{detail}, #{location}, #{date}, #{desired}, 0, #{loccode}, #{latitude}, #{longitude})")
 	int registerPartyOk(PartyTO to);

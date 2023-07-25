@@ -1421,6 +1421,25 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	@RequestMapping("/partyBoardModify")
+	public ModelAndView partyBoardModify(HttpServletRequest req) {
+		ModelAndView mav = new ModelAndView("community/party/party_board_modify");
+		
+		String boardSeq = req.getParameter("seq");
+		BoardTO boardTo = new BoardTO();
+		boardTo.setSeq(boardSeq);
+		boardTo = boardDAO.boardModify(boardTo);
+		
+		PartyTO partyTo = new PartyTO();
+		partyTo.setBoardSeq(boardSeq);
+		partyTo = partyDAO.getPartyByBoardSeq(partyTo);
+		
+		mav.addObject("boardTo", boardTo);
+		mav.addObject("partyTo", partyTo);
+		
+		return mav;
+	}
+	
 	@PostMapping("/partyApplyOk")
 	public int partyApplyOk(HttpServletRequest request) {
 		ApplyTO ato = new ApplyTO();

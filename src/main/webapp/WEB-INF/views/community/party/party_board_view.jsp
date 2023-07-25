@@ -394,7 +394,7 @@ if(didUserRec){
 					<div class="d-flex">
 						<%if(isWriter){ %>	
 						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='freeBoardDelete("<%=boardSeq%>")'>삭제</button>											
-						<button class="btn btn-dark" style="margin-left: auto;" onclick="location.href='freeBoardModify?cpage='null'&seq=<%=boardSeq %>'">수정</button>				
+						<button class="btn btn-dark" style="margin-left: auto;" onclick="location.href='partyBoardModify?seq=<%=boardSeq %>'">수정</button>				
 						<%}else{%>
 						<button class="btn btn-dark mx-3" style="margin-left: auto;" onclick='report("<%=boardSeq%>", "board")'>신고</button>
 						<%} %>
