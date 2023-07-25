@@ -1725,7 +1725,7 @@ public class DURKController {
 		
 		recently_list.add(0, gameTO);
 		
-		if(recently_list.size() > 12) {
+		if(recently_list.size() > 10) {
 			recently_list.remove(recently_list.size()-1);
 		}
 		

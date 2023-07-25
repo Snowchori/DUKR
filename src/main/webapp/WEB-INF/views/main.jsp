@@ -123,12 +123,27 @@
 	
 	totalSB.append("</div>");
 	
-	for(BoardgameTO to : recently_list){
+	if(recently_list.size() > 0) {
+		recentSB.append("<ul>");
 		recentSB.append("<li>");
-		recentSB.append("<div class='container'>");
-		recentSB.append("<img class='img-fluid q_image' src='"+ to.getImageUrl()+"' alt='' onclick=\"location.href='gameView?seq=" + to.getSeq() + "'\" />");
-		recentSB.append("</div>");
+		recentSB.append("<div>최근 본<br>보드게임</div>");
 		recentSB.append("</li>");
+		recentSB.append("<li class='caretup' value='0'>");
+		recentSB.append("<i class='bi bi-caret-up-fill' onclick='caretUp()'></i>");
+		recentSB.append("</li>");
+		int count = 0;
+		for(BoardgameTO to : recently_list){
+			recentSB.append("<li class='caret" + count + "'>");
+			recentSB.append("<div class='container'>");
+			recentSB.append("<img class='img-fluid q_image' src='"+ to.getImageUrl()+"' alt='' onclick=\"location.href='gameView?seq=" + to.getSeq() + "'\" />");
+			recentSB.append("</div>");
+			recentSB.append("</li>");
+			count++;
+		}
+		recentSB.append("<li class='caretdown' value='2'>");
+		recentSB.append("<i class='bi bi-caret-down-fill' onclick='caretDown()'></i>");
+		recentSB.append("</li>");
+		recentSB.append("</ul>");
 	}
 %>
 <!doctype html>
@@ -142,7 +157,6 @@
 	    </script>
 	    <!-- 자바 스크립트 영역 -->
 	    <script type="text/javascript">
-		   		
 		    $(document).ready(function() {
 	            // 퀵 메뉴를 따라다니도록 설정
 	            var quickMenu = $("#quickmenu1");
@@ -160,6 +174,51 @@
 	                }
 	            });
         	});
+		    
+		    var count = <%= recently_list.size() %>
+		    
+		    window.onload = function() {
+		    	$(".caretup").hide();
+		    	if(count > 3) {
+		    		for(let i=3; i<count; i++) {
+		    			$(".caret" + i).hide();
+		    		}
+		    	} else {
+		    		$(".caretdown").hide();
+		    	}
+		    }
+		    
+		    function caretUp() {
+		    	var index = $(".caretup").val();
+		    	if(index > 0) {
+		    		if(index-1 == 0) {
+		    			$(".caretup").hide();
+		    		}
+		    		if(count > 3) {
+		    			$(".caretdown").show();
+		    		}
+		    		$(".caret" + (index-1)).show();
+		    		$(".caret" + (index+2)).hide();
+		    		$(".caretup").val(index-1);
+		    		$(".caretdown").val(index+1);
+		    	}
+		    }
+		    
+			function caretDown() {
+				var index = $(".caretdown").val();
+		    	if(index < count) {
+		    		if(index+1 == count-1) {
+		    			$(".caretdown").hide();
+		    		}
+		    		if(index-1 > 0) {
+		    			$(".caretup").show();
+		    		}
+		    		$(".caret" + (index-2)).hide();
+		    		$(".caret" + (index+1)).show();
+		    		$(".caretup").val(index-1);
+		    		$(".caretdown").val(index+1);
+		    	}
+		    }
 	    </script>
 	    
 	    <meta charset="utf-8" />
@@ -174,7 +233,7 @@
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 	    <!-- Masthead-->
 	    <header class="bg-secondary">
-	        <div class="container">
+	        <div class="container d-flex justify-content-center">
 	            <img class="main_image" src="assets/img/logos/boardgame.png">
 	        </div>
 	    </header>
@@ -246,13 +305,8 @@
 	    
 	    <!--  퀵메뉴  -->
 	    <div class="quickmenu" id="quickmenu1">
-			<ul>
-		  		<li>
-			    	<div>최근 본<br>보드게임</div>
-			    </li>
-				<%= recentSB %>
-			</ul>	  
-		</div> 
+	    	<%= recentSB %>
+		</div>
 	    
 	    <!-- Core theme JS-->
 	    <script src="assets/js/scripts.js"></script>
