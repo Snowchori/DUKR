@@ -126,7 +126,7 @@
 	for(BoardgameTO to : recently_list){
 		recentSB.append("<li>");
 		recentSB.append("<div class='container'>");
-		recentSB.append("<img class='img-fluid' src='"+ to.getImageUrl()+"' alt='' onclick=\"location.href='gameView?seq=" + to.getSeq() + "'\" />");
+		recentSB.append("<img class='img-fluid q_image' src='"+ to.getImageUrl()+"' alt='' onclick=\"location.href='gameView?seq=" + to.getSeq() + "'\" />");
 		recentSB.append("</div>");
 		recentSB.append("</li>");
 	}
@@ -142,24 +142,24 @@
 	    </script>
 	    <!-- 자바 스크립트 영역 -->
 	    <script type="text/javascript">
-	   		
-	    $(document).ready(function() {
-            // 퀵 메뉴를 따라다니도록 설정
-            var quickMenu = $("#quickmenu1");
-            var offset = quickMenu.offset();
-            var topPadding = 20;
-            $(window).scroll(function() {
-                if ($(window).scrollTop() > offset.top) {
-                    quickMenu.stop().animate({
-                        marginTop: $(window).scrollTop() - offset.top + topPadding
-                    });
-                } else {
-                    quickMenu.stop().animate({
-                        marginTop: 0
-                    });
-                }
-            });
-        });
+		   		
+		    $(document).ready(function() {
+	            // 퀵 메뉴를 따라다니도록 설정
+	            var quickMenu = $("#quickmenu1");
+	            var offset = quickMenu.offset();
+	            var topPadding = 20;
+	            $(window).scroll(function() {
+	                if ($(window).scrollTop() > offset.top) {
+	                    quickMenu.stop().animate({
+	                        marginTop: $(window).scrollTop() - offset.top + topPadding
+	                    });
+	                } else {
+	                    quickMenu.stop().animate({
+	                        marginTop: 0
+	                    });
+	                }
+	            });
+        	});
 	    </script>
 	    
 	    <meta charset="utf-8" />
@@ -169,17 +169,12 @@
 	    <title>DUKrule?</title>
 	    <!-- Favicon-->
 	    <link rel="icon" type="image/x-icon" href="assets/img/boardgame.png" />
-	    <!-- Font Awesome icons (free version)-->
-	    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-	    <!-- Google fonts-->
-	    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-	    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
 	</head>
-	<body id="page-top">
+	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 	    <!-- Masthead-->
-	    <header class="masthead bg-secondary">
-	        <div class="container d-flex align-self-center">
+	    <header class="bg-secondary">
+	        <div class="container">
 	            <img class="main_image" src="assets/img/logos/boardgame.png">
 	        </div>
 	    </header>
@@ -252,12 +247,12 @@
 	    <!--  퀵메뉴  -->
 	    
 	    <div class="quickmenu" id="quickmenu1">
-		  <ul>
+			<ul>
 		  		<li>
-			    <div>최근 본 보드게임</div>
+			    	<div>최근 본<br>보드게임</div>
 			    </li>
-			    <%= recentSB %>
-		  </ul>	  
+				<%= recentSB %>
+			</ul>	  
 		</div> 
 	    
 	    <!-- Core theme JS-->
