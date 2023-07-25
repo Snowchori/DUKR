@@ -10,6 +10,7 @@
 	String genre = "";
 	String players = "";
 	String stx = "";
+	
 	if( request.getParameter("sort") != null ){
 		sort = request.getParameter("sort");
 	}
@@ -23,10 +24,11 @@
 		stx = request.getParameter("stx");
 	}
 
+	boolean chkSearch = (boolean)request.getAttribute("chkSearch");
 	ArrayList<BoardgameTO> lists = (ArrayList)request.getAttribute("lists");
 	
 	StringBuilder sbHtml = new StringBuilder();
-	for(BoardgameTO gameInfo : lists){
+	for(BoardgameTO gameInfo : lists){		
 		sbHtml.append("<div class='col-lg-2 col-sm-6 mb-4'>");
 		sbHtml.append("		<div class='portfolio-item'>");
 		sbHtml.append("			<div class='image-container text-center'>");
@@ -53,33 +55,7 @@
 	    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
 	    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
 		
-		<style type="text/css">						
-					
-		    .list-tsearch {
-		    	margin-top:20px;
-				display:inline-block;
-		    }
-		
-		    .list-tsearch table {
-		        border: none;
-		        border-collapse: separate;
-  				border-spacing: 10px;
-		    }
-		
-		    .list-tsearch table td, .list-tsearch table th {
-		    	width: min-content;
-		        padding: 3px 5px;
-		        line-height: 30px;
-		        text-align: left;
-		    }
-		    
-		    .list-tsearch th {
-				text-align:center;
-			}
-			
-		    .list-tsearch .btn-danger {
-		        color: #ffffff;
-		    }
+		<style type="text/css">
 		    
 		    /* 전체 버튼 */
 		    .btn {
@@ -95,14 +71,7 @@
 				color: #444444;
 				border-color: #ddd;
 			}
-			
-			#content_wrapper {
-			    width: 100%;
-			    display: flex;
-			    flex-direction: column;
-			    gap: 20px;
-			}
-			
+ 										
 	        #list-wrap {
 			    width: 100%;
 			    display: flex;
@@ -141,8 +110,7 @@
 			  	background-color: #fff;
 			}
 		    
-		</style>
-
+		</style>		
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
@@ -222,7 +190,7 @@
 				</div>
 								
 				<!-- 버튼 이벤트 -->
-				<script type="text/javascript" >
+				<script type="text/javascript" >								
 					// 정렬 버튼
 					var sorts = document.querySelectorAll('span.s-sort');
 					
@@ -234,7 +202,7 @@
 						var selectedButton = e.target;
 						var data = selectedButton.getAttribute('data-value');
 						
-						 // 어떤정렬인지 알려주기 위한 data를 input[name=sst]로 값을 보내주어야 함.		 
+						 // 어떤정렬인지 알려주기 위한 data를 input[name=sort]로 값을 보내주어야 함.		 
 						 document.querySelector('input[name=sort]').value = data;
 						 
 						 // 버튼 선택을 표현하기 위해 버튼클래스 변경
@@ -352,6 +320,24 @@
 							}
 						}
 					}
+					
+					// 검색 버튼 클릭 시 검색결과로 스크롤 이동
+					window.onload = function() {
+						
+						if(<%=chkSearch%>){
+							const targetPosition = 500; // 스크롤할 위치 (픽셀 단위로 지정)
+							
+						    // 스크롤 이동 애니메이션 설정 (optional)
+						    const scrollOptions = {
+						        top: targetPosition,
+						        behavior: 'smooth' // 부드럽게 스크롤
+						    };
+				
+						    // 스크롤 이동 실행
+						    window.scrollTo(scrollOptions);
+						}
+						
+					}
 				</script>
 				
 				<!-- 검색 조건 유지 -->
@@ -361,7 +347,7 @@
 					function keepSort(){
 						var searchedSort = "<%=sort%>";	// 이전에 검색했던 정렬 조건 값
 						var sorts = document.querySelectorAll('span.s-sort');
-						
+																
 						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
 						document.querySelector('span.s-sort.btn-danger').classList.replace('btn-danger', 'btn-default');
 						
@@ -369,16 +355,14 @@
 							var data = i.getAttribute('data-value');
 							
 							if(data == searchedSort){
-
-								// 정렬 조건 유지하기 위한 data를 input[name=sst]로 값을 보내주어야 함.
-								// document.querySelector('input[name=sort]').value = data;
-
 								// 선택된 버튼 표현
 								i.classList.add('btn-danger');
 								i.classList.remove('btn-default');
 							}
 						});
 						
+						// 어떤정렬인지 알려주기 위한 data를 input[name=sort]로 값을 보내주어야 함.		 
+						document.querySelector('input[name=sort]').value = searchedSort;
 					}
 					
 					// 인원 조건 유지
@@ -398,10 +382,11 @@
 									i.classList.add('btn-danger');
 									i.classList.remove('btn-default');
 								}
-							});
-
-							
+							});							
 						});
+						
+						// 선택된 값들 input[name=players]에 저장
+						document.querySelector('input[name=players]').value = searchedPlayers.join(',');
 					}
 					
 					// 장르 조건 유지
@@ -422,10 +407,11 @@
 									i.classList.add('btn-danger');
 									i.classList.remove('btn-default');
 								}
-							});
-
-							
+							});							
 						});
+						
+						// 선택된 값들 input[name=genre]에 저장
+						document.querySelector('input[name=genre]').value = searchedGenre.join(',');
 					}
 					
 					keepGenre();				
@@ -434,10 +420,10 @@
 				</script>
 				
 				<!-- 조건에 맞는 게임 리스트 -->				
-				<section class="page-section" id="portfolio">
+				<section class="page-section bg-light" id="portfolio">
 			        <div class="container" id="p1">
 			            <div class="text-center">
-			                <h2 class="section-heading text-uppercase">검색결과</h2>
+			                <h2 class="searchResult section-heading text-uppercase">검색결과</h2>
 			                <h3 class="section-subheading text-muted"></h3>
 			            </div>
 			            

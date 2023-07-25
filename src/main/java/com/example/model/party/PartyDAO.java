@@ -44,6 +44,12 @@ public class PartyDAO {
 		
 		return pto;
 	}
+
+	// 게시글에 해당하는 모임정보
+	public PartyTO getPartyByBoardSeq(PartyTO to) {
+		to = partyMapper.getPartyByBoardSeq(to);
+		return to;
+	}
 	
 	/* 모임 등록 */
 	public int registerPartyOk(BoardTO bto, PartyTO mto) {
@@ -95,5 +101,11 @@ public class PartyDAO {
 		}
 		
 		return flag;
+	}
+	
+	// 모임정보 수정
+	public int partyModifyOk(PartyTO to) {
+		int result = partyMapper.partyModifyOk(to);
+		return result;
 	}
 }

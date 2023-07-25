@@ -137,7 +137,7 @@
 										</div>
 										&nbsp;
 										<input class="form-control" type="email" name="hint_ans" placeholder="힌트 답변"/>
-										<button class="btn btn-primary" type="button" id="find_password">비밀번호 변경하기</button>
+										<button class="btn btn-dark" type="button" id="find_password">비밀번호 변경하기</button>
 									</div>
 									&nbsp; 
 								</div>

@@ -1423,6 +1423,78 @@ public class DURKController {
 		return modelAndView;
 	}
 	
+	// 모임게시글 수정화면
+	@RequestMapping("/partyBoardModify")
+	public ModelAndView partyBoardModify(HttpServletRequest req) {
+		ModelAndView mav = new ModelAndView("community/party/party_board_modify");
+		
+		String boardSeq = req.getParameter("seq");
+		BoardTO boardTo = new BoardTO();
+		boardTo.setSeq(boardSeq);
+		boardTo = boardDAO.boardModify(boardTo);
+		
+		PartyTO partyTo = new PartyTO();
+		partyTo.setBoardSeq(boardSeq);
+		partyTo = partyDAO.getPartyByBoardSeq(partyTo);
+		
+		mav.addObject("boardTo", boardTo);
+		mav.addObject("partyTo", partyTo);
+		
+		return mav;
+	}
+	
+	// 모임게시글 수정
+	@PostMapping("/partyBoardModifyOk")
+	public int partyBoardModifyOk(HttpServletRequest req) {
+		MemberTO userInfo = (MemberTO)req.getSession().getAttribute("logged_in_user");
+		int flag = 1;
+		int boardModifyResult = 0;
+		int partymodifyResult = 0;
+		
+		if(userInfo != null) {
+			// 모임 글 정보
+			BoardTO bto = new BoardTO();
+			bto.setSeq(req.getParameter("boardSeq"));
+			bto.setMemSeq(userInfo.getSeq());
+			bto.setSubject(req.getParameter("subject"));
+			String content = req.getParameter("content");
+			if(content != null){
+				bto.setContent(content);
+			}
+			bto.setWip(req.getRemoteAddr());
+			bto.setTag(req.getParameter("tag"));
+			bto.setBoardType("2");
+			
+			// 모임 위치, 시간 정보 등
+			PartyTO pto = new PartyTO();
+			String adr = req.getParameter("address");
+			String extra = req.getParameter("extra");
+			if(extra != null){
+				adr = adr.concat(extra);
+			}
+			pto.setSeq(req.getParameter("partySeq"));
+			pto.setAddress(adr);
+			pto.setDetail(req.getParameter("detail"));
+			pto.setLocation(req.getParameter("location").trim());
+			pto.setDate(req.getParameter("date"));
+			pto.setDesired(req.getParameter("desired"));
+			pto.setLoccode(req.getParameter("loccode"));
+			pto.setLatitude(req.getParameter("latitude"));
+			pto.setLongitude(req.getParameter("longitude"));
+
+			boardModifyResult = boardDAO.boardModifyOk(bto);
+			partymodifyResult = partyDAO.partyModifyOk(pto);
+			System.out.println(boardModifyResult);
+			System.out.println(partymodifyResult);
+		}
+		
+		if(boardModifyResult == 1 && partymodifyResult == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
 	@PostMapping("/partyApplyOk")
 	public int partyApplyOk(HttpServletRequest request) {
 		ApplyTO ato = new ApplyTO();
@@ -1459,41 +1531,41 @@ public class DURKController {
 
 	@PostMapping("/partyBoardRegisterOk")
 	public int partyBoardRegisterOk(HttpServletRequest request) {
-		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
-		int flag = 1;
-		
-		if(userInfo != null) {
-			// 모임 글 정보
-			BoardTO bto = new BoardTO();
-			bto.setMemSeq(userInfo.getSeq());
-			bto.setSubject(request.getParameter("subject"));
-			String content = request.getParameter("content");
-			if(content != null){
-				bto.setContent(content);
-			}
-			bto.setWip(request.getRemoteAddr());
-			bto.setTag(request.getParameter("tag"));
-			bto.setBoardType("2");
+			MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
+			int flag = 1;
 			
-			// 모임 위치, 시간 정보 등
-			PartyTO pto = new PartyTO();
-			String adr = request.getParameter("address");
-			String extra = request.getParameter("extra");
-			if(extra != null){
-				adr = adr.concat(extra);
+			if(userInfo != null) {
+				// 모임 글 정보
+				BoardTO bto = new BoardTO();
+				bto.setMemSeq(userInfo.getSeq());
+				bto.setSubject(request.getParameter("subject"));
+				String content = request.getParameter("content");
+				if(content != null){
+					bto.setContent(content);
+				}
+				bto.setWip(request.getRemoteAddr());
+				bto.setTag(request.getParameter("tag"));
+				bto.setBoardType("2");
+				
+				// 모임 위치, 시간 정보 등
+				PartyTO pto = new PartyTO();
+				String adr = request.getParameter("address");
+				String extra = request.getParameter("extra");
+				if(extra != null){
+					adr = adr.concat(extra);
+				}
+				pto.setAddress(adr);
+				pto.setDetail(request.getParameter("detail"));
+				pto.setLocation(request.getParameter("location").trim());
+				pto.setDate(request.getParameter("date"));
+				pto.setDesired(request.getParameter("desired"));
+				pto.setLoccode(request.getParameter("loccode"));
+				pto.setLatitude(request.getParameter("latitude"));
+				pto.setLongitude(request.getParameter("longitude"));
+				
+				flag = partyDAO.registerPartyOk(bto, pto);
 			}
-			pto.setAddress(adr);
-			pto.setDetail(request.getParameter("detail"));
-			pto.setLocation(request.getParameter("location").trim());
-			pto.setDate(request.getParameter("date"));
-			pto.setDesired(request.getParameter("desired"));
-			pto.setLoccode(request.getParameter("loccode"));
-			pto.setLatitude(request.getParameter("latitude"));
-			pto.setLongitude(request.getParameter("longitude"));
-			
-			flag = partyDAO.registerPartyOk(bto, pto);
-		}
-		return flag;
+			return flag;
 	}
 	
 	@RequestMapping("/partySearch")
@@ -1621,25 +1693,30 @@ public class DURKController {
 	
 	@RequestMapping("/gameSearch")
 	public ModelAndView gameSearch(HttpServletRequest request) {
+		boolean chkSearch = false;
 		
 		String keyword = "";
 		if(request.getParameter("stx") != null) {
 			keyword = request.getParameter("stx");
+			chkSearch = true;
 		}
 		
 		String players = "";
 		if(request.getParameter("players") != null) {
 			players = request.getParameter("players");
+			chkSearch = true;
 		}
 		
 		String genre = "";
 		if(request.getParameter("genre") != null) {
 			genre = request.getParameter("genre");
+			chkSearch = true;
 		}
 		
-		String sort = "yearpublished";
+		String sort = "";
 		if(request.getParameter("sort") != null) {
 			sort = request.getParameter("sort");
+			chkSearch = true;
 		} else {
 			sort = "yearpublished";
 		}
@@ -1693,6 +1770,7 @@ public class DURKController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("game/game_search");
 		modelAndView.addObject("lists", lists);
+		modelAndView.addObject("chkSearch", chkSearch);
 		return modelAndView;
 	}
 	
@@ -1727,7 +1805,7 @@ public class DURKController {
 		
 		recently_list.add(0, gameTO);
 		
-		if(recently_list.size() > 12) {
+		if(recently_list.size() > 10) {
 			recently_list.remove(recently_list.size()-1);
 		}
 		

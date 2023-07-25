@@ -387,7 +387,7 @@
 		   						<input type="text" class="form-control" id="password" name="password" value="" placeholder="비밀번호는 보이지 않습니다" readonly="readonly"><br>
 		    					<label class="form-label">이메일:</label>
 		   						<input type="email" class="form-control" id="email" name="email" value="<%=email%>"><br>
-		   						<button type="button" id="infoUpdate" class="btn btn-primary">정보수정</button>
+		   						<button type="button" id="infoUpdate" class="btn btn-dark">정보수정</button>
 		   						<input type="text" class="form-control visually-hidden" id="newpassword" name="newpassword" value=""><br>
 		 					</div>
 						</form>		

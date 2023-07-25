@@ -611,8 +611,8 @@
 							</div>
 						</form>
 						<div class="d-flex">
-							<button class="btn btn-primary" id="rbtn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="모임 정보를 갱신합니다." style="width: 20%;"><i class='bi bi-arrow-clockwise'></i><span class="refresh">&nbsp;갱신</span></button>&nbsp;
-							<input type="button" class="btn btn-primary" id="sbtn" value="검색" style="width: 80%" disabled/>
+							<button class="btn btn-dark" id="rbtn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="모임 정보를 갱신합니다." style="width: 20%;"><i class='bi bi-arrow-clockwise'></i><span class="refresh">&nbsp;갱신</span></button>&nbsp;
+							<input type="button" class="btn btn-dark" id="sbtn" value="검색" style="width: 80%" disabled/>
 						</div>
 					</div>
 				</div>

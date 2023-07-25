@@ -1,10 +1,7 @@
 package com.example.model.board;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -130,12 +127,11 @@ public class BoardDAO {
 	}
 		
 	// 게시글 수정화면 띄우기
-	public BoardTO boardModify(BoardTO to) {
-		
+	public BoardTO boardModify(BoardTO to) {	
 		to = boardMapper.boardModify(to);
 		return to;
 	}
-	
+
 	// 게시글 수정하기
 	public int boardModifyOk(BoardTO to) {
 		int result = boardMapper.boardModifyOk(to);

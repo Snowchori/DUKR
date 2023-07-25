@@ -2,17 +2,12 @@ package com.example.model.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import java.util.Map;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.config.MemberMapperInter;
-import com.example.config.NoteMapperInter;
-import com.example.model.logs.LogListTO;
-import com.example.model.member.MemberTO;
 
 @Repository
 public class MemberDAO {

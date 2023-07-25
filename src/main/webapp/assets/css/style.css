@@ -64,6 +64,7 @@
 	*display:inline;
 	border:1px solid #ddd;
 	padding:0;
+	margin-bottom:0;
 }
 
 .quickmenu ul li {
@@ -904,4 +905,44 @@ a.portfolio-link{
 
 .main_image {
 	max-width: 80vw;
+}
+
+/*--------------------------------------------------------------
+# gameSearch
+--------------------------------------------------------------*/
+#content_wrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.list-tsearch {
+	margin-top:20px;
+	display:inline-block;
+}
+
+.list-tsearch table {
+	border: none;
+	border-collapse: separate;
+	border-spacing: 10px;
+}
+
+.list-tsearch table td, .list-tsearch table th {
+	width: min-content;
+	padding: 3px 5px;
+	line-height: 30px;
+	text-align: left;
+}
+
+.list-tsearch th {
+	text-align:center;
+}
+			
+.list-tsearch .btn-danger {
+	color: #ffffff;
+}
+
+h2 .searchResult {
+	font-family: 'SBAggroB';
 }
