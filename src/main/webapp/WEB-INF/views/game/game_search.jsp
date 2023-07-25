@@ -10,6 +10,7 @@
 	String genre = "";
 	String players = "";
 	String stx = "";
+	
 	if( request.getParameter("sort") != null ){
 		sort = request.getParameter("sort");
 	}
@@ -23,10 +24,11 @@
 		stx = request.getParameter("stx");
 	}
 
+	boolean chkSearch = (boolean)request.getAttribute("chkSearch");
 	ArrayList<BoardgameTO> lists = (ArrayList)request.getAttribute("lists");
 	
 	StringBuilder sbHtml = new StringBuilder();
-	for(BoardgameTO gameInfo : lists){
+	for(BoardgameTO gameInfo : lists){		
 		sbHtml.append("<div class='col-lg-2 col-sm-6 mb-4'>");
 		sbHtml.append("		<div class='portfolio-item'>");
 		sbHtml.append("			<div class='image-container text-center'>");
@@ -141,8 +143,7 @@
 			  	background-color: #fff;
 			}
 		    
-		</style>
-
+		</style>		
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
@@ -222,7 +223,7 @@
 				</div>
 								
 				<!-- 버튼 이벤트 -->
-				<script type="text/javascript" >
+				<script type="text/javascript" >								
 					// 정렬 버튼
 					var sorts = document.querySelectorAll('span.s-sort');
 					
@@ -352,6 +353,24 @@
 							}
 						}
 					}
+					
+					// 검색 버튼 클릭 시 검색결과로 스크롤 이동
+					window.onload = function() {
+						
+						if(<%=chkSearch%>){
+							const targetPosition = 500; // 스크롤할 위치 (픽셀 단위로 지정)
+							
+						    // 스크롤 이동 애니메이션 설정 (optional)
+						    const scrollOptions = {
+						        top: targetPosition,
+						        behavior: 'smooth' // 부드럽게 스크롤
+						    };
+				
+						    // 스크롤 이동 실행
+						    window.scrollTo(scrollOptions);
+						}
+						
+					}
 				</script>
 				
 				<!-- 검색 조건 유지 -->
@@ -437,7 +456,7 @@
 				<section class="page-section" id="portfolio">
 			        <div class="container" id="p1">
 			            <div class="text-center">
-			                <h2 class="section-heading text-uppercase">검색결과</h2>
+			                <h2 class="searchResult section-heading text-uppercase">검색결과</h2>
 			                <h3 class="section-subheading text-muted"></h3>
 			            </div>
 			            

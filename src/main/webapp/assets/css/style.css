@@ -879,7 +879,7 @@ ul, #myUL {
 .portfolio-modal .modal-content img {
 	margin-bottom: 2rem;
 }
-
+h
 .portfolio-modal .close-modal {
 	position: absolute;
 	top: 1.5rem;
@@ -905,4 +905,11 @@ a.portfolio-link{
 
 .main_image {
 	max-width: 80vw;
+}
+
+/*--------------------------------------------------------------
+# gameSearch
+--------------------------------------------------------------*/
+h2.searchResult{
+	   font-family: 'SBAggroB';
 }
