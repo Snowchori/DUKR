@@ -124,7 +124,7 @@
 							></textarea>
 						</div>
 						<div class="col-12 mb-3">
-							<input type="button" class="btn btn-primary float-end" value="전송" onclick="adminWrite()"/>
+							<input type="button" class="btn btn-dark float-end" value="전송" onclick="adminWrite()"/>
 						</div>
 					</form>
 				</div>

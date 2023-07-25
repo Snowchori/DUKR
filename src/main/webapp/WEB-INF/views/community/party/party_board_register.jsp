@@ -400,7 +400,7 @@
 					</div>
 					<div class="col-12 d-flex justify-content-end">
 						<input type="button" class="btn btn-dark mx-2" value="취소" onclick="history.back();"/>
-						<input type="button" class="btn btn-primary" id="rbtn" value="등록"/>
+						<input type="button" class="btn btn-dark" id="rbtn" value="등록"/>
 					</div>
 				</form>
 			</div>

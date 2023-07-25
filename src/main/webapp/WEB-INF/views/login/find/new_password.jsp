@@ -87,7 +87,7 @@
 						<input class="form-control" type="password" name="new_pwd2"
 							placeholder="비밀번호 확인" /><br>
 						<span class="input-group-btn">
-							<button class="btn btn-secondary" id="new_pwd_btn" type="button">
+							<button class="btn btn-dark" id="new_pwd_btn" type="button">
 								비밀번호 변경
 							</button>
 						</span>

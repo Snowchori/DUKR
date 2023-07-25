@@ -196,7 +196,7 @@
 	        </div>
 	    </nav>
 		<!--  캐러셀 -->
-		<div class="container" id="c1">
+		<div class="container my-5" id="c1">
 		    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
 		        <div class="carousel-inner">
 		            <div class="carousel-item active" data-bs-interval="4000">
