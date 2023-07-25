@@ -139,33 +139,35 @@
 		<main>
 			<!-- ======= About Section ======= -->
 			<section id="about" class="about">
-				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					<div class="container" data-aos="fade-up">
-						<div class="row g-4 g-lg-5" data-aos="fade-up" data-aos-delay="200">
-							<div class="col-lg-12">
-								<div class="my-3 p-2">
-									<button type='button' class='btn btn-dark cbtn float-end' onclick='search()'><i class="bi bi-search"></i></button>
-								</div>
-								<!-- Tabs -->
-								<ul class="nav nav-pills mb-3">
-									<%= navHtml %>
-								</ul>
-								<!-- End Tabs -->
-								<!-- Tab Content -->
-								<div class="tab-content">
-									<div class="mt-3 p-2">
-										총 <%= totalRecord %>건
+				<div class="container-fluid bottombody_manage">
+					<div class="row m-3 p-4 bg-white text-black rounded-5">
+						<div class="container" data-aos="fade-up">
+							<div class="row g-4 g-lg-5" data-aos="fade-up" data-aos-delay="200">
+								<div class="col-lg-12">
+									<div class="my-3 p-2">
+										<button type='button' class='btn btn-dark cbtn float-end' onclick='search()'><i class="bi bi-search"></i></button>
 									</div>
-									<div class="tab-pane fade show active">
-										<%= logHtml %>
-									</div>
-									<!-- End Tab 1 Content -->
-									<div class="container p-2">
-										<nav class="pagination-outer" aria-label="Page navigation">
-											<ul class="pagination">
-												<%= pageHtml %>
-											</ul>
-										</nav>
+									<!-- Tabs -->
+									<ul class="nav nav-pills mb-3">
+										<%= navHtml %>
+									</ul>
+									<!-- End Tabs -->
+									<!-- Tab Content -->
+									<div class="tab-content">
+										<div class="mt-3 p-2">
+											총 <%= totalRecord %>건
+										</div>
+										<div class="tab-pane fade show active">
+											<%= logHtml %>
+										</div>
+										<!-- End Tab 1 Content -->
+										<div class="container p-2">
+											<nav class="pagination-outer" aria-label="Page navigation">
+												<ul class="pagination">
+													<%= pageHtml %>
+												</ul>
+											</nav>
+										</div>
 									</div>
 								</div>
 							</div>

@@ -123,8 +123,6 @@
 	
 	totalSB.append("</div>");
 	
-	
-	
 	for(BoardgameTO to : recently_list){
 		recentSB.append("<li>");
 		recentSB.append("<div class='container'>");
@@ -132,12 +130,6 @@
 		recentSB.append("</div>");
 		recentSB.append("</li>");
 	}
-	
-	
-    
-    	
-    
-    
 %>
 <!doctype html>
 <html>
@@ -169,19 +161,6 @@
             });
         });
 	    </script>
-	    <style type="text/css">
-	   		div, ul, li {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding:0;margin:0}
-			a {text-decoration:none;}
-
-			.quickmenu {position:absolute;width:130px;top:50%;margin-top:-50px;right:10px;background:#fff;}
-			.quickmenu ul {position:relative;float:left;width:100%;display:inline-block;*display:inline;border:1px solid #ddd;}
-			.quickmenu ul li {float:left;width:100%;border-bottom:1px solid #ddd;text-align:center;display:inline-block;*display:inline;}
-			.quickmenu ul li a {position:relative;float:left;width:100%;height:30px;line-height:30px;text-align:center;color:#999;font-size:9.5pt;}
-			.quickmenu ul li a:hover {color:#000;}
-			.quickmenu ul li:last-child {border-bottom:0;}
-
-			.content {position:relative;min-height:1000px;}
-	    </style>
 	    
 	    <meta charset="utf-8" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -200,10 +179,8 @@
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 	    <!-- Masthead-->
 	    <header class="masthead">
-	        <div class="container">
-	            <div class="masthead-subheading title">Welcome To DUKR!</div>
-	            <div class="masthead-heading text-uppercase title">대한민국 보드게임 커뮤니티</div>
-	            <a class="btn btn-secondary btn-xl text-uppercase" href="#mainNav">더보기</a>
+	        <div class="container d-flex align-self-center">
+	            <img src="assets/img/logos/boardgame.png">
 	        </div>
 	    </header>
 	    <!-- Navigation-->

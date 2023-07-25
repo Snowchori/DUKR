@@ -93,7 +93,7 @@
 	<body class="bg-secondary text-white">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 		<header class="py-5 bg-secondary">
-			<div class="container px-4 px-lg-5 my-5">
+			<div class="container-fluid px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title"><span class="hover" onclick="location.href='banUserManage'">밴유저 관리</span></h1>
 					<p class="lead fw-normal text-white-50 mb-0">Ban User Manage</p>
@@ -103,8 +103,10 @@
 		<main>
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					<%= bHtml %>
+				<div class="container-fluid bottombody_manage">
+					<div class="row m-3 p-4 bg-white text-black rounded-5">
+						<%= bHtml %>
+					</div>
 				</div>
 			</section>
 			<!-- End gameInfo Section -->

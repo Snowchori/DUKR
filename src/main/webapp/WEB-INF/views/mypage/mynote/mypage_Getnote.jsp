@@ -17,9 +17,6 @@
 	int startBlock = listTO.getStartBlock();
 	int endBlock = listTO.getEndBlock();
 	
-	String search = (request.getParameter("search") != null) ? request.getParameter("search") : "";
-	String select = (request.getParameter("select") != null) ? request.getParameter("select") : "0";
-	
 	//받은 쪽지 html
 	StringBuilder getNoteHTML = new StringBuilder();
 	for(NoteTO noteTO : listTO.getNoteList()) {
@@ -40,7 +37,7 @@
 		
 		if (startBlock != 1) {
 			pageHtml.append("<li class='page-item'>");
-			pageHtml.append("<a href='mywrite?select=" + select + "&search=" + search + "&cpage=");
+			pageHtml.append("<a href='mail?cpage=");
 			pageHtml.append(startBlock - blockPerPage);
 			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 			pageHtml.append("class='page-link' aria-label='Previous'>");
@@ -54,7 +51,7 @@
 				pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
 			} else {
 				pageHtml.append("<li class='page-item'><a class='page-link' href='");
-				pageHtml.append("mywrite?select=" + select + "&search=" + search + "&cpage=" + i);
+				pageHtml.append("mail?cpage=" + i);
 				pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 				pageHtml.append(">" + i + "</a></li>");
 			}
@@ -62,7 +59,7 @@
 		
 		if(endBlock != totalPage) {
 			pageHtml.append("<li class='page-item'>");
-			pageHtml.append("<a href='mywrite?select=" + select + "&search=" + search + "&cpage=");
+			pageHtml.append("<a href='mail?cpage=");
 			pageHtml.append(startBlock + blockPerPage);
 			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 			pageHtml.append("class='page-link' aria-label='Next'>");

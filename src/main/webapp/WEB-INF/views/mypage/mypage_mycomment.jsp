@@ -16,9 +16,6 @@
 	int blockPerPage = listTO.getBlockPerPage();
 	int startBlock = listTO.getStartBlock();
 	int endBlock = listTO.getEndBlock();
-	
-	String search = (request.getParameter("search") != null) ? request.getParameter("search") : "";
-	String select = (request.getParameter("select") != null) ? request.getParameter("select") : "0";
 
 	//글목록 html
 	StringBuilder commentHtml = new StringBuilder();
@@ -28,7 +25,7 @@
 	
 	for(CommentTO list : listTO.getCommentList()) {
 		commentHtml.append("<tr>");
-		commentHtml.append("<td onclick='location.href=\"freeBoardView?seq=" + list.getBoardSeq() + "\"'>&nbsp&nbsp&nbsp&nbsp "+list.getContent()+"</br>");
+		commentHtml.append("<td onclick='location.href=\"boardView?seq=" + list.getBoardSeq() + "\"'>&nbsp&nbsp&nbsp&nbsp "+list.getContent()+"</br>");
 		commentHtml.append("<small>&nbsp&nbsp&nbsp&nbsp "+list.getWriter()+" &nbsp&nbsp&nbsp "+list.getWdate()+" &nbsp&nbsp <i class='bi bi-hand-thumbs-up-fill'></i>"+list.getRecCnt()+"</small>");
 		commentHtml.append("</td>");
 		commentHtml.append("</tr>");
@@ -40,7 +37,7 @@
 	
 	if (startBlock != 1) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='mywrite?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='mycomment?cpage=");
 		pageHtml.append(startBlock - blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Previous'>");
@@ -54,7 +51,7 @@
 			pageHtml.append("<li class='page-item active'><a class='page-link'>" + i + "</a></li>");
 		} else {
 			pageHtml.append("<li class='page-item'><a class='page-link' href='");
-			pageHtml.append("mywrite?select=" + select + "&search=" + search + "&cpage=" + i);
+			pageHtml.append("mycomment?cpage=" + i);
 			pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 			pageHtml.append(">" + i + "</a></li>");
 		}
@@ -62,7 +59,7 @@
 	
 	if(endBlock != totalPage) {
 		pageHtml.append("<li class='page-item'>");
-		pageHtml.append("<a href='mywrite?select=" + select + "&search=" + search + "&cpage=");
+		pageHtml.append("<a href='mycomment?cpage=");
 		pageHtml.append(startBlock + blockPerPage);
 		pageHtml.append("&recordPerPage=" + recordPerPage + "' ");
 		pageHtml.append("class='page-link' aria-label='Next'>");
@@ -82,16 +79,6 @@
 		</script>
 		<link href="assets/css/style.css" rel="stylesheet">
 		<style type="text/css">
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-			
-			.title {
-				font-family: SBAggroB;
-			}
 			.selection > div > div{
 				padding: 5px 0 5px 0;
 				border: 1px #cacaca solid;

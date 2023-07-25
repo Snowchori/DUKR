@@ -26,16 +26,17 @@ public interface InquiryMapperInter {
 	
 	//마이페이지 내가 쓴 문의글 총 갯수
 	@Select("select count(*) from inquiry where senderSeq=#{seq}")
-	public int myInquiryTotal(InquiryListTO to);
+	public int myInquiryTotal(InquiryListTO listTO);
 	
 	//마이페이지 내가 쓴 문의글 리스트 가져오기
 	@Select("select i.seq seq, date_format(wdate, '%Y-%m-%d') wdate, subject, status, inquiryType, m.nickname writer "
-			+ "from inquiry i, member m where i.senderSeq=m.seq order by seq desc")
-	public ArrayList<InquiryTO> myInquiryList(InquiryListTO to);
+			+ "from inquiry i, member m where senderSeq=#{seq} and i.senderSeq=m.seq order by seq desc limit #{skip}, #{recordPerPage}")
+	public ArrayList<InquiryTO> myInquiryList(InquiryListTO listTO);
 	
 	//마이페이지 문의 글 보기
 	@Select("select subject, inquiryType, status, content, date_format(wdate, '%Y-%m-%d') wdate, answer from inquiry where seq=#{seq}")
 	public InquiryTO inquiryView(String seq);
+	
 	// 문의 전체수 가져오기
 	@Select("select count(*) from inquiry i, member m where i.senderSeq=m.seq ${query}")
 	public int inquiryListTotal(InquiryListTO listTO);

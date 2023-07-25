@@ -136,7 +136,7 @@
 					</table>
 				</div>
 				<div class="p-2 d-flex justify-content-end">
-					<button type='button' class='btn btn-dark' id="wbtn" onclick="location.href='announceBoardWrite'">글쓰기</button>
+					<%= writebutton %>
 				</div>
 				<div class="container p-2">
 					<nav class="pagination-outer" aria-label="Page navigation">

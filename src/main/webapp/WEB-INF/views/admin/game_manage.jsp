@@ -338,62 +338,64 @@ if(seq != null && !seq.equals("")) {
 		<main>
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					<h2>게임 정보 관리</h2>
-					<ul id="myUL">
-			  			<li><span class="caret">보드게임 목록</span>
-					    	<ul class="nested">
-					      		<li><span class="caret">수정한 보드게임</span>
-									<ul class="nested">
-										<%= modiHtml %>
-									</ul>
-					      		</li>
-								<li><span class="caret">수정하지 않은 보드게임</span>
-						      		<ul class="nested">
-										<%= unmodiHtml %>
-									</ul>
-								</li> 
-							</ul>
-						</li>
-					</ul>
-				</div>
-				<!-- gameInfo -->
-				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					<%= infoHtml %>
-				</div>
-				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					<h2>게임 추천 관리</h2>
-					<h5>현재 추천 게임</h5>
-					<div class="row my-3 align-items-center">
-						<%= preRecHtml %>
+				<div class="container-fluid bottombody_manage">
+					<div class="row m-3 p-4 bg-white text-black rounded-5">
+						<h2>게임 정보 관리</h2>
+						<ul id="myUL">
+				  			<li><span class="caret">보드게임 목록</span>
+						    	<ul class="nested">
+						      		<li><span class="caret">수정한 보드게임</span>
+										<ul class="nested">
+											<%= modiHtml %>
+										</ul>
+						      		</li>
+									<li><span class="caret">수정하지 않은 보드게임</span>
+							      		<ul class="nested">
+											<%= unmodiHtml %>
+										</ul>
+									</li> 
+								</ul>
+							</li>
+						</ul>
 					</div>
-					<h5>추천 게임을 선택해주세요 (2-5개)</h5>
-					<form action="recommendgameWriteOk" method="post" name="rfrm">
+					<!-- gameInfo -->
+					<div class="row m-3 p-4 bg-white text-black rounded-5">
+						<%= infoHtml %>
+					</div>
+					<div class="row m-3 p-4 bg-white text-black rounded-5">
+						<h2>게임 추천 관리</h2>
+						<h5>현재 추천 게임</h5>
 						<div class="row my-3 align-items-center">
-							<%= recHtml %>
+							<%= preRecHtml %>
 						</div>
-						<div class="row my-2 d-flex justify-content-end align-items-center">
-							<div id="result" class="col-lg-2">
-								0개 선택
+						<h5>추천 게임을 선택해주세요 (2-5개)</h5>
+						<form action="recommendgameWriteOk" method="post" name="rfrm">
+							<div class="row my-3 align-items-center">
+								<%= recHtml %>
 							</div>
-							<div class="col-lg-3">
-								<button id="rbtn" type='button' class='btn btn-dark cbtn'>등록</button>
+							<div class="row my-2 d-flex justify-content-end align-items-center">
+								<div id="result" class="col-lg-2">
+									0개 선택
+								</div>
+								<div class="col-lg-3">
+									<button id="rbtn" type='button' class='btn btn-dark cbtn'>등록</button>
+								</div>
 							</div>
-						</div>
-					</form>
+						</form>
+					</div>
+					<!-- gameList tree -->
+					<script>
+						var toggler = document.getElementsByClassName("caret");
+						var i;
+						
+						for (i = 0; i < toggler.length; i++) {
+						  toggler[i].addEventListener("click", function() {
+						    this.parentElement.querySelector(".nested").classList.toggle("active");
+						    this.classList.toggle("caret-down");
+						  });
+						}
+					</script>
 				</div>
-				<!-- gameList tree -->
-				<script>
-					var toggler = document.getElementsByClassName("caret");
-					var i;
-					
-					for (i = 0; i < toggler.length; i++) {
-					  toggler[i].addEventListener("click", function() {
-					    this.parentElement.querySelector(".nested").classList.toggle("active");
-					    this.classList.toggle("caret-down");
-					  });
-					}
-				</script>
 			</section>
 			<!-- End gameInfo Section -->
 		</main>

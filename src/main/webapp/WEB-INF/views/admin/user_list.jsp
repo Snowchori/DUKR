@@ -253,18 +253,20 @@
 		<main>
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="row m-3 p-4 bg-white text-black rounded-5">
-					<div class="mt-3 p-2">
-						총 <%= totalRecord %>명
-						<button type='button' class='btn btn-dark cbtn float-end' onclick='search()'><i class="bi bi-search"></i></button>
-					</div>
-					<%= userHtml %>
-					<div class="container p-2">
-						<nav class="pagination-outer" aria-label="Page navigation">
-							<ul class="pagination">
-								<%= pageHtml %>
-							</ul>
-						</nav>
+				<div class="container-fluid bottombody_manage">
+					<div class="row m-3 p-4 bg-white text-black rounded-5">
+						<div class="mt-3 p-2">
+							총 <%= totalRecord %>명
+							<button type='button' class='btn btn-dark cbtn float-end' onclick='search()'><i class="bi bi-search"></i></button>
+						</div>
+						<%= userHtml %>
+						<div class="container p-2">
+							<nav class="pagination-outer" aria-label="Page navigation">
+								<ul class="pagination">
+									<%= pageHtml %>
+								</ul>
+							</nav>
+						</div>
 					</div>
 				</div>
 			</section>

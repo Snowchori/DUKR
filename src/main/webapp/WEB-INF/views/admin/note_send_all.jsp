@@ -76,7 +76,7 @@
 		<main>
 			<!-- ======= gameInfo Section ======= -->
 			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="container-fluid d-flex justify-content-center bottombody">
+				<div class="container-fluid d-flex justify-content-center bottombody_manage">
 					<div class="container d-flex justify-content-around bg-light rounded-5 formframe">
 						<form action="" class="row" style="width: 100%;" method="post" name="nfrm">
 							<div class="col-md-12 mb-3">
