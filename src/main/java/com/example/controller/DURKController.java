@@ -1619,25 +1619,30 @@ public class DURKController {
 	
 	@RequestMapping("/gameSearch")
 	public ModelAndView gameSearch(HttpServletRequest request) {
+		boolean chkSearch = false;
 		
 		String keyword = "";
 		if(request.getParameter("stx") != null) {
 			keyword = request.getParameter("stx");
+			chkSearch = true;
 		}
 		
 		String players = "";
 		if(request.getParameter("players") != null) {
 			players = request.getParameter("players");
+			chkSearch = true;
 		}
 		
 		String genre = "";
 		if(request.getParameter("genre") != null) {
 			genre = request.getParameter("genre");
+			chkSearch = true;
 		}
 		
-		String sort = "yearpublished";
+		String sort = "";
 		if(request.getParameter("sort") != null) {
 			sort = request.getParameter("sort");
+			chkSearch = true;
 		} else {
 			sort = "yearpublished";
 		}
@@ -1691,6 +1696,7 @@ public class DURKController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("game/game_search");
 		modelAndView.addObject("lists", lists);
+		modelAndView.addObject("chkSearch", chkSearch);
 		return modelAndView;
 	}
 	

@@ -357,6 +357,8 @@ public class BoardgameDAO {
 					
 
 				}
+				gameTO.setHit("0");
+				gameTO.setRecCnt("0");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -573,7 +575,7 @@ public class BoardgameDAO {
 			Collections.sort(lists, new HitComparator().reversed());
 			break;
 			
-		case "recCtn":
+		case "recCnt":
 			Collections.sort(lists, new RecCntComparator().reversed());
 			break;
 	
