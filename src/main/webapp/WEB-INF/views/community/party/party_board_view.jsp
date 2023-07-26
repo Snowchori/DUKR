@@ -1,3 +1,9 @@
+<%@page import="java.util.Locale"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="java.time.LocalDateTime"%>
+<%@page import="java.time.LocalDate"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.util.Calendar"%>
 <%@page import="com.example.model.party.PartyTO"%>
 <%@page import="org.springframework.beans.factory.annotation.Autowired"%>
 <%@page import="com.example.model.comment.CommentDAO"%>
@@ -33,7 +39,9 @@
 	}
 	String detail = pto.getDetail();
 	String location = pto.getLocation();
-	String date = pto.getDate();
+	String date = pto.getDate().replace(" ", "T");
+	LocalDateTime ldt = LocalDateTime.parse(date);
+	String date2 = ldt.format(DateTimeFormatter.ofPattern("yy년 MM월 dd일(E) a HH시 mm분").withLocale(Locale.forLanguageTag("ko")));
 	String desired = pto.getDesired();
 	String participants = pto.getParticipants();
 	String latitude = pto.getLatitude();
@@ -41,7 +49,7 @@
 	int status = Integer.parseInt(pto.getStatus());
 	System.out.println(address);
 	
-	StringBuilder partyAddress = new StringBuilder("[" + location + "] ").append(address).append("<span class='slash'>&nbsp;-&nbsp;</span>").append(detail);
+	StringBuilder partyAddress = new StringBuilder("[" + location + "] ").append(address).append("&nbsp;-&nbsp;").append(detail);
 %>
 <%
 	String comments = (String)request.getAttribute("comments");
@@ -366,6 +374,15 @@
 		.subject_info{
 			display: flex;
 		}
+		.subject_info{
+			color: #888888;
+		}
+		.subject_info.address{
+			cursor: pointer;
+		}
+		.party_info{
+			display: inline-block;
+		}
 		.main_info{
 			margin-right: auto;
 		}
@@ -395,12 +412,6 @@
 			justify-content: flex-end;
 		}
 		
-		.subject_info{
-			color: #888888;
-		}
-		.subject_info.address{
-			cursor: pointer;
-		}
 		#map{
 			border-radius: 0.5em;
 		}
@@ -464,8 +475,14 @@
 				</div>
 
 				<hr class="mt-4 mb-2">
-					<div style="display: inline-block;">
+					<span class="badge bg-secondary">장소</span>
+					<div class="party_info">
 						<span class="subject_info address" id="loadmap" data-bs-toggle="tooltip" data-bs-placement="bottom" title="지도를 출력합니다"><%= partyAddress %></span>
+					</div>
+					<br>
+					<span class="badge bg-secondary">일정</span>
+					<div class="party_info">
+						<span class="subject_info"><%= date2 %></span>
 					</div>
 					<div id="map" class="border border-5" style="height: 400px; display: none;">
 						<div class="wrap_button">
