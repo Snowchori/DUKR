@@ -1061,6 +1061,7 @@ public class DURKController {
 			// 메뉴버튼: 자기댓글 => 수정/삭제, 남의댓글 => 신고
 			if(isWriter){
 				sbReturn.append("<li><a class='dropdown-item' onclick='modifyComment(\"" + cSeq + "\")'>수정하기</a></li>");	
+				sbReturn.append("<li><a class='dropdown-item' onclick='deleteComment(\"" + cSeq + "\")'>삭제하기</a></li>");
 			}else {
 				sbReturn.append("<li><a class='dropdown-item' onclick='report(\"" + cSeq + "\", \"comment\")'>신고하기</a></li>");	
 			}
