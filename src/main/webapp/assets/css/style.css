@@ -615,7 +615,7 @@ img {
 	height: 100%;
 }
 
-.hover, tr:hover {
+.hover, tr.boardList{
 	cursor: pointer;
 }
 

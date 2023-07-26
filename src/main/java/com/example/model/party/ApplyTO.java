@@ -9,4 +9,5 @@ public class ApplyTO {
 	private String senderSeq;
 	private String partySeq;
 	private String status;
+	private String nickname;
 }

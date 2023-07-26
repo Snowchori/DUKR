@@ -24,7 +24,7 @@
 	StringBuilder boardHtml = new StringBuilder();
 	
 	for(BoardTO list: announceList) {
-		boardHtml.append("<tr onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "\"'>");
+		boardHtml.append("<tr class='boardList' onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "\"'>");
 		boardHtml.append("<td class='board-img'><i class='bi bi-megaphone h1 icon'></i></td>");
 		boardHtml.append("<td><span class='badge bg-secondary'>");
 		boardHtml.append(list.getTag());
@@ -38,7 +38,7 @@
 	}
 	
 	for(BoardTO list: listTO.getBoardLists()) {
-		boardHtml.append("<tr onclick='location.href=\"partyBoardView?seq=" + list.getSeq() + "\"'>");
+		boardHtml.append("<tr class='boardList' onclick='location.href=\"partyBoardView?seq=" + list.getSeq() + "&cpage=" + cpage + "\"'>");
 		boardHtml.append("<td class='board-img'>");
 		if(!list.isHasFile()) {
 			boardHtml.append("<i class='bi bi-file-earmark-text h1'></i>");

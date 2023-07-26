@@ -15,6 +15,11 @@
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf"%>
 
 <%
+	int cpage = 1;
+	if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")){
+		cpage = Integer.parseInt(request.getParameter("cpage"));
+	}
+
 	BoardTO to = (BoardTO)request.getAttribute("to");
 	
 	String boardSeq = to.getSeq();
@@ -55,16 +60,27 @@
 %>
 <%
 	boolean isWriter = (boolean)request.getAttribute("isWriter");
+	ArrayList<ApplyTO> atos = (ArrayList<ApplyTO>)request.getAttribute("atos");
 
 	String strApply = "";
-	StringBuilder delmodBtn = new StringBuilder();
 	StringBuilder reportBtn = new StringBuilder();
+	StringBuilder delmodBtn = new StringBuilder();
+	StringBuilder sbForm = new StringBuilder();
+	
+	String manBtn = "";
 	if(!isWriter){
-		strApply = "&nbsp;<button id='appBtn' class='btn btn-success'><i id='appIcon' class='bi bi-patch-check'></i>&nbsp;<span id='appText'>참여신청</span></button>";
+		strApply = "&nbsp;<button id='appBtn' class='btn btn-dark'><i id='appIcon' class='bi bi-patch-check'></i>&nbsp;<span id='appText'>참여신청</span></button>";
 		reportBtn.append("<button class='btn btn-dark mx-3' style='margin-left: auto;' onclick='report(").append(boardSeq).append(", \"board\")'>신고</button>");
 	}else{
-		delmodBtn.append("<button class='btn btn-dark mx-3' style='margin-left: auto;' onclick='freeBoardDelete(").append(boardSeq).append(")'>삭제</button>")											
-		.append("<button class='btn btn-dark' style='margin-left: auto;' onclick='location.href=\"partyBoardModify?seq=").append(boardSeq).append("\"'>수정</button>");
+		manBtn = "&nbsp;<button id='manBtn' class='btn btn-success'><i class='bi bi-wrench'></i>&nbsp;참여관리</button>";
+		
+		delmodBtn.append("<button class='btn btn-dark' style='margin-left: auto;' onclick='partyBoardDelete(").append(boardSeq).append(")'>삭제</button>")											
+		.append("&nbsp;<button class='btn btn-dark' style='margin-left: auto;' onclick='location.href=\"partyBoardModify?seq=").append(boardSeq).append("\"'>수정</button>");
+		
+		// 참여관리 페이지 전송 폼
+		sbForm.append("<form action='/partyManage' target='applyManage' method='post' id='aform'>");
+		sbForm.append("<input type='hidden' name='boardSeq' value=" + boardSeq + ">");
+		sbForm.append("<input type='hidden' name='memSeq' value=" + memSeq + "></form>");
 	}
 	
 	boolean didUserRec = (boolean)request.getAttribute("didUserRec");
@@ -72,6 +88,7 @@
 	if(didUserRec){
 		recBtnColor = "btn-primary";
 	}
+	
 %>
 <!doctype html>
 <html>
@@ -84,7 +101,7 @@
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">
 			$(() => {
-				const bseq = <%= boardSeq %>, useq = <%= userSeq %>, isWriter = <%= isWriter %>;
+				const bseq = <%= boardSeq %>, mseq = <%= memSeq %>, useq = <%= userSeq %>, isWriter = <%= isWriter %>;
 				let status = <%= status %>;
 				
 				// 지도 생성
@@ -215,18 +232,28 @@
 				let appIcon = null;
 				let appText = null;
 				if(!isWriter){
+					appBtn = document.getElementById("appBtn");
 					appIcon = document.getElementById("appIcon");
 					appText = document.getElementById("appText");
 					
 					if(status == 1){
 						appText.innerText = '신청완료';
 						appIcon.className = "bi bi-patch-check-fill";
+						appBtn.classList.remove('btn-dark');
+						appBtn.classList.add('btn-success');
 					}else if(status == 2){
-						appText.innerText = '승인완료';
+						appText.innerText = '승인됨';
 						appIcon.className = "bi bi-person-check-fill";
+						appBtn.classList.remove('btn-dark');
+						appBtn.classList.add('btn-success');
+					}else if(status == -2){
+						appText.innerText = '거부됨';
+						appIcon.className = "bi bi-x-octagon";
+						appBtn.classList.remove('btn-dark');
+						appBtn.classList.add('btn-danger');
 					}
 					
-					document.getElementById("appBtn").onclick = function() {
+					appBtn.onclick = function() {
 						if(loggedin()){
 							if(status == 0){
 								$.ajax({
@@ -242,7 +269,7 @@
 										appIcon.className = "bi bi-patch-check-fill";
 									}
 								});
-							}else{
+							}else if(status == -1 || status == 1){
 								let tmp = 0;
 								if(status > 0){
 									tmp = -1;
@@ -272,11 +299,58 @@
 						}
 					}
 				}else{
-					
+					document.getElementById('manBtn').onclick = function(){
+						let left = Math.ceil((window.screen.width - 500) / 2)
+						let top = Math.ceil((window.screen.height - 555) / 2)
+						window.open('', 'applyManage', "width=500, height=555, left="+left+", top="+top);
+						document.getElementById('aform').submit();
+					}
 				}
-
+				
 				const tooltips = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'), tip => new bootstrap.Tooltip(tip));
 			});
+
+			// 글 삭제
+			function partyBoardDelete(seq){
+				Swal.fire({
+					title: '글을 삭제하시겠습니까?',
+					showDenyButton: true,
+					confirmButtonText: '네',
+					denyButtonText: `아니오`,
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url:'partyBoardDeleteOk',
+							type:'post',
+				  			data: {
+				  				seq: seq
+				  			},
+				  			success: function(data) {
+					  			if(data == 0) {
+						  			Swal.fire({
+							  			icon: 'success',
+							  			title: '삭제 완료',
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true,
+							  			willClose: () => {
+							  				location.href='partyBoardList?cpage=<%=cpage%>';
+						  				}
+					  				});
+					  			} else {
+						  			Swal.fire({
+							  			icon: 'error',
+							  			title: '삭제 실패',
+							  			confirmButtonText: '확인',
+							  			timer: 1500,
+							  			timerProgressBar : true
+						  			});
+					  			}
+					  		}
+						});
+					}
+				})
+			}
 			
 			// 댓글 추천함수
 			function recommendComment(wSeq, mSeq, cSeq){
@@ -403,13 +477,12 @@
 		.subject_info.address{
 			cursor: pointer;
 		}
-		.party_info{
-			display: inline-block;
-		}
 		.main_info{
 			margin-right: auto;
 		}
-		
+		.party_info{
+			display: inline-block;
+		}
 		.slash {
 			font-size: 15px;
 		}
@@ -523,9 +596,8 @@
 					<button id="recBtn" class="btn <%=recBtnColor %>">
 						<i class="fas fa-thumbs-up"></i> 추천
 					</button>
-					<%= strApply %>
+					<%= strApply %><%= manBtn %><%= sbForm %>
 				</div>
-				
 				<div class="d-flex">
 					<button class="btn btn-dark" style="margin-right: auto;" onclick="location.href='partyBoardList?cpage='">목록</button>
 					

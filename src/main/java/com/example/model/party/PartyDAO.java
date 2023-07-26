@@ -56,6 +56,17 @@ public class PartyDAO {
 		return atos;
 	}
 	
+	public int changeStatus(ApplyTO ato) {
+		int flag = 1;
+		
+		int result = partyMapper.changeStatus(ato);
+		if(result == 1) {
+			flag = 0;
+		}
+		
+		return flag;
+	}
+	
 	// 게시글에 해당하는 모임정보
 	public PartyTO getPartyByBoardSeq(PartyTO to) {
 		to = partyMapper.getPartyByBoardSeq(to);

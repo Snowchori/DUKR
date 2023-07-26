@@ -42,8 +42,12 @@ public interface PartyMapperInter {
 	public PartyTO getPartyByBoardSeq(PartyTO to);
 	
 	/* 게시글에 해당하는 지원자 정보 */
-	@Select("select senderSeq, status from apply where partySeq=#{boardSeq}")
-	public ArrayList<ApplyTO> getAppliers(String boardSeq);
+	@Select("select senderSeq, nickname, status from apply inner join member on senderSeq=seq and partySeq=#{boardSeq} order by adate desc")
+	ArrayList<ApplyTO> getAppliers(String boardSeq);
+	
+	/* 모임 승인 거부 */
+	@Update("update apply set status=#{status} where partySeq=#{partySeq} and senderSeq=#{senderSeq}")
+	int changeStatus(ApplyTO ato);
 	
 	/* 모임 등록 */
 	@Insert("insert into party values(0, #{boardSeq}, #{address}, #{detail}, #{location}, #{date}, #{desired}, 0, #{loccode}, #{latitude}, #{longitude})")
@@ -54,7 +58,7 @@ public interface PartyMapperInter {
 	Integer isApplied(ApplyTO to);
 	
 	/* 모임 신규 신청 */
-	@Insert("insert into apply values(#{senderSeq}, #{partySeq}, 1)")
+	@Insert("insert into apply values(#{senderSeq}, #{partySeq}, 1, now())")
 	int applyPartyOK(ApplyTO to);
 	
 	/* 모임 신청 | 취소*/

@@ -3,6 +3,7 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -974,9 +975,9 @@ public class DURKController {
 		return result;
 	}
 	
-	@RequestMapping( value = {"/freeBoardDeleteOk", "/announceBoardDeleteOK"})
+	@RequestMapping( value = {"/freeBoardDeleteOk", "/partyBoardDeleteOk", "/announceBoardDeleteOK"})
 	public int boardDeleteOK(HttpServletRequest request) {
-				
+		System.out.println(request.getRequestURI());
 		String boardSeq = request.getParameter("seq");
 		int flag = boardDAO.boardDelete(boardSeq);
 
@@ -1383,9 +1384,7 @@ public class DURKController {
 		to = boardDAO.boardView(to);
 		
 		PartyTO pto = partyDAO.getParty(seq, uSeq);
-		
-		ArrayList<ApplyTO> atos = partyDAO.getAppliers(seq);
-		
+
 		if(to == null) {
 			modelAndView.setViewName("community/no_board");
 			
@@ -1419,12 +1418,44 @@ public class DURKController {
 		
 		modelAndView.addObject("to", to);
 		modelAndView.addObject("pto", pto);
-		modelAndView.addObject("atos", atos);
 		modelAndView.addObject("isWriter", isWriter);
 		modelAndView.addObject("didUserRec", didUserRec);
 		modelAndView.addObject("comments", comments);
 		
 		return modelAndView;
+	}
+	
+	@PostMapping("/partyManage")
+	public ModelAndView partyManage(HttpServletRequest request) {
+		ModelAndView model = new ModelAndView("community/party/party_manage");
+		
+		String seq = request.getParameter("boardSeq");
+		String memSeq = request.getParameter("memSeq");
+		
+		
+		model.addObject("seq", seq);
+		model.addObject("memSeq", memSeq);
+		return model;
+	}
+	
+	@PostMapping("/changeApply")
+	public int changeApply(HttpServletRequest request) {
+		ApplyTO ato = new ApplyTO();
+		ato.setPartySeq(request.getParameter("seq"));
+		ato.setSenderSeq(request.getParameter("senderSeq"));
+		ato.setStatus(request.getParameter("status"));
+	
+		int flag = partyDAO.changeStatus(ato);
+		return flag;
+	}
+	
+	@PostMapping("/api/appliers.json")
+	public ArrayList<ApplyTO> getAppliers(HttpServletRequest request){
+		ArrayList<ApplyTO> atos = null;
+		String seq = request.getParameter("seq");
+
+		atos = partyDAO.getAppliers(seq);
+		return atos;
 	}
 	
 	// 모임게시글 수정화면
