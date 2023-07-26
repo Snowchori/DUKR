@@ -47,7 +47,6 @@
 	String latitude = pto.getLatitude();
 	String longitude = pto.getLongitude();
 	int status = Integer.parseInt(pto.getStatus());
-	System.out.println(address);
 	
 	StringBuilder partyAddress = new StringBuilder("[" + location + "] ").append(address).append("&nbsp;-&nbsp;").append(detail);
 %>

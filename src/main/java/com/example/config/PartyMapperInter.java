@@ -19,9 +19,9 @@ import com.example.model.party.PartyTO;
 public interface PartyMapperInter {
 	
 	/* 모임 정보 리스트 반환 */
-	String meetsuffix = "select boardSeq, address, location, date_format(wdate, '%m/%d') date, loccode, left(loccode, 2) loccode2, latitude, longitude "
-			+ "from party where wdate > now() and desired > participants and loccode ";
-	String meetprefix = "order by address, wdate";
+	String meetsuffix = "select boardSeq, address, location, date_format(date, '%m/%d') date, loccode, left(loccode, 2) loccode2, latitude, longitude "
+			+ "from party where date > now() and desired > participants and loccode ";
+	String meetprefix = "order by address, date";
 	
 	@Select(meetsuffix + "like #{loccode} " + meetprefix)
 	ArrayList<ApiPartyTO> getPartiesByDo(String doval);
@@ -29,16 +29,16 @@ public interface PartyMapperInter {
 	ArrayList<ApiPartyTO> getPartiesBySi(String sival);
 	
 	/* 모임 정보 반환 */
-	@Select("select address, detail, location, wdate date, desired, participants, latitude, longitude, ifnull(status, 0) status "
+	@Select("select address, detail, location, date, desired, participants, latitude, longitude, ifnull(status, 0) status "
 			+ "from (select * from party where boardSeq=#{boardSeq}) party left join (select senderSeq, status from apply where partySeq=#{boardSeq}) apply on senderSeq=#{userSeq}")
 	PartyTO getParty(String boardSeq, String userSeq);
 	
 	/* 특정 유저 신청 모임 리스트 반환 */
-	@Select("select boardSeq, address, location, wdate date, loccode, left(loccode, 2) loccode2, latitude, longitude, status from party inner join apply on boardSeq=partySeq and senderSeq=#{userSeq} where status!=-1 " + meetprefix)
+	@Select("select boardSeq, address, location, date, loccode, left(loccode, 2) loccode2, latitude, longitude, status from party inner join apply on boardSeq=partySeq and senderSeq=#{userSeq} where status!=-1 " + meetprefix)
 	ArrayList<ApiPartyTO> getUserParties(String userSeq);
 	
 	// 게시글에 해당하는 모임정보
-	@Select("select seq, boardSeq, address, location, wdate date, detail, location, desired, locCode, latitude, longitude from party where boardSeq=#{boardSeq}")
+	@Select("select seq, boardSeq, address, location, date, detail, location, desired, locCode, latitude, longitude from party where boardSeq=#{boardSeq}")
 	public PartyTO getPartyByBoardSeq(PartyTO to);
 	
 	/* 모임 등록 */
@@ -58,6 +58,6 @@ public interface PartyMapperInter {
 	int togglePartyOK(ApplyTO to);
 	
 	// 모임정보 수정
-	@Update("update party set address=#{address}, detail=#{detail}, location=#{location}, wdate=#{date}, desired=#{desired}, loccode=#{loccode}, latitude=#{latitude}, longitude=#{longitude} where seq=#{seq}")
+	@Update("update party set address=#{address}, detail=#{detail}, location=#{location}, date=#{date}, desired=#{desired}, loccode=#{loccode}, latitude=#{latitude}, longitude=#{longitude} where seq=#{seq}")
 	public int partyModifyOk(PartyTO to); 
 }
