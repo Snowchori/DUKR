@@ -67,16 +67,18 @@
 		
 		//정보수정버튼 기능
 		$('#infoUpdate').on('click', function() {
-			if($('#isEmailValid').val() != 'true'){
-				Swal.fire({
-					title : '회원정보 변경',
-					text  : '먼저 이메일 인증을 인증하세요',
-					icon  : 'error',
-					showCancelButton : false,
-					confirmButtonText : '확인',
-            	});
-				
-				return false;
+			if("<%=email%>" != $('#email').val()){
+				if($('#isEmailValid').val() != 'true'){
+					Swal.fire({
+						title : '회원정보 변경',
+						text  : '먼저 이메일 인증을 인증하세요',
+						icon  : 'error',
+						showCancelButton : false,
+						confirmButtonText : '확인',
+	            	});
+					
+					return false;
+				}
 			}
 			
 			if(userType != 2) {
