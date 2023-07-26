@@ -67,6 +67,20 @@
 		
 		//정보수정버튼 기능
 		$('#infoUpdate').on('click', function() {
+			if("<%=email%>" != $('#email').val()){
+				if($('#isEmailValid').val() != 'true'){
+					Swal.fire({
+						title : '회원정보 변경',
+						text  : '먼저 이메일 인증을 인증하세요',
+						icon  : 'error',
+						showCancelButton : false,
+						confirmButtonText : '확인',
+	            	});
+					
+					return false;
+				}
+			}
+			
 			if(userType != 2) {
 				Swal.fire({
 				title: '회원정보 변경을 위해 비밀번호를 입력하세요',
@@ -210,7 +224,6 @@
 		});
 	});
 </script>
-		
 		<!-- 카카오 소셜인증 -->
 		<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.2.0/kakao.min.js" integrity="sha384-x+WG2i7pOR+oWb6O5GV5f1KN2Ko6N7PTGPS7UlasYWNxZMKQA63Cj/B2lbUmUfuC" crossorigin="anonymous"></script>
 		<script type="text/javascript">
@@ -334,7 +347,79 @@
 	}
 %>
 		</script>
-		
+		<!-- 이메일 인증 스크립트 -->
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('#email').on('input', function(){
+					$('#sendEmail').attr("style", "");
+					$('#isEmailValid').val("false");
+				});
+				
+				$('#sendEmail').on('click', function(){
+					let newEmail = $('#email').val().trim();
+					
+					$.ajax({
+						url: '/emailDuplCheck',
+						type: 'POST',
+						data: {
+							email: newEmail
+						},
+						success: function(res){
+							if(res == "possible"){
+								$('#emailCertify').attr("style", "");
+								Swal.fire({
+									title : '이메일 인증',
+									text  : '입력한 이메일로 인증코드를 발송했습니다',
+									icon  : 'success',
+									showCancelButton : false,
+									confirmButtonText : '확인',
+								});
+							}else{
+								Swal.fire({
+									title : '이메일 변경',
+									text  : '이미 사용중인 이메일 입니다',
+									icon  : 'error',
+									showCancelButton : false,
+									confirmButtonText : '확인'
+					            });
+							}
+						}
+					});
+				});
+				
+				$('#emailCodeCheck').on('click', function(){
+					$.ajax({
+						url: '/emailCodeCheck',
+						type: 'POST',
+						data: {
+							emailCode: $('#emailCode').val()
+						},
+						success: function(res){
+							if(res == "valid"){
+								$('#isEmailValid').val('true');
+								$('#emailCertify').attr("style", "display:none;");
+
+								Swal.fire({
+									title : '이메일 인증',
+									text  : '이메일이 인증되었습니다',
+									icon  : 'success',
+									showCancelButton : false,
+									confirmButtonText : '확인',
+								});
+							}else{
+								Swal.fire({
+									title : '이메일 인증',
+									text  : '인증코드가 일치하지 않습니다',
+									icon  : 'error',
+									showCancelButton : false,
+									confirmButtonText : '확인'
+					            });
+							}
+						}
+					});
+				});
+			});
+		</script>
 		<style type="text/css">	
 			@font-face {
 				font-family: 'SBAggroB';
@@ -385,8 +470,18 @@
 		   						<input type="text" class="form-control" id="id" name="id" value="<%=id%>" readonly="readonly"><br>
 		    					<label class="form-label" id="passwordlabel">비밀번호:</label>
 		   						<input type="text" class="form-control" id="password" name="password" value="" placeholder="비밀번호는 보이지 않습니다" readonly="readonly"><br>
-		    					<label class="form-label">이메일:</label>
-		   						<input type="email" class="form-control" id="email" name="email" value="<%=email%>"><br>
+		    					<label class="form-label">이메일:</label> <br>
+		    					<div class="input-group">	
+		   							<input type="email" class="form-control" id="email" name="email" value="<%=email%>">
+		   							<button class="btn btn-dark" type="button" id="sendEmail" style="display:none;">인증메일 전송</button>
+		   						</div>
+		   						<br>
+		   						<div id="emailCertify" class="input-group" style="display:none;">
+		   							<input class="form-control" type="email" id="emailCode" placeholder="인증 코드"/>
+									<button class="btn btn-dark" type="button" id="emailCodeCheck">인증</button>
+		   						</div>
+		   						<input type="hidden" id="isEmailValid" value="true" />
+		   						<br>
 		   						<button type="button" id="infoUpdate" class="btn btn-dark">정보수정</button>
 		   						<input type="text" class="form-control visually-hidden" id="newpassword" name="newpassword" value=""><br>
 		 					</div>

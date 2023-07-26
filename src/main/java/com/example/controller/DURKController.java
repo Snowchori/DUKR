@@ -784,17 +784,17 @@ public class DURKController {
 		HttpSession session = request.getSession();
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
-				
-		if(userSeq == null) {
+		
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardModify(to);
+		
+		if(userSeq == null || !userSeq.equals(to.getMemSeq())) {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.setViewName("mypage/no_login");
 					
 			return modelAndView;
 		}
-				
-		BoardTO to = new BoardTO();
-		to.setSeq(request.getParameter("seq"));
-		to = boardDAO.boardModify(to);
 					
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("to", to);
@@ -936,16 +936,16 @@ public class DURKController {
 		MemberTO userInfo = (MemberTO)session.getAttribute("logged_in_user");
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
 			
-		if(userSeq == null) {
+		BoardTO to = new BoardTO();
+		to.setSeq(request.getParameter("seq"));
+		to = boardDAO.boardModify(to);
+
+		if(userSeq == null || !userSeq.equals(to.getMemSeq())) {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.setViewName("mypage/no_login");
 				
 			return modelAndView;
 		}
-			
-		BoardTO to = new BoardTO();
-		to.setSeq(request.getParameter("seq"));
-		to = boardDAO.boardModify(to);
 				
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("to", to);
@@ -1463,6 +1463,9 @@ public class DURKController {
 	public ModelAndView partyBoardModify(HttpServletRequest req) {
 		ModelAndView mav = new ModelAndView("community/party/party_board_modify");
 		
+		MemberTO userInfo = (MemberTO)req.getSession().getAttribute("logged_in_user");
+		String userSeq = userInfo.getSeq();
+		
 		String boardSeq = req.getParameter("seq");
 		BoardTO boardTo = new BoardTO();
 		boardTo.setSeq(boardSeq);
@@ -1471,6 +1474,13 @@ public class DURKController {
 		PartyTO partyTo = new PartyTO();
 		partyTo.setBoardSeq(boardSeq);
 		partyTo = partyDAO.getPartyByBoardSeq(partyTo);
+		
+		if(userSeq == null || !userSeq.equals(boardTo.getMemSeq())) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.setViewName("mypage/no_login");
+				
+			return modelAndView;
+		}
 		
 		mav.addObject("boardTo", boardTo);
 		mav.addObject("partyTo", partyTo);
