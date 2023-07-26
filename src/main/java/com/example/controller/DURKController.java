@@ -1384,6 +1384,8 @@ public class DURKController {
 		
 		PartyTO pto = partyDAO.getParty(seq, uSeq);
 		
+		ArrayList<ApplyTO> atos = partyDAO.getAppliers(seq);
+		
 		if(to == null) {
 			modelAndView.setViewName("community/no_board");
 			
@@ -1417,6 +1419,7 @@ public class DURKController {
 		
 		modelAndView.addObject("to", to);
 		modelAndView.addObject("pto", pto);
+		modelAndView.addObject("atos", atos);
 		modelAndView.addObject("isWriter", isWriter);
 		modelAndView.addObject("didUserRec", didUserRec);
 		modelAndView.addObject("comments", comments);

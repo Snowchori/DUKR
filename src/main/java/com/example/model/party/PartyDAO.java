@@ -44,7 +44,18 @@ public class PartyDAO {
 		
 		return pto;
 	}
-
+		
+	public ArrayList<ApplyTO> getAppliers(String boardSeq){
+		ArrayList<ApplyTO> atos = null;
+		
+		atos = partyMapper.getAppliers(boardSeq);
+		if(atos == null) {
+			atos = new ArrayList<ApplyTO>();
+		}
+		
+		return atos;
+	}
+	
 	// 게시글에 해당하는 모임정보
 	public PartyTO getPartyByBoardSeq(PartyTO to) {
 		to = partyMapper.getPartyByBoardSeq(to);

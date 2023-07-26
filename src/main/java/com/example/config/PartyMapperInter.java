@@ -28,18 +28,22 @@ public interface PartyMapperInter {
 	@Select(meetsuffix + "= #{loccode} " + meetprefix)
 	ArrayList<ApiPartyTO> getPartiesBySi(String sival);
 	
+	/* 특정 유저 신청 모임 리스트 반환 */
+	@Select("select boardSeq, address, location, date, loccode, left(loccode, 2) loccode2, latitude, longitude, status from party inner join apply on boardSeq=partySeq and senderSeq=#{userSeq} where status!=-1 " + meetprefix)
+	ArrayList<ApiPartyTO> getUserParties(String userSeq);
+	
 	/* 모임 정보 반환 */
 	@Select("select address, detail, location, date, desired, participants, latitude, longitude, ifnull(status, 0) status "
 			+ "from (select * from party where boardSeq=#{boardSeq}) party left join (select senderSeq, status from apply where partySeq=#{boardSeq}) apply on senderSeq=#{userSeq}")
 	PartyTO getParty(String boardSeq, String userSeq);
 	
-	/* 특정 유저 신청 모임 리스트 반환 */
-	@Select("select boardSeq, address, location, date, loccode, left(loccode, 2) loccode2, latitude, longitude, status from party inner join apply on boardSeq=partySeq and senderSeq=#{userSeq} where status!=-1 " + meetprefix)
-	ArrayList<ApiPartyTO> getUserParties(String userSeq);
-	
 	// 게시글에 해당하는 모임정보
-	@Select("select seq, boardSeq, address, location, date, detail, location, desired, locCode, latitude, longitude from party where boardSeq=#{boardSeq}")
+	@Select("select seq, address, location, date, detail, location, desired, latitude, longitude from party where boardSeq=#{boardSeq}")
 	public PartyTO getPartyByBoardSeq(PartyTO to);
+	
+	/* 게시글에 해당하는 지원자 정보 */
+	@Select("select senderSeq, status from apply where partySeq=#{boardSeq}")
+	public ArrayList<ApplyTO> getAppliers(String boardSeq);
 	
 	/* 모임 등록 */
 	@Insert("insert into party values(0, #{boardSeq}, #{address}, #{detail}, #{location}, #{date}, #{desired}, 0, #{loccode}, #{latitude}, #{longitude})")
