@@ -87,6 +87,18 @@
 				
 				// 댓글쓰기 
 				document.getElementById("cmtWbtn").onclick = function(){
+					if(document.getElementById("cContent").value.trim() == ''){
+						Swal.fire({
+				  			icon: 'error',
+				  			title: '내용을 입력하세요',
+				  			confirmButtonText: '확인',
+				  			timer: 1500,
+				  			timerProgressBar : true
+			  			});
+						
+						return false;
+					}
+					
 					$.ajax({
 						url:'/freeboardCommentWrite',
 						type:'post',
@@ -171,6 +183,19 @@
 			function modifyCommentOk(cmtSeq){
 				const cmtId = 'modifiedCmt' + cmtSeq;
 				const modifiedContent = $('#' + cmtId).val();
+				
+				if(modifiedContent.trim() == ''){
+					Swal.fire({
+			  			icon: 'error',
+			  			title: '내용을 입력하세요',
+			  			confirmButtonText: '확인',
+			  			timer: 1500,
+			  			timerProgressBar : true
+		  			});
+					
+					return false;
+				}
+				
 				$.ajax({
 					url: '/modifyComment',
 					type: 'POST',
