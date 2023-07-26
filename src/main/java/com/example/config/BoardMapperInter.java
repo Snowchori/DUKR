@@ -55,7 +55,7 @@ public interface BoardMapperInter {
 	public BoardTO boardView(BoardTO to);
 	
 	// seq로 글정보 가져오기( 글 수정 ) - 제목, 내용, 태그
-	@Select("select seq, subject, content, tag from board where seq = #{seq}")
+	@Select("select seq, memSeq, subject, content, tag from board where seq = #{seq}")
 	public BoardTO boardModify(BoardTO to);
 	
 	// 게시글 수정하기
