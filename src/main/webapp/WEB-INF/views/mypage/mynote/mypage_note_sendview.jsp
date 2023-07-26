@@ -88,12 +88,11 @@
 								readonly="readonly"
 							><%=noteTO.getContent() %></textarea>
 						</div>
-						<div class="col-12 mb-3">
-							<input type="button" class="btn btn-dark float-end" value="전송" onclick=""/>
-						</div>
 					</form>
 				</div>
 			</div>
+			<br/>
+			<br/>
 		</main>
 		<footer>
 			<!-- 최하단 디자인 영역 -->

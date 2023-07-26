@@ -89,7 +89,7 @@
 							><%=noteTO.getContent() %></textarea>
 						</div>
 						<div class="col-12 mb-3">
-							<input type="button" class="btn btn-dark float-end" value="전송" onclick=""/>
+							<input type="button" class="btn btn-dark float-end" value="답변 보내기" onclick="location.href='mailWrite?reciver=<%=noteTO.getSenderSeq()%>'"/>
 						</div>
 					</form>
 				</div>

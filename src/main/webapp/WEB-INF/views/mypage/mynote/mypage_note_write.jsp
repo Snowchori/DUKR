@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<%
+	String reciver = request.getParameter("reciver");
+	
+	if(reciver == null || reciver.equals("")) {
+		reciver = "";
+	}
+%>
 <!doctype html>
 <html>
 	<head>
@@ -117,7 +124,7 @@
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="content" class="form-label">유저 닉네임</label>
-							<input type="text" class="form-control" placeholder="닉네임을 입력하세요" name="subject" id="nickname"/>
+							<input type="text" class="form-control" placeholder="닉네임을 입력하세요" value="<%=reciver %>" name="subject" id="nickname"/>
 						</div>
 						<div class="col-12 mb-3">
 							<label for="content" class="form-label">내용</label>
