@@ -136,7 +136,7 @@
 			          			Swal.fire('이미 등록된 이메일 입니다');
 			          		}else{
 			          			Swal.fire('입력한 이메일로 인증코드를 발송했습니다');
-			          			document.getElementById("emailCode").style.visibility = "visible";
+			          			document.getElementById("emailCodeFrm").style.display = "";
 			          			console.log(res);
 			          		}
 			          	},
@@ -159,6 +159,8 @@
 			          		if(res == "valid"){
 			          			document.getElementById('isEmailValid').value = "1";
 			          			Swal.fire('이메일이 성공적으로 인증되었습니다');
+			          			document.getElementById("emailCodeFrm").style.display = "none";
+			          			$('#emailCode').val('');
 			          		}else if(res == 'invalid') {
 			          			Swal.fire('인증코드가 일치하지 않습니다');
 			          		}else{
@@ -265,7 +267,7 @@
 						</div>
 						<br>
 						<!-- 이메일 인증코드 -->
-						<div class="input-group" id="emailCode"  style='visibility:hidden'>
+						<div class="input-group" id="emailCodeFrm"  style='display:none'>
 							<input class="form-control" type="email" id="emailCode" name="emailCode" placeholder="인증코드"/>&nbsp;
 							<span class="input-group-btn">
 								<button class="btn btn-secondary" type="button" id="codeCheck">확인</button>
