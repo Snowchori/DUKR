@@ -27,6 +27,10 @@
 	PartyTO pto = (PartyTO)request.getAttribute("pto");
 	
 	String address = pto.getAddress();
+	String address2 = address;
+	if(address2.contains("(")){
+		address2 = address2.substring(0, address2.indexOf("("));
+	}
 	String detail = pto.getDetail();
 	String location = pto.getLocation();
 	String date = pto.getDate();
@@ -37,7 +41,7 @@
 	int status = Integer.parseInt(pto.getStatus());
 	System.out.println(address);
 	
-	StringBuilder partyAddress = new StringBuilder("[" + location + "] ").append(address).append("<span class='slash'> - </span>").append(detail);
+	StringBuilder partyAddress = new StringBuilder("[" + location + "] ").append(address).append("<span class='slash'>&nbsp;-&nbsp;</span>").append(detail);
 %>
 <%
 	String comments = (String)request.getAttribute("comments");
@@ -90,11 +94,33 @@
 				});
 				
 				document.getElementById('linkMap').onclick = function(){
-					const center = map.getCenter(),
-					lat = center.getLat(),
-					lng = center.getLng();
-					console.log('https://map.kakao.com/link/map/' + encodeURIComponent('<%=address%>') + ',' + lat + ',' + lng);
-					window.open('https://map.kakao.com/link/map/' + encodeURIComponent('<%=address%>') + ',' + lat + ',' + lng);
+					lat = position.getLat(),
+					lng = position.getLng();
+					window.open('https://map.kakao.com/link/map/' + encodeURIComponent('<%=address2%>') + ',' + lat + ',' + lng);
+				}
+				
+				document.getElementById('resetMap').onclick = function(){
+					map.setCenter(position);
+					map.setLevel(6);
+				}
+				
+				// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤 생성
+				const mapTypeControl = new kakao.maps.MapTypeControl();
+				// 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성
+				const zoomControl = new kakao.maps.ZoomControl();
+				// 지도에 컨트롤을 추가
+				// kakao.maps.ControlPosition 컨트롤이 표시될 위치를 정의 TOPLEFT는 왼쪽 위를 의미
+				map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPLEFT);
+				map.addControl(zoomControl, kakao.maps.ControlPosition.LEFT);
+				
+				document.getElementById('loadmap').onclick = function(){
+					if(container.style.display === 'none'){
+						container.style.display = 'block';
+						map.relayout();
+						map.setCenter(position);
+					}else{
+						container.style.display = 'none';
+					}
 				}
 				
 				function loggedin(){
@@ -230,6 +256,7 @@
 					
 				}
 
+				const tooltips = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'), tip => new bootstrap.Tooltip(tip));
 			});
 			
 			// 댓글 추천함수
@@ -328,6 +355,8 @@
 					}
 				} 
 			}
+			
+			
 		</script>
 	<style>
 		.bottombody{
@@ -366,10 +395,10 @@
 			justify-content: flex-end;
 		}
 		
-		.party_info{
+		.subject_info{
 			color: #888888;
 		}
-		.party_info.address{
+		.subject_info.address{
 			cursor: pointer;
 		}
 		#map{
@@ -382,13 +411,13 @@
 		.btn_resetMap {background-position:-69px 0;}
 		
 		@media (max-width: 575px){
-			.subject_info, .party_info{
+			.subject_info{
 				font-size: 14px;
 			}
 		}
 		
 		@media (min-width: 576px){
-			.subject_info, .party_info{
+			.subject_info{
 				font-size: 16px;
 			}
 		}
@@ -411,7 +440,7 @@
 
 				<div class="subject">
 					<b><%=subject%></b>
-					<div class="subject_info party_info mt-2">
+					<div class="subject_info mt-2">
 						<div class="main_info">
 							<div class="dropdown">
 								<a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"> <b><%=writer%></b>
@@ -435,11 +464,13 @@
 				</div>
 
 				<hr class="mt-4 mb-2">
-					<span class="party_info address" id="loadmap"><%= partyAddress %></span>
-					<div id="map" class="border border-5" style="height: 400px; display: block;">
+					<div style="display: inline-block;">
+						<span class="subject_info address" id="loadmap" data-bs-toggle="tooltip" data-bs-placement="bottom" title="지도를 출력합니다"><%= partyAddress %></span>
+					</div>
+					<div id="map" class="border border-5" style="height: 400px; display: none;">
 						<div class="wrap_button">
-							<a href="javascript:void(0);" class="btn_comm btn_linkMap" id="linkMap" target="_blank"><span class="screen_out">로드뷰 크게보기</span></a>
-							<a href="javascript:void(0);" class="btn_comm btn_resetMap" id="resetMap"><span class="screen_out">로드뷰 크게보기</span></a>
+							<a href="javascript:void(0);" class="btn_comm btn_linkMap" id="linkMap"><span class="screen_out">지도 크게보기</span></a>
+							<a href="javascript:void(0);" class="btn_comm btn_resetMap" id="resetMap"><span class="screen_out">지도 초기화</span></a>
 						</div>
 					</div>
 				<hr class="mb-4 mt-2">
