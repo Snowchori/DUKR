@@ -788,7 +788,7 @@ public class DURKController {
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardModify(to);
 		
-		if(userSeq == null || userSeq != to.getMemSeq()) {
+		if(userSeq == null || !userSeq.equals(to.getMemSeq())) {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.setViewName("mypage/no_login");
 					
@@ -938,8 +938,8 @@ public class DURKController {
 		BoardTO to = new BoardTO();
 		to.setSeq(request.getParameter("seq"));
 		to = boardDAO.boardModify(to);
-		
-		if(userSeq == null || userSeq != to.getMemSeq()) {
+
+		if(userSeq == null || !userSeq.equals(to.getMemSeq())) {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.setViewName("mypage/no_login");
 				
@@ -1444,7 +1444,7 @@ public class DURKController {
 		partyTo.setBoardSeq(boardSeq);
 		partyTo = partyDAO.getPartyByBoardSeq(partyTo);
 		
-		if(userSeq == null || userSeq != boardTo.getMemSeq()) {
+		if(userSeq == null || !userSeq.equals(boardTo.getMemSeq())) {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.setViewName("mypage/no_login");
 				
