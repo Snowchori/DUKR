@@ -337,7 +337,19 @@
 			function modifyCommentOk(cmtSeq){
 				const cmtId = 'modifiedCmt' + cmtSeq;
 				const modifiedContent = $('#' + cmtId).val();
-				//console.log(modifiedContent);
+				
+				if(modifiedContent.trim() == ''){
+					Swal.fire({
+			  			icon: 'error',
+			  			title: '내용을 입력하세요',
+			  			confirmButtonText: '확인',
+			  			timer: 1500,
+			  			timerProgressBar : true
+		  			});
+					
+					return false;
+				}
+				
 				$.ajax({
 					url: '/modifyComment',
 					type: 'POST',
