@@ -288,9 +288,13 @@
 										status = tmp;
 										if(status == -1){
 											appText.innerText = '참여신청';
+											appBtn.classList.remove('btn-success');
+											appBtn.classList.add('btn-dark');
 											appIcon.className = "bi bi-patch-check";
 										}else{
 											appText.innerText = '신청완료';
+											appBtn.classList.remove('btn-dark');
+											appBtn.classList.add('btn-success');
 											appIcon.className = "bi bi-patch-check-fill";
 										}
 									}
