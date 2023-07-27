@@ -38,7 +38,7 @@ public interface PartyMapperInter {
 	PartyTO getParty(String boardSeq, String userSeq);
 	
 	// 게시글에 해당하는 모임정보
-	@Select("select seq, address, location, date, detail, location, desired, latitude, longitude from party where boardSeq=#{boardSeq}")
+	@Select("select seq, address, location, date, detail, location, desired, locCode, latitude, longitude from party where boardSeq=#{boardSeq}")
 	public PartyTO getPartyByBoardSeq(PartyTO to);
 	
 	/* 게시글에 해당하는 지원자 정보 */

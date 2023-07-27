@@ -201,24 +201,11 @@
 				// 장소 별칭
 				const location = document.getElementById('location');
 				
-				let subject_ok = false;
-				let date_ok = false;
+				let subject_ok = true;
+				let date_ok = true;
 				let adr_ok = true;
-				let detail_ok = false;
-				let loc_ok = false;
-				
-				subject_ok = true;
-				subject.classList.remove('is-invalid');
-				subject.classList.add('is-valid');
-				date_ok = true;
-				date.classList.remove('is-invalid');
-				date.classList.add('is-valid');
-				detail_ok = true;
-				detail.classList.remove('is-invalid');
-				detail.classList.add('is-valid');
-				loc_ok = true;
-				location.classList.remove('is-invalid');
-				location.classList.add('is-valid');
+				let detail_ok = true;
+				let loc_ok = true;
 				
 				subject.addEventListener('input', () => {
 					if(subject.value.length >= 2){
@@ -397,8 +384,8 @@
 		<header class="py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
-					<h1 class="title" id="title">모임등록</h1>
-					<p class="lead fw-normal text-white-50 mb-0">Register Party</p>
+					<h1 class="title" id="title">모임수정</h1>
+					<p class="lead fw-normal text-white-50 mb-0">Modify Party</p>
 				</div>
 			</div>
 		</header>
@@ -412,24 +399,24 @@
 					<input type="hidden" id="loccode" name="loccode"/>
 					<div class="col-md-6 mb-3">
 						<label for="subject" class="form-label">제목 <span class="essential">*</span></label>
-						<input type="text" class="form-control" placeholder="제목" name="subject" id="subject"/>
+						<input type="text" class="form-control is-valid" placeholder="제목" name="subject" id="subject"/>
 						<div class="invalid-feedback">제목을 2자 이상 입력하셔야 합니다.</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="date" class="form-label">날짜 선택 <span class="essential">*</span></label>
-						<input type="datetime-local" min="<%=sdate%>" max="<%=ldate%>" class="form-control" id="date" name="date"/>
+						<input type="datetime-local" min="<%=sdate%>" max="<%=ldate%>" class="form-control is-valid" id="date" name="date"/>
 						<div class="invalid-feedback">날짜를 선택하셔야 합니다. (<%= sdate.replace("T", " ") %> ~ <%= ldate.replace("T", " ") %>)</div>
 					</div>
 					<div class="col-12 mb-3">
 						<label for="address" class="form-label">모임 장소 <span class="essential">*</span></label>
 						<div class="input-group has-validation">
-							<input type="text" class="form-control" id="address" name="address" placeholder="주소" readonly>
+							<input type="text" class="form-control is-valid" id="address" name="address" placeholder="주소" readonly>
 							<input type="button" id="zbtn" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal" value="우편번호 찾기"/>
 							<div class="invalid-feedback">주소를 선택하셔야 합니다.</div>
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
-						<input type="text" class="form-control" id="detail" name="detail" placeholder="상세주소">
+						<input type="text" class="form-control is-valid" id="detail" name="detail" placeholder="상세주소">
 						<div class="invalid-feedback">상세주소를 2자 이상 입력하셔야 합니다.</div>
 					</div>
 					<div class="col-md-6 mb-3">
@@ -437,7 +424,7 @@
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="location" class="form-label">장소 별칭 <span class="essential">*</span></label>
-						<input type="text" class="form-control" id="location" name="location" placeholder="별칭">
+						<input type="text" class="form-control is-valid" id="location" name="location" placeholder="별칭">
 						<div class="invalid-feedback">장소 별칭을 2자 이상 입력하셔야 합니다.</div>
 					</div>
 					<div class="col-md-6 mb-3">
