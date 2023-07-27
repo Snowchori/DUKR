@@ -1056,5 +1056,24 @@ label{
 	background-color: #f2f2f2;
 }
 .strike{
+	text-decoration: line-through wavy;
+}
+
+/*-----------------------------*/
+
+.manage{
+	display: flex;
+	justify-content: center;
+}
+
+.accepted{
+	color: green;
+}
+
+.denied{
+	color: red;
+}
+
+.canceled{
 	text-decoration: line-through;
 }

@@ -51,7 +51,7 @@
 								$(`#tbody .\${applier.senderSeq}`).append('<td><div class="manage"><span><select id="sel'+applier.senderSeq+'" name="status" class="form-select">' + access + deny + '</select></span></div></td>');
 								break;
 							case '-1':
-								$(`#tbody .\${applier.senderSeq}`).append('<td class="canceled">취소</td>');
+								$(`#tbody .\${applier.senderSeq}`).append('<td>취소</td>');
 								break;
 							case '-2':
 								$(`#tbody .\${applier.senderSeq}`).append('<td class="denied">거부</td>');
@@ -76,43 +76,23 @@
 									if(result == 0){
 										location.reload();
 									}else{
-										alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다\n[' + stat + ']' + error);
+										alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.');
 									}
 								},
 								error: function(xhr, stat, error){
-									alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다\n[' + stat + ']' + error);
+									alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.\n[' + stat + ']' + error);
 								}
 							});
 						}
 					}
 				}, 
 				error: function(xhr, stat, err){
-					alert('참여정보를 불러오는 중 문제가 발생했습니다.\n[' + stat + ']' + err);
+					alert('참여정보를 불러오는 중 문제가 발생하였습니다.\n[' + stat + ']' + err);
 				}
 			});
 			
 		});
 	</script>
-	<style type="text/css">
-		html{
-		}
-		.manage{
-			display: flex;
-			justify-content: center;
-		}
-		
-		.accepted{
-			color: rgb(0, 246, 0);
-		}
-		
-		.denied{
-			color: red;
-		}
-		
-		.canceled{
-			text-decoration: line-through;
-		}
-	</style>
 </head>
 <body>
 	<div class="container-fluid">

@@ -264,9 +264,20 @@
 										memSeq : useq,
 										status : status
 									},
-									success: function(result){
-										status = 1;
-										appIcon.className = "bi bi-patch-check-fill";
+									success: function(flag){
+										if(flag == 0){
+											status = 1;
+											appText.innerText = '신청완료';
+											appBtn.classList.remove('btn-dark');
+											appBtn.classList.add('btn-success');
+											appIcon.className = "bi bi-patch-check-fill";
+										}else{
+											alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.');
+											location.reload();
+										}
+									},
+									error: function(xhr, stat, error){
+										alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.\n[' + stat + ']' + error);
 									}
 								});
 							}else if(status == -1 || status == 1){
@@ -284,19 +295,27 @@
 										memSeq : useq,
 										status : tmp
 									},
-									success: function(result){
-										status = tmp;
-										if(status == -1){
-											appText.innerText = '참여신청';
-											appBtn.classList.remove('btn-success');
-											appBtn.classList.add('btn-dark');
-											appIcon.className = "bi bi-patch-check";
+									success: function(flag){
+										if(flag == 0){
+											status = tmp;
+											if(status == -1){
+												appText.innerText = '참여신청';
+												appBtn.classList.remove('btn-success');
+												appBtn.classList.add('btn-dark');
+												appIcon.className = "bi bi-patch-check";
+											}else{
+												appText.innerText = '신청완료';
+												appBtn.classList.remove('btn-dark');
+												appBtn.classList.add('btn-success');
+												appIcon.className = "bi bi-patch-check-fill";
+											}
 										}else{
-											appText.innerText = '신청완료';
-											appBtn.classList.remove('btn-dark');
-											appBtn.classList.add('btn-success');
-											appIcon.className = "bi bi-patch-check-fill";
+											alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.');
+											location.reload();
 										}
+									},
+									error: function(xhr, stat, error){
+										alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.\n[' + stat + ']' + error);
 									}
 								});
 							}

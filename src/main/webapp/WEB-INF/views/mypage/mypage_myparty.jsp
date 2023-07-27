@@ -108,8 +108,22 @@
 							}else{
 								data.strike = '';
 							}
+							
+							switch(data.status){
+							case "2":
+								data.status = 'accepted';
+								break;
+							case "1":
+								data.status = 'applied';
+								break;
+							case "-1":
+								data.status = 'canceled';
+								break;
+							case "-2":
+								data.status = 'denied';
+								break;
+							}
 						}
-						console.log(datas);
 						setTimeout(() => drawMap(datas), 100);
 					},
 					error: (xhr, status, error) => {
@@ -153,13 +167,13 @@
 							// 인포윈도우 작성될 정보(마커 인덱스, 내용) 배열로 저장
 							infoContents.push({
 								marker: markers.length-1,
-								content: `<div class="mapinfo"><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike}">\${inner}</a>\${rvshortcut}`,
-								content2: `<div class="mapinfo"><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike}">\${inner}</a>`
+								content: `<div class="mapinfo"><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike} \${datas[i].status}">\${inner}</a>\${rvshortcut}`,
+								content2: `<div class="mapinfo"><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike} \${datas[i].status}">\${inner}</a>`
 							});
 
 						} else {
-							infoContents[infoContents.length-1].content = infoContents[infoContents.length-1].content + `<br/><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike}">\${inner}</a>`;
-							infoContents[infoContents.length-1].content2 = infoContents[infoContents.length-1].content2 + `<br/><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike}">\${inner}</a>`;
+							infoContents[infoContents.length-1].content = infoContents[infoContents.length-1].content + `<br/><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike} \${datas[i].status}">\${inner}</a>`;
+							infoContents[infoContents.length-1].content2 = infoContents[infoContents.length-1].content2 + `<br/><a href="partyBoardView?seq=\${datas[i].boardSeq}" class="meet \${datas[i].strike} \${datas[i].status}">\${inner}</a>`;
 						}
 					}
 					

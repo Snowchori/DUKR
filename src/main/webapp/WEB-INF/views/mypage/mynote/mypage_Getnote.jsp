@@ -194,7 +194,7 @@
 			</div>
 			<!-- 받은 쪽지 -->
 		</main>
-		<footer class="container-fluid d-flex justify-content-center bg-light">
+		<footer class="container-fluid d-flex justify-content-center">
 			<div class="container demo mx-5 p-2">
 				<nav class="pagination-outer" aria-label="Page navigation">
 					<ul class="pagination">
