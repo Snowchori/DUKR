@@ -423,7 +423,7 @@
 				<section class="page-section bg-light" id="portfolio">
 			        <div class="container" id="p1">
 			            <div class="text-center">
-			                <h2 class="searchResult section-heading text-uppercase">검색결과</h2>
+			                <h2 class="searchResult section-heading text-uppercase">검색 결과</h2>
 			                <h3 class="section-subheading text-muted"></h3>
 			            </div>
 			            
