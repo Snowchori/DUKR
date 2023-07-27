@@ -44,18 +44,18 @@
 						switch(applier.status){
 							case '2':
 								$(`#tbody .\${applier.senderSeq}`).append('<td class="accepted">승인</td>');
-								$(`#tbody .\${applier.senderSeq}`).append('<td class="manage"><span><select id="sel'+applier.senderSeq+'" name="status" class="form-select">' + deny + '</select></span></td>');
+								$(`#tbody .\${applier.senderSeq}`).append('<td><div class="manage"><span><select id="sel'+applier.senderSeq+'" name="status" class="form-select">' + deny + '</select></span></div></td>');
 								break;
 							case '1':
 								$(`#tbody .\${applier.senderSeq}`).append('<td>신청중</td>');
-								$(`#tbody .\${applier.senderSeq}`).append('<td class="manage"><span><select id="sel'+applier.senderSeq+'" name="status" class="form-select">' + access + deny + '</select></form></td>');
+								$(`#tbody .\${applier.senderSeq}`).append('<td><div class="manage"><span><select id="sel'+applier.senderSeq+'" name="status" class="form-select">' + access + deny + '</select></span></div></td>');
 								break;
 							case '-1':
 								$(`#tbody .\${applier.senderSeq}`).append('<td class="canceled">취소</td>');
 								break;
 							case '-2':
 								$(`#tbody .\${applier.senderSeq}`).append('<td class="denied">거부</td>');
-								$(`#tbody .\${applier.senderSeq}`).append('<td class="manage"><span><select id="sel'+applier.senderSeq+'" name="status" class="form-select">' + access + '</select></span></td>');
+								$(`#tbody .\${applier.senderSeq}`).append('<td><div class="manage"><span><select id="sel'+applier.senderSeq+'" name="status" class="form-select">' + access + '</select></span></div></td>');
 								break;
 						}
 						
