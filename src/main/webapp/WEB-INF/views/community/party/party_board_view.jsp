@@ -468,36 +468,6 @@
 			
 		</script>
 	<style>
-		.bottombody{
-			max-width: 992px;
-		}
-		
-		.subject_info{
-			display: flex;
-		}
-		.subject_info{
-			color: #888888;
-		}
-		.subject_info.address{
-			cursor: pointer;
-		}
-		.main_info{
-			margin-right: auto;
-		}
-		.party_info{
-			display: inline-block;
-		}
-		.slash {
-			font-size: 15px;
-		}
-		
-		.dropdown {
-			display: inline-block;
-		} 
-		
-		.disinherit {
-			color: black;
-		}
 		
 		img {
 			max-width: 100%;
@@ -510,27 +480,6 @@
 		.image.image-style-side{
 			display: flex;
 			justify-content: flex-end;
-		}
-		
-		#map{
-			border-radius: 0.5em;
-		}
-		.screen_out {display:block;overflow:hidden;position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;text-indent:-9999px;}
-    	.wrap_button {position:absolute;right:15px;top:12px;z-index:2}
-		.btn_comm {float:left;display:block;width:70px;height:27px;background:url(/assets/img/kakao/sample_button_control.png) no-repeat;}
-		.btn_linkMap {background-position:0 0;}
-		.btn_resetMap {background-position:-69px 0;}
-		
-		@media (max-width: 575px){
-			.subject_info{
-				font-size: 14px;
-			}
-		}
-		
-		@media (min-width: 576px){
-			.subject_info{
-				font-size: 16px;
-			}
 		}
 	</style>
 	

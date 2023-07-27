@@ -7,6 +7,8 @@
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
+		<!-- Template Main CSS File -->
+		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- kakao Map API -->
 		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62a899b99d2f71a7e481ba3867c742b7&libraries=services,clusterer">
 		</script>
@@ -508,74 +510,7 @@
 		</script>
 		<!-- 개별 CSS -->
 		<style type="text/css">	
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-			
-			.title {
-				font-family: SBAggroB;
-			}
-			
-			html {
-				min-width : 280px;
-			}
-			
-			a {
-				text-decoration: none;
-			}.meet{
-				color: black;
-			}
-			
-			label{
-				font-weight: bold;
-			}
-			
-			.mapframe{
-				max-width: 1200px;
-			}
-				
-			#map{
-				border-radius: 0.5em;
-			}
-			.mapinfo{
-				width:190px;
-				text-align:center;
-			}
-			.refresh{
-				display: none;
-			}
-			
-			.swal2-title {
-				font-size: 1.5em;
-			}
-			
-			#roadviewControl {position:absolute;top:90%;left:5px;width:42px;height:42px;z-index: 2;cursor: pointer;visibility:hidden; background: url(/assets/img/kakao/img_search.png) 0 -450px no-repeat;}
-			#roadviewControl.active {background-position:0 -350px;}
-			#container {overflow:hidden;height:50em;position:relative;}
-			
-			#mapWrapper {width:100%;height:100%;z-index:1;}
-			#container.view_roadview #mapWrapper {width: 50%;}
-			#mroadviewControl {position:absolute;top:5px;left:5px;width:42px;height:42px;z-index: 2;cursor: pointer; background: url(/assets/img/kakao/img_search.png) 0 -450px no-repeat;}
-			#mroadviewControl.active {background-position:0 -350px;}
-			
-			#rvWrapper {width:50%;height:100%;top:0;right:0;position:absolute;z-index:0;}
-			#close {position: absolute;padding: 4px;top: 5px;left: 5px;z-index: 3;cursor: pointer;background: #fff;border-radius: 4px;border: 1px solid #c8c8c8;box-shadow: 0px 1px #888;}
-			#close .img {display: block;background: url(/assets/img/kakao/rv_close.png) no-repeat;width: 14px;height: 14px;}
-			
-			@media (min-width: 576px) and (max-width: 991px){
-				.refresh{
-					display: inline-block;
-				}
-			}
-			
-			@media (min-width: 992px){
-				#map-side{
-					padding: 0em 1em 0em 1em;
-				}
-			}
+			#roadviewControl {visibility:hidden;}
 		</style>
 	</head>
 	<body>
