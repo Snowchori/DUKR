@@ -339,7 +339,7 @@
 				}
 				
 				const toggleRoadview = position => {
-					// 인자로 전달받은 좌표와 50m 반경 내 가장 가까운 로드뷰 파노라마ID로 로드뷰 출력
+					// 인자로 전달받은 좌표와 100m 반경 내 가장 가까운 로드뷰 파노라마ID로 로드뷰 출력
 					rvClient.getNearestPanoId(position, 100, function(panoId){
 						if(panoId === null){
 							toggleMapWrapper(true, position);

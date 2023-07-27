@@ -37,11 +37,8 @@
 					seq: seq
 				},
 				success: function(data){
-					console.log(data);
 					desired = parseInt(data.desired);
 					participants = parseInt(data.participants);
-					console.log(desired);
-					console.log(participants);
 					
 					$('#partyStatus').html( '(' + participants + '/' + desired + ')' );
 				}

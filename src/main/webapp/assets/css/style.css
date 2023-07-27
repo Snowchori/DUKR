@@ -1077,3 +1077,7 @@ label{
 .canceled{
 	text-decoration: line-through;
 }
+			
+.essential{
+	color: red;
+}

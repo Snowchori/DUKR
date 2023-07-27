@@ -19,8 +19,8 @@
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
-		<!-- jQuery Google CDN -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+		<!-- Template Main CSS File -->
+		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- Daum Post API(postcode.v2) -->
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<!-- kakao Map API -->
@@ -301,36 +301,6 @@
 		</script>
 		<!-- 개별 CSS -->
 		<style type="text/css">	
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-			
-			.title {
-				font-family: SBAggroB;
-			}
-			
-			html {
-				min-width : 280px;
-			}
-			
-			a {
-				text-decoration: none;
-			}
-			
-			label{
-				font-weight: bold;
-			}
-			
-			.bottombody{
-				max-width: 992px;
-			}
-			.essential{
-				color: red;
-			}
-		
 			.ck-editor__editable { height: 400px; }
 		</style>
 	</head>
