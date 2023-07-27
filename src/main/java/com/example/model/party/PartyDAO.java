@@ -61,10 +61,27 @@ public class PartyDAO {
 		
 		int result = partyMapper.changeStatus(ato);
 		if(result == 1) {
-			flag = 0;
+			String status = ato.getStatus();
+			String boardSeq = ato.getPartySeq();
+			
+			if(status.equals("2")) {
+				int result2 = partyMapper.changeParticipants("+1", boardSeq);
+				if(result2 == 1) {
+					flag = 0;
+				}
+			}else if(status.equals("-2")) {
+				int result2 = partyMapper.changeParticipants("-1", boardSeq);
+				if(result2 == 1) {
+					flag = 0;
+				}
+			}
 		}
 		
 		return flag;
+	}
+	
+	public PartyTO getPartyStatus(PartyTO pto) {
+		return partyMapper.getPartyStatus(pto);
 	}
 	
 	// 게시글에 해당하는 모임정보

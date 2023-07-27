@@ -48,6 +48,10 @@ public interface PartyMapperInter {
 	/* 모임 승인 거부 */
 	@Update("update apply set status=#{status} where partySeq=#{partySeq} and senderSeq=#{senderSeq}")
 	int changeStatus(ApplyTO ato);
+	@Update("update party set participants=participants${incdec} where boardSeq=#{boardSeq}")
+	int changeParticipants(String incdec, String boardSeq);
+	@Select("select desired, participants from party where boardSeq=#{boardSeq}")
+	PartyTO getPartyStatus(PartyTO pto);
 	
 	/* 모임 등록 */
 	@Insert("insert into party values(0, #{boardSeq}, #{address}, #{detail}, #{location}, #{date}, #{desired}, 0, #{loccode}, #{latitude}, #{longitude})")

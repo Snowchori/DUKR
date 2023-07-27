@@ -1449,6 +1449,14 @@ public class DURKController {
 		return flag;
 	}
 	
+	@PostMapping("/partyStatus")
+	public PartyTO partyStatus(HttpServletRequest request) {
+		PartyTO pto = new PartyTO();
+		pto.setBoardSeq(request.getParameter("seq"));
+		
+		return partyDAO.getPartyStatus(pto);
+	}
+	
 	@PostMapping("/api/appliers.json")
 	public ArrayList<ApplyTO> getAppliers(HttpServletRequest request){
 		ArrayList<ApplyTO> atos = null;

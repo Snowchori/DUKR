@@ -20,7 +20,7 @@
 		let seq = <%= seq %>;
 		let isWriter = <%= isWriter %>;
 		let users = [];
-		
+		let desired = null, participants = null;
 		if(!isWriter){
 			alert('잘못된 접근입니다.');
 			window.close();
@@ -29,6 +29,24 @@
 		const access = "<option value=2>승인</option>", deny = "<option value=-2>거부</option>";
 		
 		$(() => {
+			$.ajax({
+				url: '/partyStatus',
+				type: 'POST',
+				async: false,
+				data:{
+					seq: seq
+				},
+				success: function(data){
+					console.log(data);
+					desired = parseInt(data.desired);
+					participants = parseInt(data.participants);
+					console.log(desired);
+					console.log(participants);
+					
+					$('#partyStatus').html( '(' + participants + '/' + desired + ')' );
+				}
+				
+			});
 			$.ajax({
 				url: '/api/appliers.json',
 				type: 'POST',
@@ -64,25 +82,30 @@
 						}
 						
 						document.getElementById('btn' + applier.senderSeq).onclick = function(){
-							$.ajax({
-								url: '/changeApply',
-								type: 'post',
-								data:{
-									seq: seq,
-									senderSeq: applier.senderSeq,
-									status: document.getElementById('sel' + applier.senderSeq).value
-								},
-								success: function(result){
-									if(result == 0){
-										location.reload();
-									}else{
-										alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.');
+							if(participants >= desired){
+								alert('모임 인원이 가득찼습니다.');
+								return;
+							}else{
+								$.ajax({
+									url: '/changeApply',
+									type: 'post',
+									data:{
+										seq: seq,
+										senderSeq: applier.senderSeq,
+										status: document.getElementById('sel' + applier.senderSeq).value
+									},
+									success: function(result){
+										if(result == 0){
+											location.reload();
+										}else{
+											alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.');
+										}
+									},
+									error: function(xhr, stat, error){
+										alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.\n[' + stat + ']' + error);
 									}
-								},
-								error: function(xhr, stat, error){
-									alert('요청하신 데이터를 처리하는 중 문제가 발생하였습니다.\n[' + stat + ']' + error);
-								}
-							});
+								});
+							}
 						}
 					}
 				}, 
@@ -96,7 +119,7 @@
 </head>
 <body>
 	<div class="container-fluid">
-		<h5 class="mt-3 text-center"><b>참여관리</b></h5>
+		<h5 class="mt-3 text-center"><b>참여관리<span id="partyStatus"></span></b></h5>
 		<hr>
 		<div class="table-responsive">
 			<table class="table table-bordered text-center mb-2">
