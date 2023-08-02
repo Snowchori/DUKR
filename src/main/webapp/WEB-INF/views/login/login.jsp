@@ -10,7 +10,7 @@
 		<!-- 카카오 로그인 -->
 		<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.2.0/kakao.min.js" integrity="sha384-x+WG2i7pOR+oWb6O5GV5f1KN2Ko6N7PTGPS7UlasYWNxZMKQA63Cj/B2lbUmUfuC" crossorigin="anonymous"></script>
 		<script>
-			Kakao.init('a987d1929430749f2fdae0e54a73dbf3'); // 카카오 초기화
+			Kakao.init('<%=kakaoApiLoginKey %>'); // 카카오 초기화
 			console.log(Kakao.isInitialized());
 			
 			function loginWithKakao() {
