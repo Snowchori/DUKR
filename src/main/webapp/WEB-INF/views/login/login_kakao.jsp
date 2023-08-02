@@ -1,6 +1,7 @@
 <%@ page import="ch.qos.logback.core.recovery.ResilientSyslogOutputStream"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
 <%
 	String code = "'" + request.getParameter("code") + "'";
 	System.out.println(code);
@@ -17,7 +18,7 @@
 		<!-- jQuery -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<script type="text/javascript">
-			Kakao.init('a987d1929430749f2fdae0e54a73dbf3'); // 카카오 초기화
+			Kakao.init('<%=kakaoApiLoginKey %>'); // 카카오 초기화
 			console.log(Kakao.isInitialized());
 		
 			// 유저 정보 요청 함수 - 비동기

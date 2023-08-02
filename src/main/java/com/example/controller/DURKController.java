@@ -95,8 +95,11 @@ public class DURKController {
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
-	@Value("${apikey.kakaomap}")
+	@Value("${kakao.api.map.key}")
 	private String kmapikey;
+
+	@Value("${kakao.api.login.key}")
+	private String kakaoApiLoginKey;
 	
 	// main
 	@RequestMapping("/")
@@ -1913,7 +1916,8 @@ public class DURKController {
 	@RequestMapping("/loginKakao")
 	public ModelAndView loginKakao(HttpServletRequest req) {
 		ModelAndView mav = new ModelAndView("login/login_kakao");
-			
+		mav.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
+		
 		return mav;
 	}
 	
@@ -1981,7 +1985,7 @@ public class DURKController {
 	public ModelAndView login(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("login/login");
-		
+		modelAndView.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
 		return modelAndView;
 	}
 	
@@ -1993,6 +1997,7 @@ public class DURKController {
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
 		
 		ModelAndView mav = new ModelAndView("login/logout");
+		mav.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
 		
 		LogsTO logTO = new LogsTO();
         logTO.setMemSeq(userSeq);
@@ -2305,6 +2310,7 @@ public class DURKController {
 		modelAndView.addObject("email", userInfo.getEmail());
 		modelAndView.addObject("nickname", userInfo.getNickname());
 		modelAndView.addObject("rate", userInfo.getRate());
+		modelAndView.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
 		modelAndView.setViewName("mypage/mypage_info");
 		
 		return modelAndView;
