@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<% String kmapikey = (String)request.getAttribute("kmapikey"); %>
 <!doctype html>
 <html>
 	<head>
@@ -8,7 +9,7 @@
 		<!-- Template Main CSS File -->
 		<link href="assets/css/style.css" rel="stylesheet">
 		<!-- kakao Map API -->
-		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62a899b99d2f71a7e481ba3867c742b7&libraries=services,clusterer">
+		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%= kmapikey %>">
 		</script>
 		<!-- 자바 스크립트 영역 -->
 		<script type="text/javascript">

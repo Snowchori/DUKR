@@ -4,6 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/top_bar_declare.jspf" %>
+<% String kmapikey = (String)request.getAttribute("kmapikey"); %>
 <%
 	BoardTO boardTo = (BoardTO)request.getAttribute("boardTo");
 	String bSeq = boardTo.getSeq();
@@ -48,12 +49,10 @@
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
-		<!-- jQuery Google CDN -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 		<!-- Daum Post API(postcode.v2) -->
 		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 		<!-- kakao Map API -->
-		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=62a899b99d2f71a7e481ba3867c742b7&libraries=services,clusterer,drawing">
+		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=<%= kmapikey %>&libraries=services">
 		</script>
 		<!-- CKEditor5 -->
 		<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>

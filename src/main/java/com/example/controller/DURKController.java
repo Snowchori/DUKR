@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,6 +94,9 @@ public class DURKController {
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
+	
+	@Value("${apikey.kakaomap}")
+	private String kmapikey;
 	
 	// main
 	@RequestMapping("/")
@@ -1416,6 +1420,7 @@ public class DURKController {
 			}
 		}
 		
+		modelAndView.addObject("kmapikey", kmapikey);
 		modelAndView.addObject("to", to);
 		modelAndView.addObject("pto", pto);
 		modelAndView.addObject("isWriter", isWriter);
@@ -1489,7 +1494,8 @@ public class DURKController {
 				
 			return modelAndView;
 		}
-		
+
+		mav.addObject("kmapikey", kmapikey);
 		mav.addObject("boardTo", boardTo);
 		mav.addObject("partyTo", partyTo);
 		
@@ -1576,7 +1582,9 @@ public class DURKController {
 		MemberTO userInfo = (MemberTO)request.getSession().getAttribute("logged_in_user");
 		
 		if(userInfo != null) {
-			return new ModelAndView("community/party/party_board_register");
+			ModelAndView modelAndView = new ModelAndView("community/party/party_board_register");
+			modelAndView.addObject("kmapikey", kmapikey);
+			return modelAndView;
 		}else {
 			return new ModelAndView("mypage/no_login");
 		}
@@ -1624,6 +1632,7 @@ public class DURKController {
 	@RequestMapping("/partySearch")
 	public ModelAndView partySearch() {
 		ModelAndView model = new ModelAndView("community/party/party_search");
+		model.addObject("kmapikey", kmapikey);
 		return model;
 	}
 
@@ -2420,9 +2429,9 @@ public class DURKController {
 			
 			return modelAndView;
 		}
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("mypage/mypage_myparty");
 		
+		ModelAndView modelAndView = new ModelAndView("mypage/mypage_myparty");
+		modelAndView.addObject("kmapikey", kmapikey);
 		return modelAndView;
 	}
 	
