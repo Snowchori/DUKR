@@ -226,9 +226,28 @@
 </script>
 		<!-- 카카오 소셜인증 -->
 		<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.2.0/kakao.min.js" integrity="sha384-x+WG2i7pOR+oWb6O5GV5f1KN2Ko6N7PTGPS7UlasYWNxZMKQA63Cj/B2lbUmUfuC" crossorigin="anonymous"></script>
+		
 		<script type="text/javascript">
-			Kakao.init('<%=kakaoApiLoginKey %>'); // 카카오 초기화
-			
+			$.ajax({
+				url: '/kakaoApiLoginKey',
+				type: 'POST',
+				success: function(res){
+					Kakao.init(res);
+				}
+			});
+		
+			function requestKakaoLoginApiKey(){
+				return new Promise(function(resolve, reject){
+					$.ajax({
+						url: '/kakaoApiLoginKey',
+						type: 'POST',
+						success: function(res){
+							resolve(res);
+						}
+					});
+				});
+			}
+		
 			function loginWithKakao() {
 		    	Kakao.Auth.authorize({
 		    		redirectUri: 'http://localhost:8080/mypage',
@@ -285,12 +304,15 @@
 		String code = "'" + request.getParameter("code") + "'";
 %>
 		<script type="text/javascript">
+		requestKakaoLoginApiKey()
+		.then(function(clientID){
+
 			$.ajax({
 				type: "POST",
 				url: 'https://kauth.kakao.com/oauth/token',
 				data: {
 					grant_type: 'authorization_code',
-			    	client_id: 'a987d1929430749f2fdae0e54a73dbf3',
+			    	client_id: clientID,
 			    	redirect_uri: 'http://localhost:8080/mypage',
 					code: <%=code%>
 				},
@@ -306,7 +328,7 @@
 			        	$.ajax({
 			        		url: '/kakaoCertifyOk',
 			          		type: 'POST',
-			          		data: {
+			          		data: { 
 			            		userInfo: userInfo
 			          		},
 			          		success: function(res) {
@@ -343,6 +365,7 @@
 			    	console.log('토큰 실패');
 				}
 			});
+		});
 <%
 	}
 %>

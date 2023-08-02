@@ -35,7 +35,4 @@
 		adminHtml.append("</ul>");
 		adminHtml.append("</li>");
 	}
-	
-	// 카카오 로그인 API 키
-	String kakaoApiLoginKey = (String)request.getAttribute("kakaoApiLoginKey");
 %>
