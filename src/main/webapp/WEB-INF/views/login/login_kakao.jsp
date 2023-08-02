@@ -46,7 +46,7 @@
 				url: 'https://kauth.kakao.com/oauth/token',
 				data: {
 					grant_type: 'authorization_code',
-				    client_id: 'a987d1929430749f2fdae0e54a73dbf3',
+				    client_id: '<%=kakaoApiLoginKey %>',
 				    redirect_uri: 'http://localhost:8080/loginKakao',
 					code: <%=code%>
 				},
