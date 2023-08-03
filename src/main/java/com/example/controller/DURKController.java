@@ -101,6 +101,9 @@ public class DURKController {
 	@Value("${kakao.api.login.key}")
 	private String kakaoApiLoginKey;
 	
+	@Value("${vworld.api.key}")
+	private String gcapikey;
+	
 	// 소셜로그인 api키 제공
 	@PostMapping("/kakaoApiLoginKey")
 	public String kakaoApiLoginKey() {
@@ -1647,6 +1650,7 @@ public class DURKController {
 		String prvcode = request.getParameter("prvcode") != null ? request.getParameter("prvcode") : "";
 
 		ModelAndView model = new ModelAndView("community/party/geocodes");
+		model.addObject("gcapikey", gcapikey);
 		model.addObject("prvcode", prvcode);
 		return model;
 	}
