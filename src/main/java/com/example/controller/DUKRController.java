@@ -60,7 +60,7 @@ import com.example.model.report.ReportListTO;
 import com.example.model.report.ReportTO;
 
 @RestController
-public class DURKController {
+public class DUKRController {
 	
 	@Autowired
 	private BoardgameDAO gameDAO;
@@ -1233,7 +1233,7 @@ public class DURKController {
 		return result;
 	}
 	
-	// ck에디터 이미지 업로드하기@@
+	// CKEditor 이미지 업로드하기
 	@PostMapping( value = { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
 		Boolean uploadResult = false;
@@ -1244,7 +1244,6 @@ public class DURKController {
 		String curTime = "_" + System.currentTimeMillis();
 		
 		String newFileName = fileNamePrefix + curTime + fileNameSuffix;
-		
 		try {
 			upload.transferTo(new File(newFileName));
 			uploadResult = true;
@@ -1256,7 +1255,6 @@ public class DURKController {
 		
 		String url = "./upload/" + newFileName;
 		String result = "{\"url\": \"" + url + "\", \"uploaded\": \"" + uploadResult + "\"}";
-		
 		return result;
 	}
 	
