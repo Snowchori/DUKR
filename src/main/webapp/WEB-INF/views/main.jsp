@@ -232,23 +232,6 @@
 	            <img class="main_image" src="assets/img/logos/boardgame.png">
 	        </div>
 	    </header>
-	    <!-- Navigation-->
-	    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
-	        <div class="container">
-	            <a class="navbar-brand" href="#page-top"></a>
-	            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-	                Menu
-	                <i class="fas fa-bars ms-1"></i>
-	            </button>
-	            <div class="collapse navbar-collapse" id="navbarResponsive">
-	                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-	                    <li class="nav-item"><a class="nav-link" href="#p1">추천게임</a></li>
-	                    <li class="nav-item"><a class="nav-link" href="#p2">즐겨찾기한게임</a></li>
-	                    <li class="nav-item"><a class="nav-link" href="#p3">전체게임</a></li>
-	                </ul>
-	            </div>
-	        </div>
-	    </nav>
 		<!--  캐러셀 -->
 		<div class="container my-5" id="c1">
 		    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
@@ -302,7 +285,6 @@
 	    <div class="quickmenu" id="quickmenu1">
 	    	<%= recentSB %>
 		</div>
-	    
 	    <!-- Core theme JS-->
 	    <script src="assets/js/scripts.js"></script>
 	    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->

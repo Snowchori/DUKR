@@ -70,22 +70,11 @@
 				};
 			};
 		</script>
-		<style type="text/css">
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-	
-			.title {
-				font-family: SBAggroB;
-			}
-		</style>
+		<link href="assets/css/style.css" rel="stylesheet">
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="py-5 bg-secondary">
+		<header class="mt-5 py-5 bg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title">로그인</h1>
