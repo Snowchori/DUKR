@@ -60,7 +60,7 @@
 					data: {
 						grant_type: 'authorization_code',
 					    client_id: clientID,
-					    redirect_uri: 'http://localhost:8080/loginKakao',
+					    redirect_uri: 'http://54.180.57.106:8080/loginKakao',
 						code: <%=code%> 
 					},
 					contentType: 'application/x-www-form-urlencoded;charset=utf-8',

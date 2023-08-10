@@ -250,7 +250,7 @@
 		
 			function loginWithKakao() {
 		    	Kakao.Auth.authorize({
-		    		redirectUri: 'http://localhost:8080/mypage',
+		    		redirectUri: 'http://54.180.57.106:8080/mypage',
 		     		state: 'userme',
 		    	});
 		  	}
@@ -313,7 +313,7 @@
 				data: {
 					grant_type: 'authorization_code',
 			    	client_id: clientID,
-			    	redirect_uri: 'http://localhost:8080/mypage',
+			    	redirect_uri: 'http://54.180.57.106:8080/mypage', 
 					code: <%=code%>
 				},
 				contentType: 'application/x-www-form-urlencoded;charset=utf-8',

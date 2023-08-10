@@ -20,7 +20,7 @@
 
 			function loginWithKakao() {
 		    	Kakao.Auth.authorize({
-		    		redirectUri: 'http://localhost:8080/loginKakao',
+		    		redirectUri: 'http://54.180.57.106:8080/loginKakao', 
 		     		state: 'userme',
 		    	});
 		  	}	
