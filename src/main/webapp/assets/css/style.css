@@ -795,6 +795,8 @@ ul, #myUL {
 }
 
 #portfolio .portfolio-item .portfolio-link {
+	width: 300px;
+	height: 300px;
 	position: relative;
 	display: block;
 	margin: 0 auto;
@@ -1076,21 +1078,8 @@ label{
 }
 
 #topBtn {
-	display: none;
 	position: fixed;
-	bottom: 20px;
-	right: 30px;
+	bottom: 50px;
+	right: 50px;
 	z-index: 99;
-	border: none;
-	outline: none;
-	background-color: red;
-	color: white;
-	cursor: pointer;
-	padding: 15px;
-	border-radius: 10px;
-	font-size: 18px;
-}
-
-#topBtn:hover {
-	background-color: #555;
 }

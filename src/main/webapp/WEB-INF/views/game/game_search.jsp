@@ -55,6 +55,25 @@
 	    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
 	    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
 		
+	    <script type="text/javascript">	    
+		    $(document).ready(function() {
+	            var topBtn = $("#topBtn");
+	            
+	            $(window).scroll(function() {
+	                if ($(window).scrollTop() > 20) {
+	                	topBtn.show();
+	                } else {
+	                	topBtn.hide();
+	                }
+	            });
+        	});
+		    
+			function topFunction() {
+				document.body.scrollTop = 0; // For Safari
+				document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+			}
+	    </script>
+		
 		<style type="text/css">
 		    
 		    /* 전체 버튼 */
@@ -438,5 +457,11 @@
 		<footer>
 	    	<!-- 최하단 디자인 영역 -->
 		</footer>
+		<button type='button' class='btn btn-dark' id="topBtn" onclick="topFunction()"><i class="bi bi-arrow-up-circle"></i></button>
+		<script>
+			window.onload = function() {
+	    		$("#topBtn").hide();
+	    	}
+		</script>
 	</body>
 </html>

@@ -15,9 +15,9 @@
 
 	if(reclists.size() > 0) {
 		for(BoardgameTO to : reclists){
-			recSB.append("<div class='col-lg-4 col-sm-6 mb-4 align-self-center d-flex justify-content-center'>");
+			recSB.append("<div class='col-lg-4 mb-4 d-flex justify-content-center align-items-center'>");
 			recSB.append("<div class='portfolio-item'>");
-			recSB.append("<a class='portfolio-link' href='gameView?seq="+to.getSeq()+"'>");
+			recSB.append("<a class='portfolio-link d-flex align-items-center justify-content-center' href='gameView?seq="+to.getSeq()+"'>");
 			recSB.append("<div class='portfolio-hover'>");
 			recSB.append("<div class='portfolio-hover-content'>");
 			recSB.append(" 제목: "+to.getTitle()+"</br>");
@@ -60,9 +60,9 @@
 		
 		if(favlists.size() > 0) {
 			for(BoardgameTO to : favlists){
-				favSB.append("<div class='col-lg-4 col-sm-6 mb-4 align-self-center d-flex justify-content-center'>");
+				favSB.append("<div class='col-lg-4 mb-4 align-self-center d-flex justify-content-center'>");
 				favSB.append("<div class='portfolio-item'>");
-				favSB.append("<a class='portfolio-link' href='gameView?seq="+to.getSeq()+"'>");
+				favSB.append("<a class='portfolio-link d-flex align-items-center justify-content-center' href='gameView?seq="+to.getSeq()+"'>");
 				favSB.append("<div class='portfolio-hover'>");
 				favSB.append("<div class='portfolio-hover-content'>");
 				favSB.append(" 제목: "+to.getTitle()+"</br>");
@@ -101,9 +101,10 @@
 	totalSB.append("<div class='row'>");
 
 	for(BoardgameTO to : totallists){
-		totalSB.append("<div class='col-lg-4 col-sm-6 mb-4 align-self-center d-flex justify-content-center'>");
+		totalSB.append("<div class='col-lg-4 mb-4 align-self-center d-flex justify-content-center'>");
 		totalSB.append("<div class='portfolio-item'>");
-		totalSB.append("<a class='portfolio-link' href='gameView?seq="+to.getSeq()+"'>");
+		totalSB.append("<a class='portfolio-link d-flex align-items-center justify-content-center' href='gameView?seq="+to.getSeq());
+		totalSB.append("' style=\"background-image:linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('" + to.getImageUrl() + "'); background-size:cover; background-position: center;\">");
 		totalSB.append("<div class='portfolio-hover'>");
 		totalSB.append("<div class='portfolio-hover-content'>");
 		totalSB.append(" 제목: "+to.getTitle()+"</br>");
@@ -162,6 +163,9 @@
 	            var quickMenu = $("#quickmenu1");
 	            var offset = quickMenu.offset();
 	            var topPadding = 20;
+	            
+	            var topBtn = $("#topBtn");
+	            
 	            $(window).scroll(function() {
 	                if ($(window).scrollTop() > offset.top) {
 	                    quickMenu.stop().animate({
@@ -171,6 +175,12 @@
 	                    quickMenu.stop().animate({
 	                        marginTop: 0
 	                    });
+	                }
+	                
+	                if ($(window).scrollTop() > 20) {
+	                	topBtn.show();
+	                } else {
+	                	topBtn.hide();
 	                }
 	            });
         	});
@@ -186,6 +196,8 @@
 		    	} else {
 		    		$(".caretdown").hide();
 		    	}
+		    	
+		    	$("#topBtn").hide();
 		    }
 		    
 		    function caretUp() {
@@ -219,6 +231,11 @@
 		    		$(".caretdown").val(index+1);
 		    	}
 		    }
+			
+			function topFunction() {
+				document.body.scrollTop = 0; // For Safari
+				document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+			}
 	    </script>
 	    
 	    <meta charset="utf-8" />
@@ -285,6 +302,9 @@
 	    <div class="quickmenu" id="quickmenu1">
 	    	<%= recentSB %>
 		</div>
+		
+		<button type='button' class='btn btn-dark' id="topBtn" onclick="topFunction()"><i class="bi bi-arrow-up-circle"></i></button>
+		
 	    <!-- Core theme JS-->
 	    <script src="assets/js/scripts.js"></script>
 	    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
