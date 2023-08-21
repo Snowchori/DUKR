@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.example.controller", "com.example.model", "com.example.project"})
+@ComponentScan(basePackages = {"com.example.controller", "com.example.websocket", "com.example.playable", "com.example.model", "com.example.project"})
 @MapperScan( basePackages = { "com.example.config" } )
 public class ProjectApplication {
 

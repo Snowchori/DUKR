@@ -72,6 +72,11 @@
 		    <artifactId>jsoup</artifactId>
 		    <version>1.15.3</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-websocket -->
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-websocket</artifactId>
+    	</dependency>
 	</dependencies>
 	<build>
 		<plugins>
