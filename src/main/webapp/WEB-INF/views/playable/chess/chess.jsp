@@ -10,6 +10,7 @@
 	window.onload = function(){
 		
 		const socket = new WebSocket('ws://localhost:8080/chess');
+		let promotableLoc = '';
 		
 		// 매칭버튼
 		$('#matchBtn').on('click', function(){
@@ -84,16 +85,24 @@
 				}
 				
 				// 이전에 클릭된 기물로 활성화된 css 제거
-				$("td").css({
+				$("#chessBoardContainer td").css({
 					'background-color': 'transparent'
 				});
 				// 기존 기물 랜더링 및 클릭이벤트 제거
-				$("td").off('click');
-				$("td").text("");
+				$("#chessBoardContainer td").off('click');
+				$("#chessBoardContainer td").text("");
 				
 				// 이전턴에 선택된 기물 및 이동 가능지점의 속성값 제거
 				$("td[selec='true']").attr('selec', 'false');
 				$("td[selec='candidate']").attr('selec', 'false');
+				
+				// 프로모션 선택지 숨김
+				$("#whitePromoteOptions").css({
+					'display' : 'none'
+				});
+				$("#blackPromoteOptions").css({
+					'display' : 'none'
+				});
 
 				// 기물 랜더링 및 클릭이벤트 추가
 				for(let i=1; i<=8; i++){
@@ -160,7 +169,31 @@
 							$('#' + locationID).html('&nbsp;');
 						}
 					}
-				}	
+				}
+				
+				// 폰 프로모션
+				if(event.data.split('@')[4] == 'promotable'){
+					const promotablePiece = 'l' + event.data.split('@')[5];
+					console.log('pl : ' + event.data.split('@')[5]);
+					promotableLoc = event.data.split('@')[5];
+
+					$('#' + promotablePiece).css({
+						'background-color': '#7851A9'	
+					});
+					
+					if(myCamp == 'white'){
+						$('#whitePromoteOptions').css({
+							'display' : ''
+						});
+					}else{
+						$('#blackPromoteOptions').css({
+							'display' : ''
+						});
+					}
+					
+					$("#chessBoardContainer td").off('click');
+				}
+				
 			}
 			
 		};
@@ -203,42 +236,63 @@
 				$('#' + possibleLocationID).click(function(){
 					move(selectedPiece.replace('l', ''), possibleMovesArr[index]);
 				});
-			}
-			
+			}		
 		}
 		
 		// 기물 이동 함수
 		function move(curPosition, nextPosition){
 			socket.send('move@' + curPosition + 'to' + nextPosition);
 		}
+	
+		// 폰 프로모션 요청
+		function promotePawn(grade){
+			console.log('prom LOC : ' + promotableLoc);
+			socket.send('promote@' + promotableLoc + '@grade@' + grade);
+		}
+		
+		$('#whiteQueen').click(function(){ promotePawn(4) });
+		$('#whiteRook').click(function(){ promotePawn(3) });
+		$('#whiteBishop').click(function(){ promotePawn(2) });
+		$('#whiteKnight').click(function(){ promotePawn(1) });
+		$('#blackQueen').click(function(){ promotePawn(4) });
+		$('#blackRook').click(function(){ promotePawn(3) });
+		$('#blackBishop').click(function(){ promotePawn(2) });
+		$('#blackKnight').click(function(){ promotePawn(1) });
 		
 	};
-	
-	
 </script>
 <style type="text/css">
+
 	@font-face {
     	font-family: 'chessPiece';
     	src: local('./assets/font/DejaVuSans.ttf') format('truetype'); 
   	}
 
-	body {
+	#flexContainer {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
     }
-	
-	chessBoardContainer {
+    
+    #promoteOptions {
+    	display:flex;
+    	justify-content: center;
+  		align-items: center; 
+    }
+    
+    .promoteOptions {
+    	color: black;	
+		text-align: center;
 		align: center;
-		border-collapse: collapse;
-    	border: 1px solid black;
-    	width:400px;
-    	height:400px;
-	}
+		font-size: 30px;
+		min-width: 50px;
+		height: 50px;
+		font-family: "chessPiece", sans-serif;
+    }
 	
-	table {
+	#chessBoardContainer table {
 		border: 3px solid black;
 		background-image: url('./assets/img/playable/chess/chessboard2.png');
     	background-size: cover;
@@ -246,8 +300,8 @@
     	background-position: right top;
 	}
 	
-	td {
-		color: black;
+	#chessBoardContainer td {
+		color: black;	
 		text-align: center;
 		align: center;
 		font-size: 30px;
@@ -255,63 +309,95 @@
 		height: 50px;
 		font-family: "chessPiece", sans-serif;
 	}
-		
-	tr{
-		color: black;
+
+	#game {
+		display : flex;
+		flex-direction: column;
 	}
 	
 	.message-area {
 		height: 300px;
       	overflow-y: auto; 
     }
+    
 </style>
 </head>
 <body>	
-	<div id='startingComponents'>
-		<!-- 매칭 버튼 -->
-		<button id="matchBtn">매칭 시작</button>
-		<input type='hidden' id='opponent' />	
-		<!-- 배정된 흑/백 진영 -->
-	</div>
-	<input type="hidden" id="myCamp" value="" /> 
+	<!-- myCamp -->
+	<input type="hidden" id="myCamp" value="" />
+	<!-- opponent --> 
+	<input type='hidden' id='opponent' />
+
+	<div id='flexContainer'>
+		<!-- 시작 요소 -->
+		<div id='startingComponents'>
+			<button id="matchBtn">매칭 시작</button>	
+		</div>
 	
-	<!-- 채팅창 -->
-	<div id="chatBox">
-		<div class="container mt-5">
-			<div class="row">
-				<div class="col-md-12 offset-md-1">
-      				<div class="card">
-        				<div class="card-header">
-        					채팅
-        				</div>
-        				<div class="card-body message-area" style="height: 300px; overflow-y: auto;">
-          					<ul class="list-unstyled">
-            					<li class="media">
-              						<div class="media-body">
-                						<h5 class="mt-0 mb-1">플레이어 1</h5>
-                						하이
-              						</div>
-            					</li>
-           	 				<!-- 추가적인 대화 메시지는 이곳에 추가 가능 -->
-          					</ul>
-        				</div>
-        				<div class="card-footer">
-          					<div class="input-group">
-            					<input type="text" class="form-control flex-grow-1 mr-2" placeholder="메시지 입력">
-            					<button class="btn btn-primary">전송</button>
-          					</div>
-        				</div>
-      				</div>
-    			</div>
-  			</div>
+		<!-- 채팅창 -->
+		<div id="chatBox">
+			<div class="container mt-5">
+				<div class="row">
+					<div class="col-md-12 offset-md-1">
+      					<div class="card">
+        					<div class="card-header">
+        						채팅
+        					</div>
+        					<div class="card-body message-area" style="height: 300px; overflow-y: auto;">
+          						<ul class="list-unstyled">
+            						<li class="media">
+              							<div class="media-body">
+                							<h5 class="mt-0 mb-1">플레이어 1</h5>
+                							하이
+              							</div>
+            						</li>
+           	 					<!-- 추가적인 대화 메시지는 이곳에 추가 가능 -->
+          						</ul>
+        					</div>
+        					<div class="card-footer">
+          						<div class="input-group">
+            						<input type="text" class="form-control flex-grow-1 mr-2" placeholder="메시지 입력">
+            						<button class="btn btn-primary">전송</button>
+          						</div>
+        					</div>
+      					</div>
+    				</div>
+  				</div>
+			</div>
+		</div>
+	
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	
+		<div id="game">
+			<div id="promoteOptions">
+				<!-- 폰 프로모션 선택지(백) -->
+				<div id="whitePromoteOptions" style="display:none;">
+					<table class="promoteOptions">
+						<tr>
+							<td id="whiteQueen">&#9813;</td>
+							<td id="whiteRook">&#9814;</td>
+							<td id="whiteBishop">&#9815;</td>
+							<td id="whiteKnignt">&#9816;</td>
+						</tr>
+					</table>
+				</div>
+				<!-- 폰 프로모션 선택지(흑) -->
+				<div id="blackPromoteOptions" style="display:none;">
+					<table class="promoteOptions">
+						<tr>
+							<td id="blackQueen">&#9819;</td>
+							<td id="blackRook">&#9820;</td>
+							<td id="blackBishop">&#9821;</td>
+							<td id="blackKnignt">&#9822;</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<!-- 체스보드 -->
+			<div id='chessBoardContainer' class='chessBoardContainer'></div>
 		</div>
 	</div>
-	
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	
-	<!-- 체스보드 -->
-	<div id='chessBoardContainer'></div>
 	
 </body>
 </html>

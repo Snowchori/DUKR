@@ -186,8 +186,62 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 			chessBoards.get(opponent).getBoardStatus().put(currentPosition, null);
 			chessBoards.get(opponent).getBoardStatus().put(nextPosition, movingPiece);
 			
-			// 기물 이동 후 수정된 보드에서 가능한 수 계산
-			// 생성된 체스보드의 가능한 수 계산, boardStatus
+			// 턴
+			int turn = chessBoards.get(session).getTurn();
+			
+			if(movingPiece.getGrade() == 0 && ( nextPosition / 10 == 8 || nextPosition / 10 == 1 )) {
+				
+				// 폰 프로모션	시작
+				chessBoards.get(session).removeAllPossibleMoves();
+				String promoting = hashmapToJson(chessBoards.get(session));
+				
+				session.sendMessage(new TextMessage("turn@" + turn + "@boardStatus@" + promoting + "@promotable@" + nextPosition));
+			 
+			}else {
+				// 기물 이동 후 수정된 보드에서 가능한 수 계산
+				// 생성된 체스보드의 가능한 수 계산, boardStatus
+				for(int i=1; i<=8; i++) {
+					for(int j=1; j<=8; j++) {
+						
+						int key = i*10 + j;
+						ChessPieceTO cpTO = chessBoards.get(session).getBoardStatus().get(key);
+						
+						if(cpTO != null) {
+							ArrayList<Integer> possibleMoves = cpTO.calcPossibleMoves1(chessBoards.get(session).getBoardStatus(), cpTO);
+							cpTO.setPossibleMoves(possibleMoves);
+							chessBoards.get(session).getBoardStatus().put(key, cpTO);
+							chessBoards.get(opponent).getBoardStatus().put(key, cpTO);
+						}					
+					}
+				}
+				
+				// 턴 카운트 올림
+				chessBoards.get(session).setTurn(turn + 1);
+				chessBoards.get(opponent).setTurn(turn + 1);
+				
+				// 기물 이동 후 가능한 움직임까지 계산된 해시맵을 json 형태로 변환
+				String newBoardStatus = hashmapToJson(chessBoards.get(session));
+				// 각 플레이어에게 갱신된 체스판 전송
+				session.sendMessage(new TextMessage("turn@" + (turn + 1) + "@boardStatus@" + newBoardStatus));
+				opponent.sendMessage(new TextMessage("turn@" + (turn + 1) + "@boardStatus@" + newBoardStatus));
+			}
+	
+		}
+		
+		// 폰 프로모션 요청 처리
+		if(message.getPayload().toString().split("@")[0].equals("promote")) {
+			// 상대방 세션 정보
+			WebSocketSession opponent = matchedGames.get(session);
+			// 프로모션 요청 위치
+			int promotingLoc = Integer.parseInt(message.getPayload().toString().split("@")[1]);
+			// 프로모션 기물 등급
+			int pGrade = Integer.parseInt(message.getPayload().toString().split("@")[3]);
+			
+			// 해시맵 상에서 폰 프로모션 진행
+			chessBoards.get(session).getBoardStatus().get(promotingLoc).setGrade(pGrade);
+			chessBoards.get(opponent).getBoardStatus().get(promotingLoc).setGrade(pGrade);
+			
+			// 가능한 수 업데이트
 			for(int i=1; i<=8; i++) {
 				for(int j=1; j<=8; j++) {
 					
@@ -203,12 +257,14 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 				}
 			}
 			
-			// 턴 카운트 올림
+			// 턴
 			int turn = chessBoards.get(session).getTurn();
+			
+			// 턴 카운트 올림
 			chessBoards.get(session).setTurn(turn + 1);
 			chessBoards.get(opponent).setTurn(turn + 1);
 			
-			// 기물 이동 후 가능한 움직임까지 계산된 해시맵을 json 형태로 변환
+			// 프로모션 후 가능한 움직임까지 계산된 해시맵을 json 형태로 변환
 			String newBoardStatus = hashmapToJson(chessBoards.get(session));
 			// 각 플레이어에게 갱신된 체스판 전송
 			session.sendMessage(new TextMessage("turn@" + (turn + 1) + "@boardStatus@" + newBoardStatus));

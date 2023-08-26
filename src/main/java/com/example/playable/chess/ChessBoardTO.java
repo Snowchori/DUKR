@@ -1,5 +1,6 @@
 package com.example.playable.chess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.web.socket.WebSocketSession;
@@ -77,4 +78,18 @@ public class ChessBoardTO {
 		}
 
 	}
+	
+	// 가능한 수 전부 제거
+	public void removeAllPossibleMoves() {
+		for(int i=1; i<=8; i++) {
+			for(int j=1; j<=8; j++) {
+				int key = i*10 + j;
+				if(this.boardStatus.get(key) != null) {
+					ArrayList<Integer> emptyArr = new ArrayList<>();
+					this.boardStatus.get(key).setPossibleMoves(emptyArr);
+				}
+			}
+		}
+	}
+	
 }

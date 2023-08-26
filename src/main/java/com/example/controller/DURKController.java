@@ -71,7 +71,7 @@ public class DURKController {
 	@Autowired
 	private BoardDAO boardDAO;
 	
-	@Autowired
+	@Autowired 
 	private EvaluationDAO evalDAO;
 	
 	@Autowired
