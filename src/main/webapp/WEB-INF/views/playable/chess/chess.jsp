@@ -25,9 +25,14 @@
 			
 			// 수신한 정보가 흑/백 진영 배정 정보일 경우
 			if(event.data.split('@')[0] == 'camp'){
+				
 				$('#startingComponents').css({
 					'display': 'none'
 				})
+				
+				$('#informations').css({
+					'display': 'flex'
+				});
 				
 				const myCamp = event.data.split('@')[1];
 				$('#myCamp').val(myCamp);
@@ -194,6 +199,15 @@
 					$("#chessBoardContainer td").off('click');
 				}
 				
+				// 타이머 동작 제어
+				if(isMyTurn){
+					pauseOpTimer();
+					startMyTimer();
+				}else if(!isMyTurn){
+					pauseMyTimer();
+					startOpTimer();
+				}
+				
 			}
 			
 		};
@@ -250,6 +264,7 @@
 			socket.send('promote@' + promotableLoc + '@grade@' + grade);
 		}
 		
+		// 프로모션 선택지 클릭 이벤트
 		$('#whiteQueen').click(function(){ promotePawn(4) });
 		$('#whiteRook').click(function(){ promotePawn(3) });
 		$('#whiteBishop').click(function(){ promotePawn(2) });
@@ -259,7 +274,64 @@
 		$('#blackBishop').click(function(){ promotePawn(2) });
 		$('#blackKnight').click(function(){ promotePawn(1) });
 		
+		// 내 타이머
+		let myTime = 600;
+		
+		function myTimer(){
+			let min = Math.floor(myTime / 60);
+			let sec = myTime % 60;
+			if(sec < 10){
+				sec = "0" + sec;
+			}
+			let result = min + " : " + sec;
+			
+			$('#timer-me').html(result);
+			myTime --;
+			
+			if(myTime < 0){
+				pauseMyTimer();
+			}
+		}
+		
+		let mt;
+		function startMyTimer(){
+			mt = setInterval(myTimer, 1000);
+		}
+		
+		function pauseMyTimer(){
+			clearInterval(mt);
+		}
+		
+		// 상대방 타이머
+		let opTime = 600;
+
+		function opTimer(){
+			let min = Math.floor(opTime / 60);
+			let sec = opTime % 60;
+			if(sec < 10){
+				sec = "0" + sec;
+			}
+			let result = min + " : " + sec;
+			
+			$('#timer-opponent').html(result);
+			opTime --;
+			
+			if(opTime < 0){
+				pauseOpTimer();
+			}
+		}
+		
+		let ot;
+		function startOpTimer(){
+			ot = setInterval(opTimer, 1000);
+		}
+		
+		function pauseOpTimer(){
+			clearInterval(ot);
+		}
+		
 	};
+	
 </script>
 <style type="text/css">
 
@@ -313,11 +385,46 @@
 	#game {
 		display : flex;
 		flex-direction: column;
+		margin: 0 10px;
+	}
+	
+	#informations {
+		display : none;
+		flex-direction: column;
+		height: 400px;
+		margin: 0 10px;
+	}
+	
+	#info-opponent {
+		display : flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		height: 50vh;
+	}
+	
+	#info-me {
+		display : flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		height: 50vh;
 	}
 	
 	.message-area {
 		height: 300px;
       	overflow-y: auto; 
+    }
+    
+    .timer {
+    	width: 100px;
+    	height: 50px;
+    	background-color: black;
+    	color: white;
+    	border-radius: 10px;
+    	display: flex;
+    	justify-content: center;
+    	align-items: center;
+    	font-size: 20px;
+    	font-weight: bold;
     }
     
 </style>
@@ -397,7 +504,20 @@
 			<!-- 체스보드 -->
 			<div id='chessBoardContainer' class='chessBoardContainer'></div>
 		</div>
+		
+		<div id="informations">
+			<div id="info-opponent">
+				<div id="timer-opponent" class="timer">
+					10 : 00
+				</div>
+			</div>
+			<div id="info-me">
+				<div id="timer-me" class="timer">
+					10 : 00
+				</div>
+			</div>
+		</div>
 	</div>
-	
+
 </body>
 </html>
