@@ -449,6 +449,49 @@ public class ChessPieceTO {
 				this.possibleMoves.add(this.position - 11);
 			}
 			
+			// 캐슬링
+			if(!this.isMoved()) {
+				int positionOfKing = this.getPosition();
+				int row = positionOfKing / 10;
+				int positionOfRook1 = row * 10 + 1;
+				int positionOfRook2 = row * 10 + 8;
+				int nullCheck1 = 0;
+				int nullCheck2 = 0;
+
+				if(boardStatus.get(positionOfRook1) != null) {
+					ChessPieceTO rook1 = boardStatus.get(positionOfRook1);
+					if(rook1.getGrade() == 3 && !rook1.isMoved()) {
+						for(int cursor=positionOfRook1+1; cursor<positionOfKing; cursor++) {
+							if(boardStatus.get(cursor) == null) {
+								nullCheck1 ++;
+							}else {
+								break;
+							}
+						}
+					}
+				}
+				
+				if(boardStatus.get(positionOfRook2) != null) {
+					ChessPieceTO rook2 = boardStatus.get(positionOfRook2);
+					if(rook2.getGrade() == 3 && !rook2.isMoved()) {
+						for(int cursor=positionOfRook2-1; cursor>positionOfKing; cursor--) {
+							if(boardStatus.get(cursor) == null) {
+								nullCheck2 ++;
+							}else {
+								break;
+							}
+						}
+					}
+				}
+				
+				if(Math.abs(positionOfKing - positionOfRook1) == nullCheck1 + 1) {
+					this.possibleMoves.add(positionOfKing - 2);
+				}
+				if(Math.abs(positionOfKing - positionOfRook2) == nullCheck2 + 1) {
+					this.possibleMoves.add(positionOfKing + 2);
+				}
+				
+			}
 		}
 		
 		// 체크 여부 판별
@@ -465,7 +508,6 @@ public class ChessPieceTO {
 			}
 		}
 
-		
 		// 2. 체크 시뮬레이션
 		for(int possibleMove : this.possibleMoves) {
 			// 가능한 위치로 이동한다고 상정, boardStatus 수정
@@ -788,7 +830,21 @@ public class ChessPieceTO {
 			
 			// 모든 경우에 상대 기물로부터의 체크에서 안전하다면 리턴할 결과에 추가
 			if(isSafe) {
-				result.add(possibleMove);
+				if(cpTO.getGrade() == 5 && Math.abs(cpTO.getPosition() - possibleMove) == 2) {
+					// 킹 캐슬링하는 경우 추가
+					if(cpTO.getPosition() - possibleMove == 2) {
+						if(result.contains(cpTO.getPosition() - 1)) {
+							result.add(possibleMove);
+						}	
+					}
+					if(cpTO.getPosition() - possibleMove == -2) {
+						if(result.contains(cpTO.getPosition() + 1)) {
+							result.add(possibleMove);
+						}
+					}
+				}else {
+					result.add(possibleMove);
+				}
 			}
 			
 		}

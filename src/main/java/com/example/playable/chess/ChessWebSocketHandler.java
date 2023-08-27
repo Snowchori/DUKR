@@ -179,12 +179,46 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 			
 			// 해시맵상에서 기물 이동
 			ChessPieceTO movingPiece = currentBoardStatus.get(currentPosition);
-			movingPiece.setPosition(nextPosition);
-			movingPiece.setMoved(true);
-			chessBoards.get(session).getBoardStatus().put(currentPosition, null);
-			chessBoards.get(session).getBoardStatus().put(nextPosition, movingPiece);
-			chessBoards.get(opponent).getBoardStatus().put(currentPosition, null);
-			chessBoards.get(opponent).getBoardStatus().put(nextPosition, movingPiece);
+			if(movingPiece.getGrade() == 5 && Math.abs(nextPosition - currentPosition) == 2) {
+				// 캐슬링하는 경우
+				movingPiece.setPosition(nextPosition);
+				movingPiece.setMoved(true);
+				// 킹 이동
+				chessBoards.get(session).getBoardStatus().put(currentPosition, null);
+				chessBoards.get(session).getBoardStatus().put(nextPosition, movingPiece);
+				chessBoards.get(opponent).getBoardStatus().put(currentPosition, null);
+				chessBoards.get(opponent).getBoardStatus().put(nextPosition, movingPiece);
+				
+				// 캐슬링할 룩 특정 후 이동
+				ChessPieceTO rook;
+				if(nextPosition < currentPosition) {
+					rook = currentBoardStatus.get( (currentPosition / 10) * 10 + 1 );
+					rook.setMoved(true);
+					rook.setPosition(movingPiece.getPosition() + 1);
+					
+					chessBoards.get(session).getBoardStatus().put((currentPosition / 10) * 10 + 1, null);
+					chessBoards.get(session).getBoardStatus().put(rook.getPosition(), rook);
+					chessBoards.get(opponent).getBoardStatus().put((currentPosition / 10) * 10 + 1, null);
+					chessBoards.get(opponent).getBoardStatus().put(rook.getPosition(), rook);
+				}else {
+					rook = currentBoardStatus.get( (currentPosition / 10) * 10 + 8 );
+					rook.setMoved(true);
+					rook.setPosition(movingPiece.getPosition() - 1);
+					
+					chessBoards.get(session).getBoardStatus().put((currentPosition / 10) * 10 + 8, null);
+					chessBoards.get(session).getBoardStatus().put(rook.getPosition(), rook);
+					chessBoards.get(opponent).getBoardStatus().put((currentPosition / 10) * 10 + 8, null);
+					chessBoards.get(opponent).getBoardStatus().put(rook.getPosition(), rook);
+				}
+			}else {
+				// 일반적인 경우
+				movingPiece.setPosition(nextPosition);
+				movingPiece.setMoved(true);
+				chessBoards.get(session).getBoardStatus().put(currentPosition, null);
+				chessBoards.get(session).getBoardStatus().put(nextPosition, movingPiece);
+				chessBoards.get(opponent).getBoardStatus().put(currentPosition, null);
+				chessBoards.get(opponent).getBoardStatus().put(nextPosition, movingPiece);
+			}
 			
 			// 턴
 			int turn = chessBoards.get(session).getTurn();
@@ -225,7 +259,6 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 				session.sendMessage(new TextMessage("turn@" + (turn + 1) + "@boardStatus@" + newBoardStatus));
 				opponent.sendMessage(new TextMessage("turn@" + (turn + 1) + "@boardStatus@" + newBoardStatus));
 			}
-	
 		}
 		
 		// 폰 프로모션 요청 처리
