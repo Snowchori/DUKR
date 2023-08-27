@@ -18,11 +18,14 @@ public class ChessBoardTO {
 	private int turn;
 	// 흑 백 진영별 플레이어
 	HashMap<WebSocketSession, String> players;
+	// 앙파상 할수있는 기물 위치
+	Integer enPassant;
 
 	// 생성자 - 체스보드 초기화, 해쉬맵에 보드 초기상태 입력
 	public ChessBoardTO() {
 		boardStatus = new HashMap<>();
 		this.turn = 1;
+		this.enPassant = 0;
 
 		for (int i = 1; i <= 8; i++) {
 

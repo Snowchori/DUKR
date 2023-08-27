@@ -109,7 +109,7 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 						ChessPieceTO cpTO = cbTO.getBoardStatus().get(key);	
 						
 						if(cpTO != null) {
-							ArrayList<Integer> possibleMoves = cpTO.calcPossibleMoves1(cbTO.getBoardStatus(), cpTO);
+							ArrayList<Integer> possibleMoves = cpTO.calcPossibleMoves1(cbTO.getBoardStatus(), cpTO, cbTO.getEnPassant());
 							cbTO.getBoardStatus().get(key).setPossibleMoves(possibleMoves);
 						}
 						
@@ -179,6 +179,12 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 			
 			// 해시맵상에서 기물 이동
 			ChessPieceTO movingPiece = currentBoardStatus.get(currentPosition);
+			// 앙파상 가능했던 위치 저장
+			int enPassant = chessBoards.get(session).getEnPassant();
+			// 이전턴에 앙파상 가능했던 위치 초기화
+			chessBoards.get(session).setEnPassant(0);
+			chessBoards.get(opponent).setEnPassant(0);
+			
 			if(movingPiece.getGrade() == 5 && Math.abs(nextPosition - currentPosition) == 2) {
 				// 캐슬링하는 경우
 				movingPiece.setPosition(nextPosition);
@@ -210,10 +216,27 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 					chessBoards.get(opponent).getBoardStatus().put((currentPosition / 10) * 10 + 8, null);
 					chessBoards.get(opponent).getBoardStatus().put(rook.getPosition(), rook);
 				}
-			}else {
-				// 일반적인 경우
+			}else if(movingPiece.getGrade() == 0 && (Math.abs(nextPosition - currentPosition) == 11 || Math.abs(nextPosition - currentPosition) == 9) && currentBoardStatus.get(nextPosition) == null){
+				// 앙파상 요청 처리
 				movingPiece.setPosition(nextPosition);
 				movingPiece.setMoved(true);
+				
+				chessBoards.get(session).getBoardStatus().put(enPassant, null);
+				chessBoards.get(opponent).getBoardStatus().put(enPassant, null);
+				
+				chessBoards.get(session).getBoardStatus().put(currentPosition, null);
+				chessBoards.get(session).getBoardStatus().put(nextPosition, movingPiece);
+				chessBoards.get(opponent).getBoardStatus().put(currentPosition, null);
+				chessBoards.get(opponent).getBoardStatus().put(nextPosition, movingPiece);
+			}else {
+				// 일반적인 기물이동 처리
+				movingPiece.setPosition(nextPosition);
+				movingPiece.setMoved(true);
+				// 움직이는 기물이 폰이고 두 칸 이동한 경우 앙파상 가능
+				if(movingPiece.getGrade() == 0 && Math.abs(currentPosition - nextPosition) == 20) {
+					chessBoards.get(session).setEnPassant(movingPiece.getPosition());
+					chessBoards.get(opponent).setEnPassant(movingPiece.getPosition());
+				}
 				chessBoards.get(session).getBoardStatus().put(currentPosition, null);
 				chessBoards.get(session).getBoardStatus().put(nextPosition, movingPiece);
 				chessBoards.get(opponent).getBoardStatus().put(currentPosition, null);
@@ -241,7 +264,7 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 						ChessPieceTO cpTO = chessBoards.get(session).getBoardStatus().get(key);
 						
 						if(cpTO != null) {
-							ArrayList<Integer> possibleMoves = cpTO.calcPossibleMoves1(chessBoards.get(session).getBoardStatus(), cpTO);
+							ArrayList<Integer> possibleMoves = cpTO.calcPossibleMoves1(chessBoards.get(session).getBoardStatus(), cpTO, chessBoards.get(session).getEnPassant());
 							cpTO.setPossibleMoves(possibleMoves);
 							chessBoards.get(session).getBoardStatus().put(key, cpTO);
 							chessBoards.get(opponent).getBoardStatus().put(key, cpTO);
@@ -282,7 +305,7 @@ public class ChessWebSocketHandler implements WebSocketHandler {
 					ChessPieceTO cpTO = chessBoards.get(session).getBoardStatus().get(key);
 					
 					if(cpTO != null) {
-						ArrayList<Integer> possibleMoves = cpTO.calcPossibleMoves1(chessBoards.get(session).getBoardStatus(), cpTO);
+						ArrayList<Integer> possibleMoves = cpTO.calcPossibleMoves1(chessBoards.get(session).getBoardStatus(), cpTO, chessBoards.get(session).getEnPassant());
 						cpTO.setPossibleMoves(possibleMoves);
 						chessBoards.get(session).getBoardStatus().put(key, cpTO);
 						chessBoards.get(opponent).getBoardStatus().put(key, cpTO);

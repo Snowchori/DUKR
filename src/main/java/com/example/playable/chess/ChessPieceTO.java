@@ -21,6 +21,8 @@ public class ChessPieceTO {
 	private ArrayList<Integer> possibleMoves;
 	// grade - 기물 종류 / 0=pawn / 1=knight / 2=bishop / 3=rook / 4=queen / 5=king /
 	private int grade;
+	// 앙파상 가능 여부
+	private boolean enPassant;
 
 	// 생성자
 	public ChessPieceTO(boolean bw, int position, int grade) {
@@ -28,11 +30,12 @@ public class ChessPieceTO {
 		this.setMoved(false);
 		this.setPosition(position);
 		this.setGrade(grade);
+		this.setEnPassant(false);
 		this.possibleMoves = new ArrayList<>();
 	}
 	
 	// 수 계산기1 -   
-	public ArrayList<Integer> calcPossibleMoves1(HashMap<Integer, ChessPieceTO> boardStatus, ChessPieceTO cpTO) {
+	public ArrayList<Integer> calcPossibleMoves1(HashMap<Integer, ChessPieceTO> boardStatus, ChessPieceTO cpTO, int enPassant) {
 		
 		// 초기화
 		if(this.possibleMoves != null || this.possibleMoves.size() != 0) {
@@ -82,7 +85,20 @@ public class ChessPieceTO {
 							this.possibleMoves.add(this.position - 9);
 						}
 					}
-				}				
+				}
+				
+				// 앙파상 - 좌
+				if(boardStatus.get(this.position - 1) != null) {
+					if(enPassant == this.getPosition() - 1 && boardStatus.get(enPassant).isBw() != this.isBw()) {
+						this.possibleMoves.add(this.getPosition() - 11);
+					}
+				}
+				// 앙파상 - 우
+				if(boardStatus.get(this.position + 1) != null) {
+					if(enPassant == this.getPosition() + 1 && boardStatus.get(enPassant).isBw() != this.isBw()) {
+						this.possibleMoves.add(this.getPosition() - 9);
+					}
+				}
 			}
 			// 백인 경우
 			else {
@@ -123,6 +139,19 @@ public class ChessPieceTO {
 						if(boardStatus.get(this.position + 9).bw) {
 							this.possibleMoves.add(this.position + 9);
 						}
+					}
+				}
+				
+				// 앙파상 - 좌
+				if(boardStatus.get(this.position - 1) != null) {
+					if(enPassant == this.getPosition() - 1 && boardStatus.get(enPassant).isBw() != this.isBw()) {
+						this.possibleMoves.add(this.getPosition() + 9);
+					}
+				}
+				// 앙파상 - 우
+				if(boardStatus.get(this.position + 1) != null) {
+					if(enPassant == this.getPosition() + 1 && boardStatus.get(enPassant).isBw() != this.isBw()) {
+						this.possibleMoves.add(this.getPosition() + 11);
 					}
 				}
 			}
@@ -857,7 +886,7 @@ public class ChessPieceTO {
 		if(cpTO.getGrade() == 5 && result.contains(cpTO.getPosition())) {
 			result.remove(result.indexOf(cpTO.getPosition()));
 		}
-		
+	
 		return result;
 	}
 	
