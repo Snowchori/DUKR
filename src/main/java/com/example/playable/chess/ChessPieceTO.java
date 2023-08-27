@@ -393,6 +393,9 @@ public class ChessPieceTO {
 		// king
 		if(this.grade == 5) {
 			
+			// 현위치 체크여부 판별용
+			this.possibleMoves.add(this.getPosition());
+			
 			// king - 상
 			if(boardStatus.get(this.position + 10) == null) {
 				this.possibleMoves.add(this.position + 10);
@@ -832,23 +835,29 @@ public class ChessPieceTO {
 			if(isSafe) {
 				if(cpTO.getGrade() == 5 && Math.abs(cpTO.getPosition() - possibleMove) == 2) {
 					// 킹 캐슬링하는 경우 추가
-					if(cpTO.getPosition() - possibleMove == 2) {
-						if(result.contains(cpTO.getPosition() - 1)) {
-							result.add(possibleMove);
-						}	
-					}
-					if(cpTO.getPosition() - possibleMove == -2) {
-						if(result.contains(cpTO.getPosition() + 1)) {
-							result.add(possibleMove);
+					if(result.contains(cpTO.getPosition())) {
+						if(cpTO.getPosition() - possibleMove == 2) {
+							if(result.contains(cpTO.getPosition() - 1)) {
+								result.add(possibleMove);
+							}	
+						}
+						if(cpTO.getPosition() - possibleMove == -2) {
+							if(result.contains(cpTO.getPosition() + 1)) {
+								result.add(possibleMove);
+							}
 						}
 					}
 				}else {
 					result.add(possibleMove);
 				}
 			}
-			
 		}
 
+		// 현재 체크상태 판별을 위해 집어넣은 확인용 데이터 제거
+		if(cpTO.getGrade() == 5 && result.contains(cpTO.getPosition())) {
+			result.remove(result.indexOf(cpTO.getPosition()));
+		}
+		
 		return result;
 	}
 	
