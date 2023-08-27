@@ -21,8 +21,6 @@ public class ChessPieceTO {
 	private ArrayList<Integer> possibleMoves;
 	// grade - 기물 종류 / 0=pawn / 1=knight / 2=bishop / 3=rook / 4=queen / 5=king /
 	private int grade;
-	// 앙파상 가능 여부
-	private boolean enPassant;
 
 	// 생성자
 	public ChessPieceTO(boolean bw, int position, int grade) {
@@ -30,7 +28,6 @@ public class ChessPieceTO {
 		this.setMoved(false);
 		this.setPosition(position);
 		this.setGrade(grade);
-		this.setEnPassant(false);
 		this.possibleMoves = new ArrayList<>();
 	}
 	
