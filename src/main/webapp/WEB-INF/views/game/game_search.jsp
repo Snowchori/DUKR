@@ -164,7 +164,7 @@
 											<tr>
 								                <th>인원</th>
 								                <td id="players">
-													<span class="btn btn-danger btn-xs s-players s-all" data-value="">전체</span>
+													<span class="btn button-primary btn-xs s-players s-all" data-value="">전체</span>
 													<span class="btn btn-default btn-xs s-players" data-value="2">2인</span>
 		                                            <span class="btn btn-default btn-xs s-players" data-value="3">3인</span>
 		                                            <span class="btn btn-default btn-xs s-players" data-value="4">4인</span>
@@ -175,7 +175,7 @@
 											<tr>
 								                <th>장르</th>
 								                <td id="genre">
-			                    					<span class="btn btn-danger btn-xs s-genre s-all" data-value="">전체</span>
+			                    					<span class="btn button-primary btn-xs s-genre s-all" data-value="">전체</span>
 		                                            <span class="btn btn-default btn-xs s-genre" data-value="전략">전략</span>
 		                                            <span class="btn btn-default btn-xs s-genre" data-value="두뇌">두뇌</span>
 		                                            <span class="btn btn-default btn-xs s-genre" data-value="순발력">순발력</span>
@@ -189,7 +189,7 @@
 											<tr>
 								                <th>정렬</th>
 								                <td id="sort">
-								                    <span class="btn btn-danger btn-xs s-sort" data-value="yearpublished">최신순</span>
+								                    <span class="btn button-primary btn-xs s-sort" data-value="yearpublished">최신순</span>
 								                    <span class="btn btn-default btn-xs s-sort" data-value="hit">조회수</span>
 								                    <span class="btn btn-default btn-xs s-sort" data-value="recCnt">추천순</span>
 								                </td>
@@ -225,10 +225,10 @@
 						 
 						 // 버튼 선택을 표현하기 위해 버튼클래스 변경
 						 sorts.forEach(function(i) {
-							 i.classList.replace('btn-danger', 'btn-default');
+							 i.classList.replace('button-primary', 'btn-default');
 						 });
 				
-						 selectedButton.classList.add('btn-danger');
+						 selectedButton.classList.add('button-primary');
 						 selectedButton.classList.remove('btn-default');
 					}
 					
@@ -249,24 +249,24 @@
 						if(data == ''){
 							// (전체) 버튼 클릭시
 							genres.forEach(function(i){
-								i.classList.replace('btn-danger', 'btn-default');
+								i.classList.replace('button-primary', 'btn-default');
 							});
 							selectedButton.classList.remove('btn-default');
-							selectedButton.classList.add('btn-danger');
+							selectedButton.classList.add('button-primary');
 							document.querySelector('input[name=genre]').value = '';			
 				
 						} else{	
 							// (전체) 이외의 버튼 클릭시			
-							allButton.classList.remove('btn-danger');
+							allButton.classList.remove('button-primary');
 							// (전체) 버튼 비활성화
 							allButton.classList.add('btn-default');
 							
-							selectedButton.classList.toggle('btn-danger');
+							selectedButton.classList.toggle('button-primary');
 							// 선택된 버튼 반대 상태로 전환
 							selectedButton.classList.toggle('btn-default');
 				
 							// 선택된 장르 값들 저장.
-							selectedButtons = document.querySelectorAll('span.s-genre.btn-danger');
+							selectedButtons = document.querySelectorAll('span.s-genre.button-primary');
 							selectedButtons.forEach(function(i){
 								if(i.getAttribute('data-value') == ''){
 									return true;
@@ -276,7 +276,7 @@
 							
 							if(selectedGenre.length == 0){
 								// 선택된 버튼이 없으면, (전체) 버튼 활성화
-								allButton.classList.replace('btn-default', 'btn-danger');
+								allButton.classList.replace('btn-default', 'button-primary');
 								document.querySelector('input[name=genre]').value = '';			
 							} else {
 								document.querySelector('input[name=genre]').value = selectedGenre.join(',');
@@ -300,25 +300,25 @@
 						if(data == ''){	
 							// (전체) 버튼 클릭시
 							players.forEach(function(i){
-								 i.classList.replace('btn-danger', 'btn-default');
+								 i.classList.replace('button-primary', 'btn-default');
 							});
 							selectedButton.classList.remove('btn-default');
-							selectedButton.classList.add('btn-danger');
+							selectedButton.classList.add('button-primary');
 							
 							// input[name=players]에 전체값 저장
 							document.querySelector('input[name=players]').value = '';	
 						} else {
 							// (전체) 이외의 버튼 클릭시			
-							allButton.classList.remove('btn-danger');
+							allButton.classList.remove('button-primary');
 							// (전체) 버튼 비활성화
 							allButton.classList.add('btn-default');
 							
-							selectedButton.classList.toggle('btn-danger');
+							selectedButton.classList.toggle('button-primary');
 							// 선택된 버튼 반대 상태로 전환
 							selectedButton.classList.toggle('btn-default');
 				
 							// 선택된 인원 값들 저장.
-							selectedButtons = document.querySelectorAll('span.s-players.btn-danger');
+							selectedButtons = document.querySelectorAll('span.s-players.button-primary');
 							selectedButtons.forEach(function(i){
 								if(i.getAttribute('data-value') == ''){
 									return true;
@@ -328,7 +328,7 @@
 							
 							if(selectedPlayers.length == 0){
 								// 선택된 버튼이 없으면, (전체) 버튼 활성화
-								allButton.classList.replace('btn-default', 'btn-danger');
+								allButton.classList.replace('btn-default', 'button-primary');
 							
 								// input[name=players]에 전체값 저장
 								document.querySelector('input[name=players]').value = '';			
@@ -367,14 +367,14 @@
 						var sorts = document.querySelectorAll('span.s-sort');
 																
 						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
-						document.querySelector('span.s-sort.btn-danger').classList.replace('btn-danger', 'btn-default');
+						document.querySelector('span.s-sort.button-primary').classList.replace('button-primary', 'btn-default');
 						
 						sorts.forEach(function(i){
 							var data = i.getAttribute('data-value');
 							
 							if(data == searchedSort){
 								// 선택된 버튼 표현
-								i.classList.add('btn-danger');
+								i.classList.add('button-primary');
 								i.classList.remove('btn-default');
 							}
 						});
@@ -389,7 +389,7 @@
 						var players = document.querySelectorAll('span.s-players');
 
 						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
-						document.querySelector('span.s-players.btn-danger').classList.replace('btn-danger', 'btn-default');
+						document.querySelector('span.s-players.button-primary').classList.replace('button-primary', 'btn-default');
 
 						players.forEach(function(i){
 							var data = i.getAttribute('data-value');
@@ -397,7 +397,7 @@
 							searchedPlayers.forEach(function(j){
 								if(data == j){
 									// 선택된 버튼 표현
-									i.classList.add('btn-danger');
+									i.classList.add('button-primary');
 									i.classList.remove('btn-default');
 								}
 							});							
@@ -413,7 +413,7 @@
 						var genres = document.querySelectorAll('span.s-genre');
 
 						// 버튼 초기화 ( 모든 정렬 버튼이 선택되지 않은 상태 )
-						document.querySelector('span.s-genre.btn-danger').classList.replace('btn-danger', 'btn-default');
+						document.querySelector('span.s-genre.button-primary').classList.replace('button-primary', 'btn-default');
 
 						genres.forEach(function(i){
 							var data = i.getAttribute('data-value');
@@ -422,7 +422,7 @@
 								if(data == j){
 
 									// 선택된 버튼 표현
-									i.classList.add('btn-danger');
+									i.classList.add('button-primary');
 									i.classList.remove('btn-default');
 								}
 							});							

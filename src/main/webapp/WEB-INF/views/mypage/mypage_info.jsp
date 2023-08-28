@@ -503,7 +503,7 @@
 						<br><br>
 						현재 내점수
 						<div class="progress" style="height:30px">
-		   					 <div class="progress-bar" style="width:<%=rate%>%;"><%=rate%>점</div>
+		   					 <div class="progress-bar backg-primary" style="width:<%=rate%>%;"><%=rate%>점</div>
 		  				</div>
 		  				<br><br><br>
 		  				<%=sbSocialOption %><br><br><br>

@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <header class="header">
 	<!-- 최상단 디자인 -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Eighth navbar example">
+	<nav class="navbar navbar-expand-lg navbar-dark backg-primary font-bold" aria-label="Eighth navbar example">
 		<div class="container">
 			<a class="navbar-brand" href="/"><img src="assets/img/logos/logo.png"></a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,10 +11,10 @@
 			<div class="collapse navbar-collapse" id="navbarsExample07">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item">
-						<a class="nav-link" href="/gameSearch">게임검색</a>
+						<a class="nav-link textc-quinary" href="/gameSearch">게임검색</a>
 					</li>
 					<li class="nav-item dropdown">
-	                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</a>
+	                    <a class="nav-link textc-quinary dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티</a>
 	                    <ul class="dropdown-menu">
 	                    	<li><a class="dropdown-item" href="/announceBoardList">공지사항</a></li>
 							<li><a class="dropdown-item" href="/freeBoardList">자유게시판</a></li>
@@ -22,7 +22,7 @@
 						</ul>
 					</li>
 					<li class="nav-item">
-                    	<a class="nav-link" href="/partySearch">모임검색</a>
+                    	<a class="nav-link textc-quinary" href="/partySearch">모임검색</a>
 					</li>
 					<%= adminHtml %>
 				</ul>

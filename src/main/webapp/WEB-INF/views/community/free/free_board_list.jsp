@@ -26,7 +26,7 @@
 	for(BoardTO list: announceList) {
 		boardHtml.append("<tr class='boardList' onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "\"'>");
 		boardHtml.append("<td class='board-img'><i class='bi bi-megaphone h1 icon'></i></td>");
-		boardHtml.append("<td><span class='badge bg-secondary'>");
+		boardHtml.append("<td><span class='badge backg-primary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
 		boardHtml.append(list.getSubject() + " [" + list.getCmtCnt() + "]<br>");
@@ -46,7 +46,7 @@
 			boardHtml.append("<div class='thumbnail'>" + list.getThumbnail() + "</div>");
 		}
 		boardHtml.append("</td>");
-		boardHtml.append("<td><span class='badge bg-secondary'>");
+		boardHtml.append("<td><span class='badge backg-primary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
 		boardHtml.append(list.getSubject() + " [" + list.getCmtCnt() + "]<br>");

@@ -27,7 +27,7 @@
 		boardHtml.append("<tr onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "&cpage="+ cpage +"\"'>");
 		boardHtml.append("<td class='board-img'><i class='bi bi-megaphone");
 		boardHtml.append(" h1 icon'></i></td>");
-		boardHtml.append("<td><span class='badge bg-secondary'>");
+		boardHtml.append("<td><span class='badge backg-primary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
 		boardHtml.append(list.getSubject() + " [" + list.getCmtCnt() + "]<br>");
