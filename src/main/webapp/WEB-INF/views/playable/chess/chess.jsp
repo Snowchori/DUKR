@@ -287,7 +287,7 @@
 			if(sec < 10){
 				sec = "0" + sec;
 			}
-			let result = min + " : " + sec;
+			let result = '<i class="fas fa-clock"></i> &nbsp; ' + min + " : " + sec;
 			
 			$('#timer-me').html(result);
 			myTime --;
@@ -315,7 +315,7 @@
 			if(sec < 10){
 				sec = "0" + sec;
 			}
-			let result = min + " : " + sec;
+			let result = '<i class="fas fa-clock"></i> &nbsp; ' + min + " : " + sec;
 			
 			$('#timer-opponent').html(result);
 			opTime --;
@@ -420,7 +420,7 @@
 	}
 	
     .timer {
-    	width: 100px;
+    	width: 120px;
     	height: 50px;
     	background-color: black;
     	color: white;
@@ -518,12 +518,12 @@
 			<div id="informations">
 				<div id="info-opponent">
 					<div id="timer-opponent" class="timer">
-						10 : 00
+						<i class="fas fa-clock"></i> &nbsp; 10 : 00
 					</div>
 				</div>
 				<div id="info-me">
 					<div id="timer-me" class="timer">
-						10 : 00
+						<i class="fas fa-clock"></i> &nbsp; 10 : 00
 					</div>
 				</div>
 			</div>
