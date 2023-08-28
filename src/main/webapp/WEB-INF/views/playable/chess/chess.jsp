@@ -28,9 +28,13 @@
 				
 				$('#startingComponents').css({
 					'display': 'none'
-				})
+				});
 				
 				$('#informations').css({
+					'display': 'flex'
+				});
+				
+				$('#chatBox').css({
 					'display': 'flex'
 				});
 				
@@ -345,7 +349,13 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            margin: 0 auto;
+    }
+    
+    #playElements {
+    	display: flex;
+    	margin: 0 auto;
+    	position: relative;
     }
     
     #promoteOptions {
@@ -385,7 +395,7 @@
 	#game {
 		display : flex;
 		flex-direction: column;
-		margin: 0 10px;
+		margin: 0 auto;
 	}
 	
 	#informations {
@@ -409,11 +419,6 @@
 		height: 50vh;
 	}
 	
-	.message-area {
-		height: 300px;
-      	overflow-y: auto; 
-    }
-    
     .timer {
     	width: 100px;
     	height: 50px;
@@ -427,6 +432,37 @@
     	font-weight: bold;
     }
     
+    #chatBox {
+    	display: none;
+    	margin-right: 0px;
+    	flex-direction: column;
+    	background-color: lightblue;
+    	height: 100vh;
+    	width: 400px;
+    }
+    
+    #startingComponents {
+    	display: flex;
+    	justify-content: center;
+    	align-items: center;
+    	height: 100vh;
+    }
+    
+    .matchBtn {
+    	background-color: #4CAF50; 
+    	border: none; 
+    	color: white; 
+    	padding: 10px 20px;
+    	text-align: center; 
+    	text-decoration: none; 
+    	display: inline-block;
+    	font-size: 16px; 
+    	border-radius: 5px; 
+    	cursor: pointer;
+    	font-size: 30px;
+    	font-weight: bold;
+  	}
+    
 </style>
 </head>
 <body>	
@@ -435,85 +471,60 @@
 	<!-- opponent --> 
 	<input type='hidden' id='opponent' />
 
+	<!-- 시작 요소 -->
+	<div id='startingComponents'>
+		<button id="matchBtn" class="matchBtn">Rapid - 10분<br>매칭 시작</button>	
+	</div>
+
 	<div id='flexContainer'>
-		<!-- 시작 요소 -->
-		<div id='startingComponents'>
-			<button id="matchBtn">매칭 시작</button>	
-		</div>
-	
+		
 		<!-- 채팅창 -->
 		<div id="chatBox">
-			<div class="container mt-5">
-				<div class="row">
-					<div class="col-md-12 offset-md-1">
-      					<div class="card">
-        					<div class="card-header">
-        						채팅
-        					</div>
-        					<div class="card-body message-area" style="height: 300px; overflow-y: auto;">
-          						<ul class="list-unstyled">
-            						<li class="media">
-              							<div class="media-body">
-                							<h5 class="mt-0 mb-1">플레이어 1</h5>
-                							하이
-              							</div>
-            						</li>
-           	 					<!-- 추가적인 대화 메시지는 이곳에 추가 가능 -->
-          						</ul>
-        					</div>
-        					<div class="card-footer">
-          						<div class="input-group">
-            						<input type="text" class="form-control flex-grow-1 mr-2" placeholder="메시지 입력">
-            						<button class="btn btn-primary">전송</button>
-          						</div>
-        					</div>
-      					</div>
-    				</div>
-  				</div>
+			<div>
+				chatbox
 			</div>
-		</div>
-	
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	
-		<div id="game">
-			<div id="promoteOptions">
-				<!-- 폰 프로모션 선택지(백) -->
-				<div id="whitePromoteOptions" style="display:none;">
-					<table class="promoteOptions">
-						<tr>
-							<td id="whiteQueen">&#9813;</td>
-							<td id="whiteRook">&#9814;</td>
-							<td id="whiteBishop">&#9815;</td>
-							<td id="whiteKnignt">&#9816;</td>
-						</tr>
-					</table>
-				</div>
-				<!-- 폰 프로모션 선택지(흑) -->
-				<div id="blackPromoteOptions" style="display:none;">
-					<table class="promoteOptions">
-						<tr>
-							<td id="blackQueen">&#9819;</td>
-							<td id="blackRook">&#9820;</td>
-							<td id="blackBishop">&#9821;</td>
-							<td id="blackKnignt">&#9822;</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			<!-- 체스보드 -->
-			<div id='chessBoardContainer' class='chessBoardContainer'></div>
 		</div>
 		
-		<div id="informations">
-			<div id="info-opponent">
-				<div id="timer-opponent" class="timer">
-					10 : 00
+		<div id="playElements">
+			<div id="game">
+				<div id="promoteOptions">
+					<!-- 폰 프로모션 선택지(백) -->
+					<div id="whitePromoteOptions" style="display:none;">
+						<table class="promoteOptions">
+							<tr>
+								<td id="whiteQueen">&#9813;</td>
+								<td id="whiteRook">&#9814;</td>
+								<td id="whiteBishop">&#9815;</td>
+								<td id="whiteKnignt">&#9816;</td>
+							</tr>
+						</table>
+					</div>
+					<!-- 폰 프로모션 선택지(흑) -->
+					<div id="blackPromoteOptions" style="display:none;">
+						<table class="promoteOptions">
+							<tr>
+								<td id="blackQueen">&#9819;</td>
+								<td id="blackRook">&#9820;</td>
+								<td id="blackBishop">&#9821;</td>
+								<td id="blackKnignt">&#9822;</td>
+							</tr>
+						</table>
+					</div>
 				</div>
+				<!-- 체스보드 -->
+				<div id='chessBoardContainer' class='chessBoardContainer'></div>
 			</div>
-			<div id="info-me">
-				<div id="timer-me" class="timer">
-					10 : 00
+			<!-- 타이머 -->
+			<div id="informations">
+				<div id="info-opponent">
+					<div id="timer-opponent" class="timer">
+						10 : 00
+					</div>
+				</div>
+				<div id="info-me">
+					<div id="timer-me" class="timer">
+						10 : 00
+					</div>
 				</div>
 			</div>
 		</div>

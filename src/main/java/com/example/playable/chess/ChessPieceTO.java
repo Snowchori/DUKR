@@ -3,7 +3,6 @@ package com.example.playable.chess;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import lombok.Getter;
 import lombok.Setter;
 
