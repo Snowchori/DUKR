@@ -46,7 +46,7 @@
 			boardHtml.append("<div class='thumbnail'>" + list.getThumbnail() + "</div>");
 		}
 		boardHtml.append("</td>");
-		boardHtml.append("<td><span class='badge backg-primary'>");
+		boardHtml.append("<td><span class='badge bg-secondary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
 		boardHtml.append(list.getSubject() + " [" + list.getCmtCnt() + "]<br>");
@@ -121,7 +121,7 @@
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="mt-5 py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title"><span class="hover" onclick="location.href='freeBoardList'">자유게시판</span></h1>

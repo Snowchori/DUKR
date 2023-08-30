@@ -21,6 +21,10 @@ String minAge = "";
 String brief = "";
 String theme = "";
 String genre = "";
+int count = 0;
+
+recHtml.append("<div id='carouselExampleInterval' class='carousel slide' data-bs-ride='carousel'>");
+recHtml.append("<div class='carousel-inner'>");
 
 // 수정여부에 따라서 수정함, 수정안함 분리
 for(BoardgameTO to: gameList) {
@@ -44,20 +48,64 @@ for(BoardgameTO to: gameList) {
 	}
 
 	if(gameRecList.contains(to.getSeq())) {
-		preRecHtml.append("<div class='col-lg-3 m-1 p-1 text-center'>");
+		preRecHtml.append("<div class='col-lg-3 m-1 p-1 text-center align-self-center d-flex justify-content-center'>");
+		preRecHtml.append("<div class='portfolio-item border'>");
+		preRecHtml.append("<a class='portfolio-link-sub bg-white d-flex align-items-center justify-content-center'>");
 		preRecHtml.append("<img class='game_img' src='" + to.getImageUrl() + "'><br/>");
-		preRecHtml.append("번호: " + to.getSeq() + ", 제목: " + to.getTitle());
+		preRecHtml.append("</a>");
+		preRecHtml.append("<div class='portfolio-caption-sub'>");
+		preRecHtml.append("<div class='portfolio-caption-heading font-bold'>"+to.getTitle()+"</div>");
 		preRecHtml.append("</div>");
-		
+		preRecHtml.append("</div>");
+		preRecHtml.append("</div>");
+	}
+	
+	if(count==0) {
+		recHtml.append("<div class='carousel-item active' data-bs-interval='100000'>");
+		recHtml.append("<div class='row d-flex justify-content-around'>");
+	} else if (count%9 == 0) {
+		recHtml.append("<div class='carousel-item' data-bs-interval='100000'>");
+		recHtml.append("<div class='row d-flex justify-content-around'>");
 	}
 
-	recHtml.append("<div class='col-lg-3 m-1 p-1 text-center'>");
+	recHtml.append("<div class='col-lg-3 m-1 text-center align-self-center d-flex justify-content-center'>");
+	recHtml.append("<div class='portfolio-item border'>");
+	recHtml.append("<a class='portfolio-link-sub bg-white d-flex align-items-center justify-content-center'>");
 	recHtml.append("<img class='game_img' src='" + to.getImageUrl() + "'><br/>");
+	recHtml.append("</a>");
+	recHtml.append("<div class='portfolio-caption-sub'>");
 	recHtml.append("<input type='checkbox' name='checkedValue' value='" + to.getSeq());
-	recHtml.append( "' onclick='getCheckedCnt()'/> ");
-	recHtml.append("번호: " + to.getSeq() + ", 제목: " + to.getTitle());
+	recHtml.append("' onclick='getCheckedCnt()'/> ");
+	recHtml.append("<div class='portfolio-caption-heading font-bold'>"+to.getTitle()+"</div>");
+	recHtml.append("</div>");
+	recHtml.append("</div>");
+	recHtml.append("</div>");
+	
+	count++;
+	
+	if(count%9 == 0) {
+		recHtml.append("</div>");
+		recHtml.append("</div>");
+	}
+}
+
+if(count%9 != 0) {
+	recHtml.append("</div>");
 	recHtml.append("</div>");
 }
+
+recHtml.append("</div>");
+recHtml.append("</div>");
+recHtml.append("<div class='mt-5 d-flex justify-content-center'>");
+recHtml.append("<button type='button' data-bs-target='#carouselExampleInterval' data-bs-slide='prev'>");
+recHtml.append("<span class='carousel-control-prev-icon' aria-hidden='true'></span>");
+recHtml.append("<span class='visually-hidden'>Previous</span>");
+recHtml.append("</button>");
+recHtml.append("<button type='button' data-bs-target='#carouselExampleInterval' data-bs-slide='next'>");
+recHtml.append("<span class='carousel-control-next-icon' aria-hidden='true'></span>");
+recHtml.append("<span class='visually-hidden'>Next</span>");
+recHtml.append("</button>");
+recHtml.append("</div>");
 
 StringBuilder cbtnHtml = new StringBuilder();
 
@@ -67,8 +115,8 @@ if(preRecHtml == null || preRecHtml.toString().equals("")) {
 	preRecHtml.append("</div>");
 } else {
 	preRecHtml.append("<div class='row my-2 d-flex justify-content-end align-items-center'>");
-	preRecHtml.append("<div class='col-lg-3'>");
-	preRecHtml.append("<button id='cbtn' type='button' class='btn btn-dark cbtn'>초기화</button>");
+	preRecHtml.append("<div class='col-lg-3 d-flex justify-content-end'>");
+	preRecHtml.append("<button id='cbtn' type='button' class='btn btn-dark cbtn '>초기화</button>");
 	preRecHtml.append("</div>");
 	preRecHtml.append("</div>");
 	
@@ -325,9 +373,9 @@ if(seq != null && !seq.equals("")) {
 			}
 		</script>
 	</head>
-	<body class="bg-secondary text-white">
+	<body class="backg-quinary text-white">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="mt-5 py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title"><span class="hover" onclick="location.href='gameManage'">보드게임 관리</span></h1>
@@ -337,8 +385,8 @@ if(seq != null && !seq.equals("")) {
 		</header>
 		<main>
 			<!-- ======= gameInfo Section ======= -->
-			<section id="gameInfo" class="gameInfo p-3 mb-2">
-				<div class="container-fluid bottombody_manage">
+			<section id="portfolio" class="page-section p-3 mb-2">
+				<div class="container bottombody_manage" id='p2'>
 					<div class="row m-3 p-4 bg-white text-black rounded-5">
 						<h2>게임 정보 관리</h2>
 						<ul id="myUL">
@@ -365,7 +413,7 @@ if(seq != null && !seq.equals("")) {
 					<div class="row m-3 p-4 bg-white text-black rounded-5">
 						<h2>게임 추천 관리</h2>
 						<h5>현재 추천 게임</h5>
-						<div class="row my-3 align-items-center">
+						<div class="row my-3 align-items-center d-flex justify-content-around">
 							<%= preRecHtml %>
 						</div>
 						<h5>추천 게임을 선택해주세요 (2-5개)</h5>
@@ -374,11 +422,13 @@ if(seq != null && !seq.equals("")) {
 								<%= recHtml %>
 							</div>
 							<div class="row my-2 d-flex justify-content-end align-items-center">
-								<div id="result" class="col-lg-2">
-									0개 선택
-								</div>
-								<div class="col-lg-3">
-									<button id="rbtn" type='button' class='btn btn-dark cbtn'>등록</button>
+								<div class="col-lg-3 d-flex justify-content-between">
+									<div id="result">
+										<span class="align-middle">0개 선택</span>
+									</div>
+									<div>
+										<button id="rbtn" type='button' class='btn btn-dark cbtn'>등록</button>
+									</div>
 								</div>
 							</div>
 						</form>

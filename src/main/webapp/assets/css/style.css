@@ -17,7 +17,7 @@
 .quickmenu {
 	position:fixed;
 	width:100px;
-	top:20%;
+	top:30%;
 	margin-top:-50px;
 	right:10px;
 	background:#fff;
@@ -55,11 +55,25 @@
 	margin: 2px;
 }
 
+.top-margin {
+	margin-top: 120px;
+}
+
 @font-face {
     font-family: 'SBAggroB';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
     font-weight: normal;
     font-style: normal;
+}
+
+.logo {
+	height: 55px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.v-align {
+	vertical-align: middle;
 }
 
 :root {
@@ -662,8 +676,8 @@ ul, #myUL {
 }
 
 .game_img {
-    max-width:200px;
-    max-height:200px;
+    max-width:150px;
+    max-height:150px;
 }
 
 *,
@@ -807,6 +821,14 @@ ul, #myUL {
 	margin: 0 auto;
 }
 
+#portfolio .portfolio-item .portfolio-link-sub {
+	width: 200px;
+	height: 200px;
+	position: relative;
+	display: block;
+	margin: 0 auto;
+}
+
 #portfolio .portfolio-item .portfolio-link .portfolio-hover {
 	display: flex;
 	position: absolute;
@@ -829,6 +851,14 @@ ul, #myUL {
 }
 
 #portfolio .portfolio-item .portfolio-caption {
+	padding: 1.5rem;
+	text-align: center;
+	background-color: #fff;
+}
+
+#portfolio .portfolio-item .portfolio-caption-sub {
+	width: 200px;
+	height: 100px;
 	padding: 1.5rem;
 	text-align: center;
 	background-color: #fff;

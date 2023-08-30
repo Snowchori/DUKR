@@ -92,7 +92,7 @@
 	</head>
 	<body class="backg-quinary text-white">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="mt-5 py-5 backg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container-fluid px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title"><span class="hover" onclick="location.href='banUserManage'">밴유저 관리</span></h1>

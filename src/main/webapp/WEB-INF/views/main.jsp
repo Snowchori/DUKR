@@ -159,12 +159,19 @@
 	    <script type="text/javascript">
 		    $(document).ready(function() {
 	            var topBtn = $("#topBtn");
+	            var quickMenu = $("#quickmenu1");
 	            
 	            $(window).scroll(function() {
 	                if ($(window).scrollTop() > 20) {
 	                	topBtn.show();
 	                } else {
 	                	topBtn.hide();
+	                }
+	                
+	                if ($(window).scrollTop() > 700) {
+	                	quickMenu.show();
+	                } else {
+	                	quickMenu.hide();
 	                }
 	            });
         	});
@@ -182,6 +189,7 @@
 		    	}
 		    	
 		    	$("#topBtn").hide();
+		    	$("#quickmenu1").hide();
 		    }
 		    
 		    function caretUp() {
@@ -228,29 +236,29 @@
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 	    <!-- Masthead-->
-	    <header>
+	    <header class="top-margin">
 	        <!--  캐러셀 -->
-			    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-			        <div class="carousel-inner">
-			            <div class="carousel-item active banner" data-bs-interval="4000">
-			                <img src="assets/img/carousel/carousel1.jpg" class="d-block w-100" alt="...">
-			            </div>
-			            <div class="carousel-item banner" data-bs-interval="4000">
-			                <img src="assets/img/carousel/carousel2.jpg" class="d-block w-100" alt="...">
-			            </div>
-			            <div class="carousel-item banner">
-			                <img src="assets/img/carousel/carousel3.jpg" class="d-block w-100" alt="...">
-			            </div>
-			        </div>
-			        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-			            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-			            <span class="visually-hidden">Previous</span>
-			        </button>
-			        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-			            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-			            <span class="visually-hidden">Next</span>
-			        </button>
-			    </div>
+		    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+		        <div class="carousel-inner">
+		            <div class="carousel-item active banner" data-bs-interval="4000">
+		                <img src="assets/img/carousel/carousel1.jpg" class="d-block w-100" alt="...">
+		            </div>
+		            <div class="carousel-item banner" data-bs-interval="4000">
+		                <img src="assets/img/carousel/carousel2.jpg" class="d-block w-100" alt="...">
+		            </div>
+		            <div class="carousel-item banner">
+		                <img src="assets/img/carousel/carousel3.jpg" class="d-block w-100" alt="...">
+		            </div>
+		        </div>
+		        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+		            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		            <span class="visually-hidden">Previous</span>
+		        </button>
+		        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+		            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+		            <span class="visually-hidden">Next</span>
+		        </button>
+		    </div>
 	    </header>
 	    <!-- 즐겨찾기 헤더-->
 	    <%=favSB %>
