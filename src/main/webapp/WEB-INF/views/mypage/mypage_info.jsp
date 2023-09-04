@@ -443,22 +443,11 @@
 				});
 			});
 		</script>
-		<style type="text/css">	
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-			
-			.title {
-				font-family: SBAggroB;
-			}
-		</style>
+		<link href="assets/css/style.css" rel="stylesheet">
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title">마이페이지</h1>
@@ -514,7 +503,7 @@
 						<br><br>
 						현재 내점수
 						<div class="progress" style="height:30px">
-		   					 <div class="progress-bar" style="width:<%=rate%>%;"><%=rate%>점</div>
+		   					 <div class="progress-bar backg-primary" style="width:<%=rate%>%;"><%=rate%>점</div>
 		  				</div>
 		  				<br><br><br>
 		  				<%=sbSocialOption %><br><br><br>
