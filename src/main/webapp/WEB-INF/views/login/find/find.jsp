@@ -22,23 +22,13 @@
 <html>
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
+		<link href="assets/css/style.css" rel="stylesheet">
 		<script type="text/javascript">
 			function changeDropdownItem(item) {
 		    	document.getElementById('dropdownMenuButton1').innerHTML = item;
 		 	}
 		</script>
 		<style type="text/css">
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-	
-			.title{
-				font-family: SBAggroB;
-			}
-			
 			.border {
 				border-radius: 10px;
 				border-style: solid;
@@ -83,7 +73,7 @@
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title">아이디/비밀번호 찾기</h1>

@@ -23,7 +23,7 @@
 	StringBuilder adminHtml = new StringBuilder();
 	if(isAdmin) {
 		adminHtml.append("<li class='nav-item dropdown'>");
-		adminHtml.append("<a class='nav-link dropdown-toggle' href='#' data-bs-toggle='dropdown' aria-expanded='false'>관리자</a>");
+		adminHtml.append("<a class='nav-link textc-quinary dropdown-toggle' href='#' data-bs-toggle='dropdown' aria-expanded='false'>관리자</a>");
 		adminHtml.append("<ul class='dropdown-menu'>");
 		adminHtml.append("<li><a class='dropdown-item' href='reportList'>신고글 목록</a></li>");
 		adminHtml.append("<li><a class='dropdown-item' href='banUserManage'>밴유저 관리</a></li>");
@@ -35,7 +35,4 @@
 		adminHtml.append("</ul>");
 		adminHtml.append("</li>");
 	}
-	
-	// 카카오 로그인 API 키
-	String kakaoApiLoginKey = (String)request.getAttribute("kakaoApiLoginKey");
 %>

@@ -3,7 +3,6 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,7 @@ import com.example.model.report.ReportListTO;
 import com.example.model.report.ReportTO;
 
 @RestController
-public class DURKController {
+public class DUKRController {
 	
 	@Autowired
 	private BoardgameDAO gameDAO;
@@ -100,6 +99,15 @@ public class DURKController {
 
 	@Value("${kakao.api.login.key}")
 	private String kakaoApiLoginKey;
+	
+	@Value("${vworld.api.key}")
+	private String gcapikey;
+	
+	// 소셜로그인 api키 제공
+	@PostMapping("/kakaoApiLoginKey")
+	public String kakaoApiLoginKey() {
+		return kakaoApiLoginKey;
+	}	
 	
 	// main
 	@RequestMapping("/")
@@ -984,7 +992,6 @@ public class DURKController {
 	
 	@RequestMapping( value = {"/freeBoardDeleteOk", "/partyBoardDeleteOk", "/announceBoardDeleteOK"})
 	public int boardDeleteOK(HttpServletRequest request) {
-		System.out.println(request.getRequestURI());
 		String boardSeq = request.getParameter("seq");
 		int flag = boardDAO.boardDelete(boardSeq);
 
@@ -1225,7 +1232,7 @@ public class DURKController {
 		return result;
 	}
 	
-	// ck에디터 이미지 업로드하기@@
+	// CKEditor 이미지 업로드하기
 	@PostMapping( value = { "/upload/freeboard", "/upload/announce" })
 	public String imgUpload(HttpServletRequest req, MultipartFile upload) {
 		Boolean uploadResult = false;
@@ -1236,7 +1243,6 @@ public class DURKController {
 		String curTime = "_" + System.currentTimeMillis();
 		
 		String newFileName = fileNamePrefix + curTime + fileNameSuffix;
-		
 		try {
 			upload.transferTo(new File(newFileName));
 			uploadResult = true;
@@ -1248,7 +1254,6 @@ public class DURKController {
 		
 		String url = "./upload/" + newFileName;
 		String result = "{\"url\": \"" + url + "\", \"uploaded\": \"" + uploadResult + "\"}";
-		
 		return result;
 	}
 	
@@ -1546,8 +1551,6 @@ public class DURKController {
 
 			boardModifyResult = boardDAO.boardModifyOk(bto);
 			partymodifyResult = partyDAO.partyModifyOk(pto);
-			System.out.println(boardModifyResult);
-			System.out.println(partymodifyResult);
 		}
 		
 		if(boardModifyResult == 1 && partymodifyResult == 1) {
@@ -1644,6 +1647,7 @@ public class DURKController {
 		String prvcode = request.getParameter("prvcode") != null ? request.getParameter("prvcode") : "";
 
 		ModelAndView model = new ModelAndView("community/party/geocodes");
+		model.addObject("gcapikey", gcapikey);
 		model.addObject("prvcode", prvcode);
 		return model;
 	}
@@ -1916,8 +1920,6 @@ public class DURKController {
 	@RequestMapping("/loginKakao")
 	public ModelAndView loginKakao(HttpServletRequest req) {
 		ModelAndView mav = new ModelAndView("login/login_kakao");
-		mav.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
-		
 		return mav;
 	}
 	
@@ -1985,7 +1987,6 @@ public class DURKController {
 	public ModelAndView login(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("login/login");
-		modelAndView.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
 		return modelAndView;
 	}
 	
@@ -1997,7 +1998,6 @@ public class DURKController {
 		String userSeq = (userInfo != null) ? userInfo.getSeq() : null;
 		
 		ModelAndView mav = new ModelAndView("login/logout");
-		mav.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
 		
 		LogsTO logTO = new LogsTO();
         logTO.setMemSeq(userSeq);
@@ -2310,7 +2310,6 @@ public class DURKController {
 		modelAndView.addObject("email", userInfo.getEmail());
 		modelAndView.addObject("nickname", userInfo.getNickname());
 		modelAndView.addObject("rate", userInfo.getRate());
-		modelAndView.addObject("kakaoApiLoginKey", kakaoApiLoginKey);
 		modelAndView.setViewName("mypage/mypage_info");
 		
 		return modelAndView;
@@ -2337,6 +2336,7 @@ public class DURKController {
 			// 세션 - 소셜인증한 유저정보로 업데이트
 			currentUser = memberDAO.memberinfoGet(currentUser.getSeq());
 			request.getSession().setAttribute("logged_in_user", currentUser);
+			System.out.println("" + currentUser.getSeq());
 			
 			responsetText = "소셜 인증이 완료되었습니다";
 		}

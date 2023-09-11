@@ -10,12 +10,17 @@
 		<!-- 카카오 로그인 -->
 		<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.2.0/kakao.min.js" integrity="sha384-x+WG2i7pOR+oWb6O5GV5f1KN2Ko6N7PTGPS7UlasYWNxZMKQA63Cj/B2lbUmUfuC" crossorigin="anonymous"></script>
 		<script>
-			Kakao.init('<%=kakaoApiLoginKey %>'); // 카카오 초기화
-			console.log(Kakao.isInitialized());
-			
+			$.ajax({
+				url: '/kakaoApiLoginKey',
+				type: 'POST',
+				success: function(res){
+					Kakao.init(res);
+				}
+			});
+
 			function loginWithKakao() {
 		    	Kakao.Auth.authorize({
-		    		redirectUri: 'http://localhost:8080/loginKakao',
+		    		redirectUri: 'http://54.180.57.106:8080/loginKakao', 
 		     		state: 'userme',
 		    	});
 		  	}	
@@ -65,22 +70,11 @@
 				};
 			};
 		</script>
-		<style type="text/css">
-			@font-face {
-				font-family: 'SBAggroB';
-				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-			}
-	
-			.title {
-				font-family: SBAggroB;
-			}
-		</style>
+		<link href="assets/css/style.css" rel="stylesheet">
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title">로그인</h1>

@@ -410,9 +410,9 @@
 			}
 		</script>
 	</head>
-	<body class="bg-secondary text-white">
+	<body class="backg-quinary text-white">
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title"><span class="hover" onclick="location.href='reportList'">신고글 목록</span></h1>
