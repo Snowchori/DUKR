@@ -49,7 +49,7 @@ Do You Know Rule?
         모임검색 페이지<br>
         <img src="./screenshot/board.png" alt="board.png"><br>
         커뮤니티 게시판<br>
-        <img src="./screenshot/mymage.png" alt="mymage.png"><br>
+        <img src="./screenshot/mypage.png" alt="mypage.png"><br>
         마이페이지<br>
         <img src="./screenshot/manager.png" alt="manager.png"><br>
         관리자 페이지<br>
