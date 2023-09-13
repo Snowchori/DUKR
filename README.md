@@ -41,17 +41,17 @@ Do You Know Rule?
 
 ## Screen shot
 <p align="center">
-        <img src="./screenshot/MapleCal_1.png" alt="MapleCal_1.png"><br>
+        <img src="./screenshot/main.png" alt="main.png"><br>
         메인페이지<br>
-        <img src="./screenshot/MapleCal_2.png" alt="MapleCal_2.png"><br>
+        <img src="./screenshot/gamesearch.png" alt="gamesearch.png"><br>
         게임검색 페이지<br>
-        <img src="./screenshot/MapleCal_3.png" alt="MapleCal_3.png"><br>
+        <img src="./screenshot/partysearch.png" alt="partysearch.png"><br>
         모임검색 페이지<br>
-        <img src="./screenshot/MapleCal_4.png" alt="MapleCal_4.png"><br>
+        <img src="./screenshot/board.png" alt="board.png"><br>
         커뮤니티 게시판<br>
-        <img src="./screenshot/MapleCal_4.png" alt="MapleCal_4.png"><br>
+        <img src="./screenshot/mymage.png" alt="mymage.png"><br>
         마이페이지<br>
-        <img src="./screenshot/MapleCal_4.png" alt="MapleCal_4.png"><br>
+        <img src="./screenshot/manager.png" alt="manager.png"><br>
         관리자 페이지<br>
 </p>
 
