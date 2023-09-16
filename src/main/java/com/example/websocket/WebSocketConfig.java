@@ -6,6 +6,7 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 import com.example.playable.chess.ChessWebSocketHandler;
+import com.example.playable.sechsnimmt.SechsNimmtWebSocketHandler;
 
 @Configuration
 @EnableWebSocket
@@ -17,6 +18,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 		// 체스 웹소켓
 		registry.addHandler(new ChessWebSocketHandler(), "/chess").setAllowedOrigins("*");
+		registry.addHandler(new SechsNimmtWebSocketHandler(), "/sechsNimmt").setAllowedOrigins("*");
 	}
 
 }

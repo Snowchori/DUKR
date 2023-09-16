@@ -40,6 +40,8 @@ application.properties
 
 /src/main/webapp/upload/
 
+/src/main/java/com/example/playable/tetris/
+/src/main/webapp/WEB-INF/views/playable/tetris/
 
 ### Eclipse ###
 .metadata

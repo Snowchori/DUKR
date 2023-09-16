@@ -386,9 +386,9 @@
 		color: black;	
 		text-align: center;
 		align: center;
-		font-size: 30px;
-		min-width: 50px;
-		height: 50px;
+		font-size: 60px;
+		min-width: 100px;
+		height: 100px;
 		font-family: "chessPiece", sans-serif;
 	}
 
@@ -401,7 +401,7 @@
 	#informations {
 		display : none;
 		flex-direction: column;
-		height: 400px;
+		height: 800px;
 		margin: 0 10px;
 	}
 	
@@ -420,15 +420,15 @@
 	}
 	
     .timer {
-    	width: 120px;
-    	height: 50px;
+    	width: 240px;
+    	height: 100px;
     	background-color: black;
     	color: white;
     	border-radius: 10px;
     	display: flex;
     	justify-content: center;
     	align-items: center;
-    	font-size: 20px;
+    	font-size: 40px;
     	font-weight: bold;
     }
     
@@ -514,6 +514,7 @@
 				<!-- 체스보드 -->
 				<div id='chessBoardContainer' class='chessBoardContainer'></div>
 			</div>
+			
 			<!-- 타이머 -->
 			<div id="informations">
 				<div id="info-opponent">
@@ -527,6 +528,7 @@
 					</div>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 
