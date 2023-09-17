@@ -73,7 +73,6 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 		StringBuilder sbResult = new StringBuilder();
 		
 		sbResult.append("{");
-		
 		sbResult.append("\"players\": ");
 		sbResult.append("[");
 		for(SechsNimmtPlayerTO player : players) {
@@ -89,7 +88,6 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 		}
 		sbResult.deleteCharAt(sbResult.lastIndexOf(","));
 		sbResult.append("]");
-		
 		sbResult.append("}");
 		
 		return sbResult.toString();
@@ -165,17 +163,17 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 						game.getPicks().add(playerTO);
 					}
 					game.sortPicks();
+					String transfer = game.autoTransfer();
+					System.out.println(transfer);
 					
 					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
-						String picksJson = picksToJson(game.getPicks()); 
+						String picksJson = picksToJson(game.getPicks());
 						playerTO.getPlayerSession().sendMessage(new TextMessage("picks@" + picksJson));
+						playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
 					}
 				}
-				
-			}
-			
+			}	
 		}
-		
 	}
 
 	@Override

@@ -23,6 +23,8 @@ public class SechsNimmtGameTO {
 	private int round;
 	// 플레이어들이 고른 카드 공개
 	private ArrayList<SechsNimmtPlayerTO> picks;
+	// 카드이동 포인터
+	private int picksPointer;
 
 	// 생성자 - 게임 초기화
 	public SechsNimmtGameTO(ArrayList<WebSocketSession> playersList) {
@@ -32,6 +34,7 @@ public class SechsNimmtGameTO {
 		this.players = new HashMap<>();
 		this.round = 1;
 		this.picks = new ArrayList<>();
+		this.picksPointer = 0;
 
 		// 플레이어 추가
 		for(WebSocketSession player : playersList) {
@@ -89,6 +92,51 @@ public class SechsNimmtGameTO {
 					break;
 				}
 			}
+		}
+	}
+	
+	// 카드 자동 이동
+	public String autoTransfer() {
+		if(this.picksPointer == this.picks.size()) {
+			this.picksPointer = 0;
+			this.round ++;
+			return "transfer_complete";
+		}
+		
+		SechsNimmtCardTO movingCard = this.picks.get(this.picksPointer).getPick();
+		ArrayList<SechsNimmtCardTO> candidates = new ArrayList<>(); 
+		
+		for(int row=0; row<4; row++) {
+			for(int col=5; col>0; col--) {
+				SechsNimmtCardTO cursor = this.gameStatus[row][col];
+				SechsNimmtCardTO before = this.gameStatus[row][col-1];
+				if(cursor == null && before != null && before.getCardNumber() < movingCard.getCardNumber()) {
+					before.setRow(row);
+					before.setCol(col - 1);
+					candidates.add(before);
+				}
+			}
+		}
+		
+		if(candidates.size() == 0) {
+			return "picksPointer@" + this.picksPointer + "@no_candidate";
+		}else {
+			int gap = 104;
+			int row = 0;
+			int col = 0;
+			
+			for(SechsNimmtCardTO card : candidates) {
+				int gapCandidate = movingCard.getCardNumber() - card.getCardNumber();
+				if(gapCandidate < gap) {
+					gap = gapCandidate;
+					row = card.getRow();
+					col = card.getCol() + 1;
+				}	
+			}
+			
+			this.gameStatus[row][col] = movingCard;
+			this.picksPointer ++;
+			return "picksPointer@" + (this.picksPointer - 1) + "@transfer_to@r" + (row + 1) + "c" + (col + 1);
 		}
 	}
 	

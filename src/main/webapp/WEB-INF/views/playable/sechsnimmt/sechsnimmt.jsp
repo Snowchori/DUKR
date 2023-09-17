@@ -80,6 +80,7 @@
 			
 			// 플레이어들이 고른 카드정보 수신
 			if(event.data.split('@')[0] == 'picks'){
+				$('#picksContainer').empty();
 				const picks = JSON.parse(event.data.split('@')[1]);
 				
 				let picksTable = '<table id="picks">';
@@ -98,6 +99,11 @@
 				var showPicks = $(picksTable);
 				$('#picksContainer').append(showPicks);
 				$('#instruction').html('');
+			}
+			
+			// 카드이동정보 수신
+			if(event.data.split('@')[0] == 'picksPointer'){
+				console.log('transfer // ' + event.data.split('@')[1]);
 			}
 		} 
 		
@@ -120,6 +126,14 @@
 		text-align: center;
 		border-width: 1px;	
 		border-style: solid;
+	}
+	
+	[penalty="true"] {
+		background-color: yellow;
+		background-image: url('./assets/img/playable/sechsnimmt/sechsnimmt_skull.png');
+		background-size: contain;
+  		background-repeat: no-repeat;
+  		background-position: center;
 	}
 	
 	#spaceBetweenPublicAndPicksContainer {
@@ -170,16 +184,16 @@
 	<div id="gameStatus">
 		<table id="public">
 			<tr>
-				<td id="r1c1"></td><td id="r1c2"></td><td id="r1c3"></td><td id="r1c4"></td><td id="r1c5"></td><td id="r1c6"></td>
+				<td id="r1c1"></td><td id="r1c2"></td><td id="r1c3"></td><td id="r1c4"></td><td id="r1c5"></td><td id="r1c6" penalty="true"></td>
 			</tr>
 			<tr>
-				<td id="r2c1"></td><td id="r2c2"></td><td id="r2c3"></td><td id="r2c4"></td><td id="r2c5"></td><td id="r2c6"></td>
+				<td id="r2c1"></td><td id="r2c2"></td><td id="r2c3"></td><td id="r2c4"></td><td id="r2c5"></td><td id="r2c6" penalty="true"></td>
 			</tr>
 			<tr>
-				<td id="r3c1"></td><td id="r3c2"></td><td id="r3c3"></td><td id="r3c4"></td><td id="r3c5"></td><td id="r3c6"></td>
+				<td id="r3c1"></td><td id="r3c2"></td><td id="r3c3"></td><td id="r3c4"></td><td id="r3c5"></td><td id="r3c6" penalty="true"></td>
 			</tr>
 			<tr>
-				<td id="r4c1"></td><td id="r4c2"></td><td id="r4c3"></td><td id="r4c4"></td><td id="r4c5"></td><td id="r4c6"></td>
+				<td id="r4c1"></td><td id="r4c2"></td><td id="r4c3"></td><td id="r4c4"></td><td id="r4c5"></td><td id="r4c6" penalty="true"></td>
 			</tr>
 		</table>
 		
