@@ -88,8 +88,8 @@
 				picksTable += '<tr>';
 				for(let index=0; index<picks.players.length; index++){
 					console.log(picks.players[index]);
-					picksTable += '<td>' + picks.players[index] + '</td>';
-					cardNumbers += '<td>' + picks.picks[index] + '</td>';
+					picksTable += '<td id="picks_player' + index + '">' + picks.players[index] + '</td>';
+					cardNumbers += '<td id="picks_pick' + index + '">' + picks.picks[index] + '</td>';
 				}
 				picksTable += '</tr>';
 				picksTable += cardNumbers;
@@ -104,9 +104,40 @@
 			// 카드이동정보 수신
 			if(event.data.split('@')[0] == 'picksPointer'){
 				console.log('transfer // ' + event.data.split('@')[1]);
+				const movingCard = event.data.split('@')[1];
+				const movingCardNumber = $('#picks_pick' + movingCard).text();
+				const target = event.data.split('@')[3];
+				
+				// 이전 선택항목 css 초기화
+				$('[selec="true"]').css({
+					'background-color' : 'transparent'
+				});
+				$('[selec="true"]').attr('selec', 'false');
+				
+				// 새로운 지시사항 적용
+				$('#picks_pick' + movingCard).css({
+					'background-color' : 'pink'
+				});
+				$('#picks_pick' + movingCard).attr('selec', 'true');
+				$('#' + target).html(movingCardNumber);
+				$('#' + target).attr('selec', 'true');
+				$('#' + target).css({
+					'background-color' : 'pink'
+				});
+				
+				delay(1000).then((result) => {
+					socket.send('gameID@' + gameID + '@next instruction request');
+				});
 			}
 		} 
 		
+		// 시간지연
+		function delay(delayTime){
+			return new Promise(function(resolve, reject){
+				setTimeout(resolve, delayTime);
+			});
+		}
+
 	}
 </script>
 <style type="text/css">
@@ -132,7 +163,7 @@
 		background-color: yellow;
 		background-image: url('./assets/img/playable/sechsnimmt/sechsnimmt_skull.png');
 		background-size: contain;
-  		background-repeat: no-repeat;
+  		background-repeat: no-repeat; 
   		background-position: center;
 	}
 	

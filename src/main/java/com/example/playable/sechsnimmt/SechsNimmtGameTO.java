@@ -25,6 +25,8 @@ public class SechsNimmtGameTO {
 	private ArrayList<SechsNimmtPlayerTO> picks;
 	// 카드이동 포인터
 	private int picksPointer;
+	// 카드이동 지시 응답 카운트
+	private int instructionResponseCount;
 
 	// 생성자 - 게임 초기화
 	public SechsNimmtGameTO(ArrayList<WebSocketSession> playersList) {
@@ -35,6 +37,7 @@ public class SechsNimmtGameTO {
 		this.round = 1;
 		this.picks = new ArrayList<>();
 		this.picksPointer = 0;
+		this.instructionResponseCount = 0;
 
 		// 플레이어 추가
 		for(WebSocketSession player : playersList) {

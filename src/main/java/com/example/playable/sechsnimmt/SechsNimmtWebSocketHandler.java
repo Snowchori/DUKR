@@ -172,7 +172,21 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 						playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
 					}
 				}
-			}	
+			}
+			
+			// 카드이동 지시사항 완료응답 수신
+			if(strMessage.split("@")[2].equals("next instruction request")) {
+				System.out.println("run next instruction");
+				game.setInstructionResponseCount(game.getInstructionResponseCount() + 1);
+				if(game.getInstructionResponseCount() == 5) {
+					game.setInstructionResponseCount(0);
+					String transfer = game.autoTransfer();
+					
+					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
+						playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
+					}	
+				}
+			}
 		}
 	}
 
