@@ -22,7 +22,7 @@
 						</ul>
 					</li>
 					<li class="nav-item nav_margin">
-                    	<a class="nav-link textc-quinary" href="/partySearch">모임검색</a>
+                        <a class="nav-link textc-quinary" href="/partySearch">모임검색</a>
 					</li>
 					<%= adminHtml %>
 				</ul>
