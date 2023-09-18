@@ -151,7 +151,7 @@
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 	     <!--  css 파일 -->
-		<link rel="stylesheet" href="assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/style.css" />
 	    <!--  jquery cdn -->
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
 	    </script>
@@ -241,13 +241,13 @@
 		    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
 		        <div class="carousel-inner">
 		            <div class="carousel-item active banner" data-bs-interval="4000">
-		                <img src="assets/img/carousel/carousel1.jpg" class="d-block w-100" alt="...">
+		                <img src="assets/img/carousel/banner1.png" class="d-block w-100" alt="..." onclick="location.href='#'">
 		            </div>
 		            <div class="carousel-item banner" data-bs-interval="4000">
-		                <img src="assets/img/carousel/carousel2.jpg" class="d-block w-100" alt="...">
+		                <img src="assets/img/carousel/banner2.png" class="d-block w-100" alt="..." onclick="location.href='#'">
 		            </div>
 		            <div class="carousel-item banner">
-		                <img src="assets/img/carousel/carousel3.jpg" class="d-block w-100" alt="...">
+		                <img src="assets/img/carousel/banner3.png" class="d-block w-100" alt="..." onclick="location.href='/partySearch'">
 		            </div>
 		        </div>
 		        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
