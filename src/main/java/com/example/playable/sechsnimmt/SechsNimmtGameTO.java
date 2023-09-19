@@ -25,8 +25,8 @@ public class SechsNimmtGameTO {
 	private ArrayList<SechsNimmtPlayerTO> picks;
 	// 카드이동 포인터
 	private int picksPointer;
-	// 카드이동 지시 응답 카운트
-	private int instructionResponseCount;
+	// 카드이동 지시 응답 포인터
+	volatile private int instructionResponseCount;
 
 	// 생성자 - 게임 초기화
 	public SechsNimmtGameTO(ArrayList<WebSocketSession> playersList) {
@@ -98,6 +98,11 @@ public class SechsNimmtGameTO {
 		}
 	}
 	
+	// 지시사항 완료응답 수신 후 카운드 올림
+	public void countResponse() {
+		this.instructionResponseCount ++;
+	}
+
 	// 카드 자동 이동
 	public String autoTransfer() {
 		if(this.picksPointer == this.picks.size()) {
@@ -122,7 +127,7 @@ public class SechsNimmtGameTO {
 		}
 		
 		if(candidates.size() == 0) {
-			return "picksPointer@" + this.picksPointer + "@no_candidate";
+			return "picksPointer@" + this.picksPointer + "@no_candidate@" + this.picks.get(this.picksPointer).getPlayerSession().getId();
 		}else {
 			int gap = 104;
 			int row = 0;

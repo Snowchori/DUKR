@@ -17,12 +17,19 @@
 		});
 		
 		let gameID = '';
+		let playerID = '';
+		let confirm = 0;
 		
 		// 수신정보 처리
 		socket.onmessage = function(event){
 			// 게임 고유번호 수신
 			if(event.data.split('@')[0] == 'uuid'){
 				gameID = event.data.split('@')[1];
+			}
+			
+			// 클라이언트 고유 구분자 수신
+			if(event.data.split('@')[0] == 'playerID'){
+				playerID = event.data.split('@')[1];
 			}
 			
 			// 게임 진행정보 수신
@@ -108,26 +115,49 @@
 				const movingCardNumber = $('#picks_pick' + movingCard).text();
 				const target = event.data.split('@')[3];
 				
-				// 이전 선택항목 css 초기화
-				$('[selec="true"]').css({
-					'background-color' : 'transparent'
-				});
-				$('[selec="true"]').attr('selec', 'false');
-				
-				// 새로운 지시사항 적용
-				$('#picks_pick' + movingCard).css({
-					'background-color' : 'pink'
-				});
-				$('#picks_pick' + movingCard).attr('selec', 'true');
-				$('#' + target).html(movingCardNumber);
-				$('#' + target).attr('selec', 'true');
-				$('#' + target).css({
-					'background-color' : 'pink'
-				});
-				
-				delay(1000).then((result) => {
-					socket.send('gameID@' + gameID + '@next instruction request');
-				});
+				if(event.data.split('@')[2] == ('no_candidate')){
+					if(event.data.split('@')[3] == (playerID)){
+						// 플레이어가 고른 카드가 놓일 공간이 없는 경우 => 패널티라인 선택 진행
+						$('#instruction').html('<p>선택한 카드를 놓을 수 있는 위치가 없습니다. 벌칙으로 모든 카드를 가져갈 행을 선택하십쇼.</p>');
+						$('[line="true"]').hover(function(){
+							$(this).css('background-color', 'lightgreen');
+						},  
+						function(){
+							$(this).css('background-color', 'transparent');
+						});
+						console.log('choose penalty');
+					}else{
+						confirm = 1;
+					}
+				}else{
+					// 이전 선택항목 css 초기화
+					$('[selec="true"]').css({
+						'background-color' : 'transparent'
+					});
+					$('[selec="true"]').attr('selec', 'false');
+					
+					// 새로운 지시사항 적용
+					$('#picks_pick' + movingCard).css({
+						'background-color' : 'pink'
+					});
+					$('#picks_pick' + movingCard).attr('selec', 'true');
+					$('#' + target).html(movingCardNumber);
+					$('#' + target).attr('selec', 'true');
+					$('#' + target).css({
+						'background-color' : 'pink'
+					});
+					
+					delay(1000).then((result) => {
+						socket.send('gameID@' + gameID + '@next instruction request');
+					});
+				}
+			}
+			
+			if(event.data == 'confirm completion'){
+				if(confirm == 1){
+					confirm = 0;
+					socket.send('next instruction request');
+				}
 			}
 		} 
 		
@@ -160,7 +190,6 @@
 	}
 	
 	[penalty="true"] {
-		background-color: yellow;
 		background-image: url('./assets/img/playable/sechsnimmt/sechsnimmt_skull.png');
 		background-size: contain;
   		background-repeat: no-repeat; 
@@ -214,16 +243,16 @@
 
 	<div id="gameStatus">
 		<table id="public">
-			<tr>
+			<tr id="line1" line="true">
 				<td id="r1c1"></td><td id="r1c2"></td><td id="r1c3"></td><td id="r1c4"></td><td id="r1c5"></td><td id="r1c6" penalty="true"></td>
 			</tr>
-			<tr>
+			<tr id="line2" line="true">
 				<td id="r2c1"></td><td id="r2c2"></td><td id="r2c3"></td><td id="r2c4"></td><td id="r2c5"></td><td id="r2c6" penalty="true"></td>
 			</tr>
-			<tr>
+			<tr id="line3" line="true">
 				<td id="r3c1"></td><td id="r3c2"></td><td id="r3c3"></td><td id="r3c4"></td><td id="r3c5"></td><td id="r3c6" penalty="true"></td>
 			</tr>
-			<tr>
+			<tr id="line4" line="true">
 				<td id="r4c1"></td><td id="r4c2"></td><td id="r4c3"></td><td id="r4c4"></td><td id="r4c5"></td><td id="r4c6" penalty="true"></td>
 			</tr>
 		</table>

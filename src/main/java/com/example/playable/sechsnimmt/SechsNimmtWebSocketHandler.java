@@ -13,11 +13,11 @@ import org.springframework.web.socket.WebSocketSession;
 public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 	
 	// 진행중인 게임 목록
-	private HashMap<String, SechsNimmtGameTO> games = new HashMap<>(); 
+	volatile private HashMap<String, SechsNimmtGameTO> games = new HashMap<>(); 
 	// 플레이어 그룹
-	private HashMap<String, ArrayList<WebSocketSession>> playerGroups = new HashMap<>();
+	volatile private HashMap<String, ArrayList<WebSocketSession>> playerGroups = new HashMap<>();
 	// 매칭 대기중인 플레이어 그룹
-	private ArrayList<WebSocketSession> waitingRoom = new ArrayList<>();
+	volatile private ArrayList<WebSocketSession> waitingRoom = new ArrayList<>();
 	
 	// 게임객체 -> JSON String 변환 메소드 
 	public String gameToJson(SechsNimmtGameTO game, WebSocketSession player) {
@@ -123,6 +123,8 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				for(WebSocketSession player : waitingRoom) {
 					player.sendMessage(new TextMessage("uuid@" + uuid.toString()));
 					player.sendMessage(new TextMessage("game@" + gameToJson(newGame, player)));
+					// 유저 구분자 전달
+					player.sendMessage(new TextMessage("playerID@" + player.getId()));
 				}
 				
 				// 대기열 비우기
@@ -176,15 +178,18 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 			
 			// 카드이동 지시사항 완료응답 수신
 			if(strMessage.split("@")[2].equals("next instruction request")) {
-				System.out.println("run next instruction");
-				game.setInstructionResponseCount(game.getInstructionResponseCount() + 1);
+				synchronized (game) {
+					game.countResponse();
+				}				
+				System.out.println(game.getInstructionResponseCount());
+				
+				// 모든 플레이어의 브라우저로부터 완료응답을 수신한 경우 => 다음 카드이동 지시사항 전달
 				if(game.getInstructionResponseCount() == 5) {
 					game.setInstructionResponseCount(0);
 					String transfer = game.autoTransfer();
-					
 					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 						playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
-					}	
+					}
 				}
 			}
 		}
