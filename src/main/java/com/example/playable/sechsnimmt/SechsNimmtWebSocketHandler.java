@@ -17,7 +17,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 	// 플레이어 그룹
 	volatile private HashMap<String, ArrayList<WebSocketSession>> playerGroups = new HashMap<>();
 	// 매칭 대기중인 플레이어 그룹
-	volatile private ArrayList<WebSocketSession> waitingRoom = new ArrayList<>();
+	volatile private ArrayList<WebSocketSession> waitingRoom = new ArrayList<>();	
 	
 	// 게임객체 -> JSON String 변환 메소드 
 	public String gameToJson(SechsNimmtGameTO game, WebSocketSession player) {
@@ -149,21 +149,15 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				// 플레이어의 손패에서 플레이어가 고른 카드를 제거하고 pick카드로 등록
 				hand.remove(pickIndex);
 				player.setPick(pick);
+				game.getPicks().add(player);
 				
 				// 모든 플레이어의 카드 선택 여부
-				boolean allPlayersReady = true;
-				for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
-					if(playerTO.getPick() == null) {
-						allPlayersReady = false;
-						break;
-					}
-				}
-
+				System.out.println("size1" + game.getPicks().size());
+				System.out.println("size2" + game.getPlayers().size());
+				boolean allPlayersReady = (game.getPicks().size() == game.getPlayers().size());
+				
 				// 모든 플레이어카 카드를 고른 경우
 				if(allPlayersReady) {
-					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
-						game.getPicks().add(playerTO);
-					}
 					game.sortPicks();
 					String transfer = game.autoTransfer();
 					System.out.println(transfer);
@@ -181,14 +175,18 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				synchronized (game) {
 					game.countResponse();
 				}				
-				System.out.println(game.getInstructionResponseCount());
-				
+	
 				// 모든 플레이어의 브라우저로부터 완료응답을 수신한 경우 => 다음 카드이동 지시사항 전달
 				if(game.getInstructionResponseCount() == 5) {
 					game.setInstructionResponseCount(0);
 					String transfer = game.autoTransfer();
+					System.out.println(transfer);
 					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
-						playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
+						if(transfer.equals("transfer_complete")) {
+							playerTO.getPlayerSession().sendMessage(new TextMessage("game@" + gameToJson(game, session)));
+						}else {
+							playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
+						}
 					}
 				}
 			}

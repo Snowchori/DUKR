@@ -18,8 +18,7 @@
 		
 		let gameID = '';
 		let playerID = '';
-		let confirm = 0;
-		
+
 		// 수신정보 처리
 		socket.onmessage = function(event){
 			// 게임 고유번호 수신
@@ -91,7 +90,7 @@
 				const picks = JSON.parse(event.data.split('@')[1]);
 				
 				let picksTable = '<table id="picks">';
-				let cardNumbers = '<tr>';
+				let cardNumbers = '<tr cardPlace="true">';
 				picksTable += '<tr>';
 				for(let index=0; index<picks.players.length; index++){
 					console.log(picks.players[index]);
@@ -114,6 +113,8 @@
 				const movingCard = event.data.split('@')[1];
 				const movingCardNumber = $('#picks_pick' + movingCard).text();
 				const target = event.data.split('@')[3];
+				const targetRow = target.split('c')[0].replaceAll('r', '');
+				const targetCol = target.split('c')[1];
 				
 				if(event.data.split('@')[2] == ('no_candidate')){
 					if(event.data.split('@')[3] == (playerID)){
@@ -125,9 +126,8 @@
 						function(){
 							$(this).css('background-color', 'transparent');
 						});
-						console.log('choose penalty');
 					}else{
-						confirm = 1;
+						socket.send('gameID@' + gameID + '@next instruction request');
 					}
 				}else{
 					// 이전 선택항목 css 초기화
@@ -147,17 +147,43 @@
 						'background-color' : 'pink'
 					});
 					
+					if(event.data.split('@')[4] == 'penaltyPlayer'){
+						console.log('got penalty');	
+						// 패널티를 받는 플레이어가 존재하는 경우
+						if(event.data.split('@')[5] == playerID){
+							// 내가 패널티를 받는 경우
+							const totalPenalty = event.data.split('@')[7];
+							$('#instruction').html('<p>패널티로 총 ' + totalPenalty + '점을 차감합니다</p>');	
+						}
+						// 패널티라인 css
+						delay(1000).then((result) => {
+							// 선택자 css 초기화
+							$('[selec="true"]').css({
+								'background-color' : 'transparent'
+							});
+							$('[selec="true"]').attr('selec', 'false');
+							// 패널티라인 css
+							$('#line' + targetRow).css({
+								'background-color' : 'red'
+							});
+							delay(1000).then((result) => {
+								for(let col=1; col<=6; col++){
+									const targetTd = 'r' + targetRow + 'c' + col;
+									$('#' + targetTd).html('');
+								}
+								const newStartPoint = 'r' + targetRow + 'c1';
+								$('#' + newStartPoint).html(movingCardNumber);
+								$('#line' + targetRow).css({
+									'background-color' : 'transparent'
+								});
+							});
+						});
+					}
+					
 					delay(1000).then((result) => {
 						socket.send('gameID@' + gameID + '@next instruction request');
 					});
-				}
-			}
-			
-			if(event.data == 'confirm completion'){
-				if(confirm == 1){
-					confirm = 0;
-					socket.send('next instruction request');
-				}
+				}	
 			}
 		} 
 		
@@ -232,6 +258,13 @@
 		font-weight: bold;
 		color: blue;
 	}
+	
+	[cardPlace='true'] {
+		font-weight: bold;
+		font-size: 30px;
+		color: #FF5733;
+		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	}
 </style>
 </head>
 <body>
@@ -242,7 +275,7 @@
 	</div>
 
 	<div id="gameStatus">
-		<table id="public">
+		<table id="public" cardPlace="true">
 			<tr id="line1" line="true">
 				<td id="r1c1"></td><td id="r1c2"></td><td id="r1c3"></td><td id="r1c4"></td><td id="r1c5"></td><td id="r1c6" penalty="true"></td>
 			</tr>
@@ -268,7 +301,7 @@
 	<div id="instruction"></div>
 		
 	<!-- 손패 -->
-	<div id="hand"></div>
+	<div id="hand" cardPlace="true"></div>
 
 </body>
 </html>

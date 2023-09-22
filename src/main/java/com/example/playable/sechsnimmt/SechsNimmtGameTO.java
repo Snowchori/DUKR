@@ -108,6 +108,7 @@ public class SechsNimmtGameTO {
 		if(this.picksPointer == this.picks.size()) {
 			this.picksPointer = 0;
 			this.round ++;
+			this.picks.clear();
 			return "transfer_complete";
 		}
 		
@@ -132,6 +133,8 @@ public class SechsNimmtGameTO {
 			int gap = 104;
 			int row = 0;
 			int col = 0;
+			SechsNimmtPlayerTO penaltyPlayer = null;
+			int totalPenalty = 0;
 			
 			for(SechsNimmtCardTO card : candidates) {
 				int gapCandidate = movingCard.getCardNumber() - card.getCardNumber();
@@ -143,8 +146,27 @@ public class SechsNimmtGameTO {
 			}
 			
 			this.gameStatus[row][col] = movingCard;
-			this.picksPointer ++;
-			return "picksPointer@" + (this.picksPointer - 1) + "@transfer_to@r" + (row + 1) + "c" + (col + 1);
+			
+			if(col == 5) {
+				penaltyPlayer = this.picks.get(picksPointer);
+				SechsNimmtCardTO nullCard = new SechsNimmtCardTO(0);
+				//this.gameStatus[row][0] = movingCard;
+				for(int index=0; index<5; index++) {
+					totalPenalty += this.gameStatus[row][index].getPenalty();
+					this.gameStatus[row][index] = nullCard;
+				}
+				this.gameStatus[row][5] = nullCard;
+				this.gameStatus[row][0] = movingCard;
+				// 점수 차감
+				int currentScore = this.players.get(penaltyPlayer.getPlayerSession()).getScore();
+				this.players.get(penaltyPlayer.getPlayerSession()).setScore(currentScore - totalPenalty);
+			}
+				
+			this.picksPointer ++;			
+			String strReturn = "picksPointer@" + (this.picksPointer - 1) + "@transfer_to@r" + (row + 1) + "c" + (col + 1);
+			if(penaltyPlayer != null) strReturn += "@penaltyPlayer@" + penaltyPlayer.getPlayerSession().getId().toString() + "@totalPenalty@" + totalPenalty;
+			
+			return strReturn; 
 		}
 	}
 	
