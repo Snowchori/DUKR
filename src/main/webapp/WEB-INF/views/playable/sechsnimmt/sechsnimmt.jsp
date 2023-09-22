@@ -36,6 +36,12 @@
 				console.log(event.data.split('@')[1]);
 				game = JSON.parse(event.data.split('@')[1]);
 				
+				// 기존 선택자 css 초기화
+				$('[selec="true"]').css({
+					'background-color' : 'transparent'
+				});
+				$('[selec="true"]').attr('selec', 'false');
+				
 				// 손패 
 				$('#hand').empty();
 				let handTable = '<table><tr>';
@@ -220,6 +226,7 @@
 		background-size: contain;
   		background-repeat: no-repeat; 
   		background-position: center;
+  		opacity: 0.5;
 	}
 	
 	#spaceBetweenPublicAndPicksContainer {
@@ -264,7 +271,9 @@
 		font-size: 30px;
 		color: #FF5733;
 		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+		border-radius: 10px;
 	}
+	
 </style>
 </head>
 <body>

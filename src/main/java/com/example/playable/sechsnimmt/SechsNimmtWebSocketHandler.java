@@ -183,7 +183,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 					System.out.println(transfer);
 					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 						if(transfer.equals("transfer_complete")) {
-							playerTO.getPlayerSession().sendMessage(new TextMessage("game@" + gameToJson(game, session)));
+							playerTO.getPlayerSession().sendMessage(new TextMessage("game@" + gameToJson(game, playerTO.getPlayerSession())));
 						}else {
 							playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
 						}
