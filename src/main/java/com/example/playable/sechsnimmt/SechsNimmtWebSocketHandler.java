@@ -52,7 +52,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 		for(SechsNimmtCardTO card : hand) {
 			sbResult.append(card.getCardNumber() + ", ");
 		}
-		sbResult.deleteCharAt(sbResult.lastIndexOf(","));
+		if(hand.size() != 0) sbResult.deleteCharAt(sbResult.lastIndexOf(","));
 		sbResult.append("],");
 		
 		sbResult.append("\"players\": ");
@@ -228,6 +228,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				}
 				
 				game.getGameStatus()[row][0] = game.getPicks().get(game.getPicksPointer()).getPick();
+				System.out.println("row0 : " + game.getGameStatus()[row][0].getCardNumber());
 				game.setPicksPointer(game.getPicksPointer() + 1);
 				
 				int newScore = game.getPlayers().get(session).getScore() - totalPenalty;
