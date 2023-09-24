@@ -30,7 +30,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 			sbResult.append("[");
 			for(int col=0; col<6; col++) {
 				SechsNimmtCardTO card = game.getGameStatus()[row][col];
-				if(card != null) {
+				if(card != null) { 
 					sbResult.append(card.getCardNumber());
 				}else {
 					sbResult.append("0");
@@ -152,8 +152,6 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				game.getPicks().add(player);
 				
 				// 모든 플레이어의 카드 선택 여부
-				System.out.println("size1" + game.getPicks().size());
-				System.out.println("size2" + game.getPlayers().size());
 				boolean allPlayersReady = (game.getPicks().size() == game.getPlayers().size());
 				
 				// 모든 플레이어카 카드를 고른 경우
@@ -181,13 +179,47 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 					game.setInstructionResponseCount(0);
 					String transfer = game.autoTransfer();
 					System.out.println(transfer);
+					
 					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 						if(transfer.equals("transfer_complete")) {
 							playerTO.getPlayerSession().sendMessage(new TextMessage("game@" + gameToJson(game, playerTO.getPlayerSession())));
+							playerTO.getPlayerSession().sendMessage(new TextMessage("picks_clear"));
 						}else {
 							playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
 						}
 					}
+				}
+			}
+			
+			// 패널티라인 선택정보 수신
+			if(strMessage.split("@")[2].equals("penaltyLine")) {
+				int totalPenalty = 0;
+				int row = Integer.parseInt(strMessage.split("@")[3].split("line")[1]) - 1;
+				
+				for(int col=0; col<6; col++) {
+					if(game.getGameStatus()[row][col] == null) break;
+					totalPenalty += game.getGameStatus()[row][col].getPenalty();
+					game.getGameStatus()[row][col] = null;
+					System.out.println("gs : " + game.getGameStatus()[row][col]);
+				}
+				
+				game.getGameStatus()[row][0] = game.getPicks().get(game.getPicksPointer()).getPick();
+				game.setPicksPointer(game.getPicksPointer() + 1);
+				
+				int newScore = game.getPlayers().get(session).getScore() - totalPenalty;
+				player.setScore(newScore);				
+				game.setInstructionResponseCount(0);
+
+				for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
+					playerTO.getPlayerSession().sendMessage(new TextMessage("game@" + gameToJson(game, playerTO.getPlayerSession())));
+				}
+				Thread.sleep(1000);
+				
+				String transfer = game.autoTransfer();
+				System.out.println(transfer);
+				
+				for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
+					playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
 				}
 			}
 		}

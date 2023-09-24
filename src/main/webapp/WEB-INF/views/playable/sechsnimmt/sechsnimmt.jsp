@@ -58,6 +58,8 @@
 						const locID = 'r' + (row + 1) + 'c' + (col + 1);
 						if(game.gameStatus[row][col] != 0){
 							$('#' + locID).html(game.gameStatus[row][col]);
+						}else{
+							$('#' + locID).html('');
 						}
 					}
 				}
@@ -80,7 +82,7 @@
 					});
 					
 					$('#' + locID).click(function(){
-						socket.send('gameID@' + gameID + '@' + 'pick@' + index);
+						socket.send('gameID@' + gameID + '@pick@' + index);
 						$('td[tag="hand"]').off('mouseenter mouseleave click'); 
 						$(this).css('background-color', 'red');
 						$('#instruction').html('<p>다른 플레이어들의 선택을 기다리는 중입니다</p>');
@@ -115,7 +117,6 @@
 			
 			// 카드이동정보 수신
 			if(event.data.split('@')[0] == 'picksPointer'){
-				console.log('transfer // ' + event.data.split('@')[1]);
 				const movingCard = event.data.split('@')[1];
 				const movingCardNumber = $('#picks_pick' + movingCard).text();
 				const target = event.data.split('@')[3];
@@ -132,7 +133,17 @@
 						function(){
 							$(this).css('background-color', 'transparent');
 						});
+						
+						$('[line="true"]').click(function(){
+							const idVal = $(this).attr('id');
+							$('[line="true"]').off('mouseenter mouseleave click');
+							$(this).css({
+								'background-color' : 'transparent'
+							});
+							socket.send('gameID@' + gameID + '@penaltyLine@' + idVal);
+						});
 					}else{
+						// 다른 플레이어가 고른 카드가 놓일 공간이 없는 경우
 						socket.send('gameID@' + gameID + '@next instruction request');
 					}
 				}else{
@@ -191,6 +202,11 @@
 					});
 				}	
 			}
+			
+			if(event.data == 'picks_clear'){
+				console.log('tc');
+				$('#picksContainer').empty();
+			}
 		} 
 		
 		// 시간지연
@@ -226,7 +242,6 @@
 		background-size: contain;
   		background-repeat: no-repeat; 
   		background-position: center;
-  		opacity: 0.5;
 	}
 	
 	#spaceBetweenPublicAndPicksContainer {
@@ -268,7 +283,7 @@
 	
 	[cardPlace='true'] {
 		font-weight: bold;
-		font-size: 30px;
+		font-size: 55px;
 		color: #FF5733;
 		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 		border-radius: 10px;

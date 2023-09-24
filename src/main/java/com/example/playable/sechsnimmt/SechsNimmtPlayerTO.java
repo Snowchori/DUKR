@@ -21,5 +21,6 @@ public class SechsNimmtPlayerTO {
 		this.playerSession = session;
 		this.hand = new ArrayList<>();
 		this.name = "익명" + session.getId();
+		this.score = 100;
 	}
 }

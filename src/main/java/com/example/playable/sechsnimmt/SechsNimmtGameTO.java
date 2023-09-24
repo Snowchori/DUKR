@@ -149,13 +149,12 @@ public class SechsNimmtGameTO {
 			
 			if(col == 5) {
 				penaltyPlayer = this.picks.get(picksPointer);
-				SechsNimmtCardTO nullCard = new SechsNimmtCardTO(0);
 				//this.gameStatus[row][0] = movingCard;
 				for(int index=0; index<5; index++) {
 					totalPenalty += this.gameStatus[row][index].getPenalty();
-					this.gameStatus[row][index] = nullCard;
+					this.gameStatus[row][index] = null;
 				}
-				this.gameStatus[row][5] = nullCard;
+				this.gameStatus[row][5] = null;
 				this.gameStatus[row][0] = movingCard;
 				// 점수 차감
 				int currentScore = this.players.get(penaltyPlayer.getPlayerSession()).getScore();
