@@ -18,6 +18,7 @@
 		
 		let gameID = '';
 		let playerID = '';
+		let defaultDelayTime = 1000;
 
 		// 수신정보 처리
 		socket.onmessage = function(event){
@@ -185,7 +186,6 @@
 					});
 					
 					if(event.data.split('@')[4] == 'penaltyPlayer'){
-						console.log('got penalty');	
 						// 패널티를 받는 플레이어가 존재하는 경우
 						if(event.data.split('@')[5] == playerID){
 							// 내가 패널티를 받는 경우
@@ -203,6 +203,8 @@
 							$('#line' + targetRow).css({
 								'background-color' : 'red'
 							});
+							defaultDelayTime = 2000;
+							
 							delay(1000).then((result) => {
 								for(let col=1; col<=6; col++){
 									const targetTd = 'r' + targetRow + 'c' + col;
@@ -217,8 +219,9 @@
 						});
 					}
 					
-					delay(1000).then((result) => {
+					delay(defaultDelayTime).then((result) => {
 						socket.send('gameID@' + gameID + '@next instruction request');
+						defaultDelayTime = 1000;
 					});
 				}	
 			}
@@ -250,8 +253,8 @@
 	}
 	
 	#gameStatus td {
-		width: 100px;
-		height: 162px;
+		width: 80px;
+		height: 130px;
 		text-align: center;
 		border-width: 1px;	
 		border-style: solid;
@@ -303,14 +306,18 @@
 	
 	[cardPlace='true'] {
 		font-weight: bold;
-		font-size: 55px;
+		font-size: 44px;
 		color: #FF5733;
 		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-		border-radius: 10px;
 	}
 	
 	#scoreInfo {
 		margin-left: auto;
+	}
+	
+	#scoreInfo table {
+		height: 500px;
+		font-size: 10px;
 	}
 	
 </style>

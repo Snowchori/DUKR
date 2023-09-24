@@ -149,7 +149,6 @@ public class SechsNimmtGameTO {
 			
 			if(col == 5) {
 				penaltyPlayer = this.picks.get(picksPointer);
-				//this.gameStatus[row][0] = movingCard;
 				for(int index=0; index<5; index++) {
 					totalPenalty += this.gameStatus[row][index].getPenalty();
 					this.gameStatus[row][index] = null;

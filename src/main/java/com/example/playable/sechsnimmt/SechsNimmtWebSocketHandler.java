@@ -139,17 +139,13 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				SechsNimmtGameTO newGame = new SechsNimmtGameTO(waitingRoom);				
 				// 진행중인 게임목록에 새로 생성된 게임 추가
 				games.put(uuid.toString(), newGame);
-				
-				System.out.println(scoresToJson(newGame));
-				
 				// 매칭된 플레이어들 각자에게 게임 고유코드 및 정보 전달
 				for(WebSocketSession player : waitingRoom) {
 					player.sendMessage(new TextMessage("uuid@" + uuid.toString()));
 					player.sendMessage(new TextMessage("game@" + gameToJson(newGame, player)));
 					player.sendMessage(new TextMessage("playerID@" + player.getId()));
 					player.sendMessage(new TextMessage("scoreInfo@" + scoresToJson(newGame)));
-				}
-				
+				}			
 				// 대기열 비우기
 				waitingRoom.removeAll(waitingRoom);
 			}
@@ -181,11 +177,15 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				if(allPlayersReady) {
 					game.sortPicks();
 					String transfer = game.autoTransfer();
-					System.out.println(transfer);
 					
 					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 						String picksJson = picksToJson(game.getPicks());
 						playerTO.getPlayerSession().sendMessage(new TextMessage("picks@" + picksJson));
+					}
+					
+					Thread.sleep(1000);
+					
+					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 						playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
 						playerTO.getPlayerSession().sendMessage(new TextMessage("scoreInfo@" + scoresToJson(game)));
 					}
@@ -202,8 +202,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				if(game.getInstructionResponseCount() == 5) {
 					game.setInstructionResponseCount(0);
 					String transfer = game.autoTransfer();
-					System.out.println(transfer);
-					
+
 					for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 						if(transfer.equals("transfer_complete")) {
 							playerTO.getPlayerSession().sendMessage(new TextMessage("game@" + gameToJson(game, playerTO.getPlayerSession())));
@@ -226,7 +225,6 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 					if(game.getGameStatus()[row][col] == null) break;
 					totalPenalty += game.getGameStatus()[row][col].getPenalty();
 					game.getGameStatus()[row][col] = null;
-					System.out.println("gs : " + game.getGameStatus()[row][col]);
 				}
 				
 				game.getGameStatus()[row][0] = game.getPicks().get(game.getPicksPointer()).getPick();
@@ -241,9 +239,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				}
 				Thread.sleep(1000);
 				
-				String transfer = game.autoTransfer();
-				System.out.println(transfer);
-				
+				String transfer = game.autoTransfer();				
 				for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 					playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
 					playerTO.getPlayerSession().sendMessage(new TextMessage("scoreInfo@" + scoresToJson(game)));
