@@ -93,6 +93,27 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 		return sbResult.toString();
 	}
 	
+	// 점수정보 => JSON String
+	public String scoresToJson(SechsNimmtGameTO game) {
+		StringBuilder sbScores = new StringBuilder();
+		StringBuilder sbPlayers = new StringBuilder();
+
+		sbPlayers.append("{");
+		sbPlayers.append("\"players\" : ");
+		sbPlayers.append("[");
+		for(SechsNimmtPlayerTO player : game.getPlayers().values()) {
+			sbPlayers.append("\"" + player.getName() + "\",");
+			sbScores.append(player.getScore() + ",");
+		}
+		sbPlayers.deleteCharAt(sbPlayers.lastIndexOf(","));
+		sbPlayers.append("], \"scores\" : [");
+		sbPlayers.append(sbScores);
+		sbPlayers.deleteCharAt(sbPlayers.lastIndexOf(","));
+		sbPlayers.append("]}");
+
+		return sbPlayers.toString();
+	}
+	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		// TODO Auto-generated method stub
@@ -119,12 +140,14 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				// 진행중인 게임목록에 새로 생성된 게임 추가
 				games.put(uuid.toString(), newGame);
 				
+				System.out.println(scoresToJson(newGame));
+				
 				// 매칭된 플레이어들 각자에게 게임 고유코드 및 정보 전달
 				for(WebSocketSession player : waitingRoom) {
 					player.sendMessage(new TextMessage("uuid@" + uuid.toString()));
 					player.sendMessage(new TextMessage("game@" + gameToJson(newGame, player)));
-					// 유저 구분자 전달
 					player.sendMessage(new TextMessage("playerID@" + player.getId()));
+					player.sendMessage(new TextMessage("scoreInfo@" + scoresToJson(newGame)));
 				}
 				
 				// 대기열 비우기
@@ -164,6 +187,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 						String picksJson = picksToJson(game.getPicks());
 						playerTO.getPlayerSession().sendMessage(new TextMessage("picks@" + picksJson));
 						playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
+						playerTO.getPlayerSession().sendMessage(new TextMessage("scoreInfo@" + scoresToJson(game)));
 					}
 				}
 			}
@@ -184,8 +208,10 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 						if(transfer.equals("transfer_complete")) {
 							playerTO.getPlayerSession().sendMessage(new TextMessage("game@" + gameToJson(game, playerTO.getPlayerSession())));
 							playerTO.getPlayerSession().sendMessage(new TextMessage("picks_clear"));
+							playerTO.getPlayerSession().sendMessage(new TextMessage("scoreInfo@" + scoresToJson(game)));
 						}else {
 							playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
+							playerTO.getPlayerSession().sendMessage(new TextMessage("scoreInfo@" + scoresToJson(game)));
 						}
 					}
 				}
@@ -220,6 +246,7 @@ public class SechsNimmtWebSocketHandler implements WebSocketHandler {
 				
 				for(SechsNimmtPlayerTO playerTO : game.getPlayers().values()) {
 					playerTO.getPlayerSession().sendMessage(new TextMessage(transfer));
+					playerTO.getPlayerSession().sendMessage(new TextMessage("scoreInfo@" + scoresToJson(game)));
 				}
 			}
 		}

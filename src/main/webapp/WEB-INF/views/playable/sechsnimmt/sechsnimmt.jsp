@@ -92,6 +92,26 @@
 				$('#instruction').html('<p>낼 카드를 선택하세요</p>');
 			}
 			
+			// 플레이어들의 점수정보 수신
+			if(event.data.split('@')[0] == 'scoreInfo'){
+				const playersAndScores = JSON.parse(event.data.split('@')[1]);
+				const players = playersAndScores.players;
+				const scores = playersAndScores.scores;
+				$('#scoreInfo').empty();
+				
+				let scoreTable = '<table>';
+				for(let index=0; index<players.length; index++){
+					scoreTable += '<tr>';
+					scoreTable += '<td>' + players[index] + '</td>';
+					scoreTable += '<td>' + scores[index] + '</td>';
+					scoreTable += '</tr>';
+				}
+				scoreTable += '</table>';
+				
+				var scoreInfo = $(scoreTable);
+				$('#scoreInfo').append(scoreInfo);
+			}
+			
 			// 플레이어들이 고른 카드정보 수신
 			if(event.data.split('@')[0] == 'picks'){
 				$('#picksContainer').empty();
@@ -289,6 +309,10 @@
 		border-radius: 10px;
 	}
 	
+	#scoreInfo {
+		margin-left: auto;
+	}
+	
 </style>
 </head>
 <body>
@@ -317,6 +341,10 @@
 		<div id="spaceBetweenPublicAndPicksContainer"></div>
 		
 		<div id="picksContainer"></div>
+		
+		<div id="spaceBetweenPicksContainerAndScoreInfo"></div>
+		
+		<div id="scoreInfo"></div>
 	</div>
 	
 	<br/><hr/><br/>
