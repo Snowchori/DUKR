@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Project</name>
 	<description>Demo project for Spring Boot</description>
+	<packaging>war</packaging>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -72,13 +73,22 @@
 		    <artifactId>jsoup</artifactId>
 		    <version>1.15.3</version>
 		</dependency>
+<<<<<<< HEAD
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-websocket -->
 		<dependency>
     		<groupId>org.springframework</groupId>
     		<artifactId>spring-websocket</artifactId>
     	</dependency>
+=======
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+>>>>>>> 387b4dbf509d63783e1870d2557f19890ec556fe
 	</dependencies>
 	<build>
+		<finalName>dukr</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

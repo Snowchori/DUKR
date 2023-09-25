@@ -15,9 +15,9 @@
 
 	if(reclists.size() > 0) {
 		for(BoardgameTO to : reclists){
-			recSB.append("<div class='col-lg-4 col-sm-6 mb-4 align-self-center d-flex justify-content-center'>");
-			recSB.append("<div class='portfolio-item'>");
-			recSB.append("<a class='portfolio-link' href='gameView?seq="+to.getSeq()+"'>");
+			recSB.append("<div class='col-lg-4 mb-4 d-flex justify-content-center align-items-center'>");
+			recSB.append("<div class='portfolio-item border'>");
+			recSB.append("<a class='portfolio-link bg-white d-flex align-items-center justify-content-center' href='gameView?seq="+to.getSeq()+"'>");
 			recSB.append("<div class='portfolio-hover'>");
 			recSB.append("<div class='portfolio-hover-content'>");
 			recSB.append(" 제목: "+to.getTitle()+"</br>");
@@ -29,7 +29,7 @@
 			recSB.append("<img class='img-fluid game_image' src='"+to.getImageUrl()+"' alt='...' />");
 			recSB.append("</a>");
 			recSB.append("<div class='portfolio-caption'>");
-			recSB.append("<div class='portfolio-caption-heading'>"+to.getTitle()+"</div>");
+			recSB.append("<div class='portfolio-caption-heading font-bold'>"+to.getTitle()+"</div>");
 			recSB.append("</div>");
 			recSB.append("</div>");
 			recSB.append("</div>");
@@ -41,7 +41,7 @@
 	}
 	
 	if(userSeq != null){
-		favSB.append("<section class='page-section bg-light' id='portfolio'>");
+		favSB.append("<section class='page-section' id='portfolio'>");
 		favSB.append("<div class='container' id='p2'>");
 		favSB.append("<div class='text-center'>");
 		favSB.append("<h2 class='section-heading text-uppercase title'>favorite games</h2>");
@@ -60,9 +60,9 @@
 		
 		if(favlists.size() > 0) {
 			for(BoardgameTO to : favlists){
-				favSB.append("<div class='col-lg-4 col-sm-6 mb-4 align-self-center d-flex justify-content-center'>");
-				favSB.append("<div class='portfolio-item'>");
-				favSB.append("<a class='portfolio-link' href='gameView?seq="+to.getSeq()+"'>");
+				favSB.append("<div class='col-lg-4 mb-4 align-self-center d-flex justify-content-center'>");
+				favSB.append("<div class='portfolio-item border'>");
+				favSB.append("<a class='portfolio-link bg-white d-flex align-items-center justify-content-center' href='gameView?seq="+to.getSeq()+"'>");
 				favSB.append("<div class='portfolio-hover'>");
 				favSB.append("<div class='portfolio-hover-content'>");
 				favSB.append(" 제목: "+to.getTitle()+"</br>");
@@ -74,7 +74,7 @@
 				favSB.append("<img class='img-fluid game_image' src='"+to.getImageUrl()+"' alt='...' />");
 				favSB.append("</a>");
 				favSB.append("<div class='portfolio-caption'>");
-				favSB.append("<div class='portfolio-caption-heading'>"+to.getTitle()+"</div>");
+				favSB.append("<div class='portfolio-caption-heading font-bold'>"+to.getTitle()+"</div>");
 				favSB.append("</div>");
 				favSB.append("</div>");
 				favSB.append("</div>");
@@ -98,12 +98,12 @@
 	}
 	totalSB.append("</div>");
 	totalSB.append("</div>");
-	totalSB.append("<div class='row'>");
+	totalSB.append("<div class='row pt-3'>");
 
 	for(BoardgameTO to : totallists){
-		totalSB.append("<div class='col-lg-4 col-sm-6 mb-4 align-self-center d-flex justify-content-center'>");
-		totalSB.append("<div class='portfolio-item'>");
-		totalSB.append("<a class='portfolio-link' href='gameView?seq="+to.getSeq()+"'>");
+		totalSB.append("<div class='col-lg-4 mb-4 align-self-center d-flex justify-content-center'>");
+		totalSB.append("<div class='portfolio-item border'>");
+		totalSB.append("<a class='portfolio-link bg-white d-flex align-items-center justify-content-center' href='gameView?seq="+to.getSeq()+"'>");
 		totalSB.append("<div class='portfolio-hover'>");
 		totalSB.append("<div class='portfolio-hover-content'>");
 		totalSB.append(" 제목: "+to.getTitle()+"</br>");
@@ -115,7 +115,7 @@
 		totalSB.append("<img class='img-fluid game_image' src='"+to.getImageUrl()+"' alt='...' />");
 		totalSB.append("</a>");
 		totalSB.append("<div class='portfolio-caption'>");
-		totalSB.append("<div class='portfolio-caption-heading'>"+to.getTitle()+"</div>");
+		totalSB.append("<div class='portfolio-caption-heading font-bold'>"+to.getTitle()+"</div>");
 		totalSB.append("</div>");
 		totalSB.append("</div>");
 		totalSB.append("</div>");
@@ -134,7 +134,7 @@
 		int count = 0;
 		for(BoardgameTO to : recently_list){
 			recentSB.append("<li class='caret" + count + "'>");
-			recentSB.append("<div class='container'>");
+			recentSB.append("<div class='container q_div d-flex align-items-center justify-content-center'>");
 			recentSB.append("<img class='img-fluid q_image' src='"+ to.getImageUrl()+"' alt='' onclick=\"location.href='gameView?seq=" + to.getSeq() + "'\" />");
 			recentSB.append("</div>");
 			recentSB.append("</li>");
@@ -151,26 +151,27 @@
 	<head>
 		<%@ include file="/WEB-INF/views/include/head_setting.jspf" %>
 	     <!--  css 파일 -->
-		<link rel="stylesheet" href="assets/css/style.css" />
+		<link rel="stylesheet" href="/assets/css/style.css" />
 	    <!--  jquery cdn -->
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
 	    </script>
 	    <!-- 자바 스크립트 영역 -->
 	    <script type="text/javascript">
 		    $(document).ready(function() {
-	            // 퀵 메뉴를 따라다니도록 설정
+	            var topBtn = $("#topBtn");
 	            var quickMenu = $("#quickmenu1");
-	            var offset = quickMenu.offset();
-	            var topPadding = 20;
+	            
 	            $(window).scroll(function() {
-	                if ($(window).scrollTop() > offset.top) {
-	                    quickMenu.stop().animate({
-	                        marginTop: $(window).scrollTop() - offset.top + topPadding
-	                    });
+	                if ($(window).scrollTop() > 20) {
+	                	topBtn.show();
 	                } else {
-	                    quickMenu.stop().animate({
-	                        marginTop: 0
-	                    });
+	                	topBtn.hide();
+	                }
+	                
+	                if ($(window).scrollTop() > 700) {
+	                	quickMenu.show();
+	                } else {
+	                	quickMenu.hide();
 	                }
 	            });
         	});
@@ -186,6 +187,9 @@
 		    	} else {
 		    		$(".caretdown").hide();
 		    	}
+		    	
+		    	$("#topBtn").hide();
+		    	$("#quickmenu1").hide();
 		    }
 		    
 		    function caretUp() {
@@ -219,6 +223,11 @@
 		    		$(".caretdown").val(index+1);
 		    	}
 		    }
+			
+			function topFunction() {
+				document.body.scrollTop = 0; // For Safari
+				document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+			}
 	    </script>
 	    
 	    <meta charset="utf-8" />
@@ -227,40 +236,18 @@
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
 	    <!-- Masthead-->
-	    <header class="bg-secondary">
-	        <div class="container d-flex justify-content-center">
-	            <img class="main_image" src="assets/img/logos/boardgame.png">
-	        </div>
-	    </header>
-	    <!-- Navigation-->
-	    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
-	        <div class="container">
-	            <a class="navbar-brand" href="#page-top"></a>
-	            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-	                Menu
-	                <i class="fas fa-bars ms-1"></i>
-	            </button>
-	            <div class="collapse navbar-collapse" id="navbarResponsive">
-	                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-	                    <li class="nav-item"><a class="nav-link" href="#p1">추천게임</a></li>
-	                    <li class="nav-item"><a class="nav-link" href="#p2">즐겨찾기한게임</a></li>
-	                    <li class="nav-item"><a class="nav-link" href="#p3">전체게임</a></li>
-	                </ul>
-	            </div>
-	        </div>
-	    </nav>
-		<!--  캐러셀 -->
-		<div class="container my-5" id="c1">
+	    <header class="top-margin">
+	        <!--  캐러셀 -->
 		    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
 		        <div class="carousel-inner">
-		            <div class="carousel-item active" data-bs-interval="4000">
-		                <img src="assets/img/carousel/carousel1.jpg" class="d-block w-100" alt="...">
+		            <div class="carousel-item active banner" data-bs-interval="4000">
+		                <img src="assets/img/carousel/banner1.png" class="d-block w-100" alt="..." onclick="location.href='#'">
 		            </div>
-		            <div class="carousel-item" data-bs-interval="4000">
-		                <img src="assets/img/carousel/carousel2.jpg" class="d-block w-100" alt="...">
+		            <div class="carousel-item banner" data-bs-interval="4000">
+		                <img src="assets/img/carousel/banner2.png" class="d-block w-100" alt="..." onclick="location.href='#'">
 		            </div>
-		            <div class="carousel-item">
-		                <img src="assets/img/carousel/carousel3.jpg" class="d-block w-100" alt="...">
+		            <div class="carousel-item banner">
+		                <img src="assets/img/carousel/banner3.png" class="d-block w-100" alt="..." onclick="location.href='/partySearch'">
 		            </div>
 		        </div>
 		        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
@@ -272,9 +259,11 @@
 		            <span class="visually-hidden">Next</span>
 		        </button>
 		    </div>
-		</div>
+	    </header>
+	    <!-- 즐겨찾기 헤더-->
+	    <%=favSB %>
 	    <!-- 추천 헤더-->
-	    <section class="page-section bg-light" id="portfolio">
+	    <section class="page-section backg-quinary" id="portfolio">
 	        <div class="container" id="p1">
 	            <div class="text-center">
 	                <h2 class="section-heading text-uppercase title">Recommended games</h2>
@@ -285,10 +274,8 @@
 	            </div>
 	        </div>
 	    </section>
-	    <!-- 즐겨찾기 헤더-->
-	    <%=favSB %>
 	    <!-- 전체 헤더-->
-	    <section class="page-section bg-light" id="portfolio">
+	    <section class="page-section" id="portfolio">
 	        <div class="container" id="p3">
 	            <div class="text-center">
 	                <h2 class="section-heading text-uppercase title">whole games</h2>
@@ -302,7 +289,9 @@
 	    <div class="quickmenu" id="quickmenu1">
 	    	<%= recentSB %>
 		</div>
-	    
+		
+		<button type='button' class='btn btn-dark' id="topBtn" onclick="topFunction()"><i class="bi bi-arrow-up-circle"></i></button>
+		
 	    <!-- Core theme JS-->
 	    <script src="assets/js/scripts.js"></script>
 	    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->

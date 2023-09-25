@@ -317,7 +317,7 @@
 	
 	#scoreInfo table {
 		height: 500px;
-		font-size: 10px;
+		font-size: 20px;
 	}
 	
 </style>

@@ -27,7 +27,7 @@
 		boardHtml.append("<tr onclick='location.href=\"announceBoardView?seq=" + list.getSeq() + "&cpage="+ cpage +"\"'>");
 		boardHtml.append("<td class='board-img'><i class='bi bi-megaphone");
 		boardHtml.append(" h1 icon'></i></td>");
-		boardHtml.append("<td><span class='badge bg-secondary'>");
+		boardHtml.append("<td><span class='badge backg-primary'>");
 		boardHtml.append(list.getTag());
 		boardHtml.append("</span>&nbsp;");
 		boardHtml.append(list.getSubject() + " [" + list.getCmtCnt() + "]<br>");
@@ -116,7 +116,7 @@
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-5">
 				<div class="text-center text-white">
 					<h1 class="title">공지사항</h1>

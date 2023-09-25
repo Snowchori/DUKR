@@ -26,6 +26,21 @@
 	String theme = gameTO.getTheme();
 	String genre = gameTO.getGenre();
 	
+	int tab = (request.getParameter("tab") != null) ? Integer.parseInt(request.getParameter("tab")) : 1;
+	String tab1 = "";
+	String tab2 = "";
+	String tab3 = "";
+	
+	
+	if(tab == 1) {
+		tab1 = "active";
+	} else if(tab == 2) {
+		tab2 = "active";
+	} else if(tab == 3) {
+		tab3 = "active";
+	}
+	
+	
 	String[] rgbs = gameTO.getBgColor().split("/");
 	
 	String strFav = "";
@@ -208,7 +223,7 @@
 							  			timer: 1500,
 							  			timerProgressBar : true,
 							  			willClose: () => {
-							  				location.href='gameView?seq=<%= seq %>';
+							  				location.href='gameView?seq=<%= seq %>&tab=2';
 						  				}
 					  				});
 					  			} else {
@@ -326,7 +341,7 @@
 			  			},
 			  			success: function(data) {
 				  			if(data == 0) {
-				  				location.href='gameView?seq=' + seq;
+				  				location.href='gameView?seq=' + seq + '&tab=2';
 				  			} else {
 					  			Swal.fire({
 						  			icon: 'error',
@@ -365,7 +380,7 @@
 							  			timer: 1500,
 							  			timerProgressBar : true,
 							  			willClose: () => {
-							  				location.href='gameView?seq=' + seq;
+							  				location.href='gameView?seq=' + seq + '&tab=2';
 						  				}
 					  				});
 					  			} else {
@@ -382,11 +397,29 @@
 					}
 				})
 			}
+			 /**
+			  * 스크롤이 움직일때마다 값을 sessionStorage에 넣어줌
+			  */
+			let scrollHeight = 0;
+			addEventListener('scroll', (event) => {
+				scrollHeight = $(document).scrollTop();
+			    sessionStorage.setItem("scrollY", scrollHeight);
+			});
+
+			/**
+			  * 스크롤 위치 지정
+			  */
+			$(document).ready(function() {
+			    const scrollY = parseInt(sessionStorage.getItem("scrollY"));
+			    if(scrollY && scrollY > 0){
+			        window.scrollTo(0, scrollY);
+			    }
+			});
 		</script>
 	</head>
 	<body>
 		<%@ include file="/WEB-INF/views/include/top_bar_header.jspf" %>
-		<header class="py-5 bg-secondary">
+		<header class="top-margin py-5 backg-secondary">
 			<div class="container px-4 px-lg-5 my-2">
 				<div class="text-center text-white">
 					<h1 class="title"><%= title %></h1>
@@ -403,8 +436,8 @@
 			          	</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-3">
-							<img src="<%= imageUrl %>" class="img-fluid" alt="" id="game_img">
+						<div class="col-lg-3 m-3 view_frame d-flex align-items-center justify-content-center">
+							<img src="<%= imageUrl %>" class="img-fluid view_img" alt="" id="game_img">
 						</div>
 						<div class="col-lg-6 pt-4 pt-lg-0 content align-self-center">
 							<div class="row ginfo">
@@ -443,14 +476,14 @@
 						<div class="col-lg-12">
 							<!-- Tabs -->
 							<ul class="nav nav-pills mb-3">
-								<li><a class="nav-link active" data-bs-toggle="pill" href="#tab1">주요정보</a></li>
-								<li><a class="nav-link" data-bs-toggle="pill" href="#tab2">평가</a></li>
-								<li><a class="nav-link" data-bs-toggle="pill" href="#tab3">커뮤니티</a></li>
+								<li><a class="nav-link <%=tab1 %>" data-bs-toggle="pill" href="#tab1">주요정보</a></li>
+								<li><a class="nav-link <%=tab2 %>" data-bs-toggle="pill" href="#tab2">평가</a></li>
+								<li><a class="nav-link <%=tab3 %>" data-bs-toggle="pill" href="#tab3">커뮤니티</a></li>
 							</ul>
 							<!-- End Tabs -->
 							<!-- Tab Content -->
 							<div class="tab-content">
-								<div class="tab-pane fade show active" id="tab1">
+								<div class="tab-pane fade show <%=tab1 %>" id="tab1">
 									<div class="d-flex align-items-center mt-4">
 										<i class="bi bi-check2"></i>
 										<h4>장르</h4>
@@ -468,7 +501,7 @@
 									<p><%= brief %></p>
 								</div>
 								<!-- End Tab 1 Content -->
-								<div class="tab-pane fade show" id="tab2">
+								<div class="tab-pane fade show <%=tab2 %>" id="tab2">
 									<div>
 										<%= evalCnt %>
 									</div>
@@ -498,7 +531,7 @@
 									</form>
 								</div>
 								<!-- End Tab 2 Content -->
-								<div class="tab-pane fade show" id="tab3">
+								<div class="tab-pane fade show <%=tab3 %>" id="tab3">
 									<%= boardHtml %>
 								</div>
 								<!-- End Tab 3 Content -->
