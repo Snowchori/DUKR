@@ -436,8 +436,8 @@
 			          	</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-3">
-							<img src="<%= imageUrl %>" class="img-fluid" alt="" id="game_img">
+						<div class="col-lg-3 m-3 view_frame d-flex align-items-center justify-content-center">
+							<img src="<%= imageUrl %>" class="img-fluid view_img" alt="" id="game_img">
 						</div>
 						<div class="col-lg-6 pt-4 pt-lg-0 content align-self-center">
 							<div class="row ginfo">
