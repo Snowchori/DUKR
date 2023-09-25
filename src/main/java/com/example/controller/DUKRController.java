@@ -70,7 +70,7 @@ public class DUKRController {
 	@Autowired
 	private BoardDAO boardDAO;
 	
-	@Autowired
+	@Autowired 
 	private EvaluationDAO evalDAO;
 	
 	@Autowired
