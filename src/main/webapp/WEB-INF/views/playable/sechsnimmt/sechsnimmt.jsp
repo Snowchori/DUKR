@@ -9,8 +9,9 @@
 <script type="text/javascript">
 	window.onload = function(){
 		
+		//const socket = new WebSocket('ws://54.180.57.106:8080/sechsNimmt');
 		const socket = new WebSocket('ws://localhost:8080/sechsNimmt');
-		
+
 		$('#startBtn').on('click', function(){
 			$('#startBtn').html('매칭 대기중');
 			socket.send('match request');
@@ -140,6 +141,7 @@
 			if(event.data.split('@')[0] == 'picksPointer'){
 				const movingCard = event.data.split('@')[1];
 				const movingCardNumber = $('#picks_pick' + movingCard).text();
+				console.log('moving card : ' + movingCardNumber);
 				const target = event.data.split('@')[3];
 				const targetRow = target.split('c')[0].replaceAll('r', '');
 				const targetCol = target.split('c')[1];
@@ -203,7 +205,7 @@
 							$('#line' + targetRow).css({
 								'background-color' : 'red'
 							});
-							defaultDelayTime = 2000;
+							defaultDelayTime = 1500;
 							
 							delay(1000).then((result) => {
 								for(let col=1; col<=6; col++){
@@ -215,14 +217,19 @@
 								$('#line' + targetRow).css({
 									'background-color' : 'transparent'
 								});
+								
+								delay(defaultDelayTime).then((result) => {
+									socket.send('gameID@' + gameID + '@next instruction request');
+									defaultDelayTime = 1000;
+								});
 							});
 						});
+					}else{
+						delay(defaultDelayTime).then((result) => {
+							socket.send('gameID@' + gameID + '@next instruction request');
+							defaultDelayTime = 1000;
+						});
 					}
-					
-					delay(defaultDelayTime).then((result) => {
-						socket.send('gameID@' + gameID + '@next instruction request');
-						defaultDelayTime = 1000;
-					});
 				}	
 			}
 			
