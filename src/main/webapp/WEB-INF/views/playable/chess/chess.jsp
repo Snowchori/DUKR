@@ -9,6 +9,7 @@
 <script type="text/javascript">
 	window.onload = function(){
 		
+		//const socket = new WebSocket('ws://54.180.57.106:8080/chess');
 		const socket = new WebSocket('ws://localhost:8080/chess');
 		let promotableLoc = '';
 		
@@ -265,6 +266,7 @@
 		// 폰 프로모션 요청
 		function promotePawn(grade){
 			console.log('prom LOC : ' + promotableLoc);
+			console.log('p grade ' + grade);
 			socket.send('promote@' + promotableLoc + '@grade@' + grade);
 		}
 		
@@ -495,7 +497,7 @@
 								<td id="whiteQueen">&#9813;</td>
 								<td id="whiteRook">&#9814;</td>
 								<td id="whiteBishop">&#9815;</td>
-								<td id="whiteKnignt">&#9816;</td>
+								<td id="whiteKnight">&#9816;</td>
 							</tr>
 						</table>
 					</div>
@@ -506,7 +508,7 @@
 								<td id="blackQueen">&#9819;</td>
 								<td id="blackRook">&#9820;</td>
 								<td id="blackBishop">&#9821;</td>
-								<td id="blackKnignt">&#9822;</td>
+								<td id="blackKnight">&#9822;</td>
 							</tr>
 						</table>
 					</div>

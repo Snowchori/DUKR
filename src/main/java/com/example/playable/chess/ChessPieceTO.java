@@ -558,7 +558,8 @@ public class ChessPieceTO {
 					if(candidate.getGrade() == 0 && !candidate.isBw()) {
 						isSafe = false;
 					}
-				}else if(modifiedBoardStatus.get(positionOfKing - 9) != null) {
+				} 
+				if(modifiedBoardStatus.get(positionOfKing - 9) != null) {
 					candidate = modifiedBoardStatus.get(positionOfKing - 9);
 					if(candidate.getGrade() == 0 && !candidate.isBw()) {
 						isSafe = false;
@@ -571,7 +572,8 @@ public class ChessPieceTO {
 					if(candidate.getGrade() == 0 && candidate.isBw()) {
 						isSafe = false;
 					}
-				}else if(modifiedBoardStatus.get(positionOfKing + 9) != null) {
+				}
+				if(modifiedBoardStatus.get(positionOfKing + 9) != null) {
 					candidate = modifiedBoardStatus.get(positionOfKing + 9);
 					if(candidate.getGrade() == 0 && candidate.isBw()) {
 						isSafe = false;

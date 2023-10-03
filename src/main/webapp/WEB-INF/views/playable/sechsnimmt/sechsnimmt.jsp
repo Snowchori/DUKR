@@ -9,8 +9,8 @@
 <script type="text/javascript">
 	window.onload = function(){
 		
-		//const socket = new WebSocket('ws://54.180.57.106:8080/sechsNimmt');
-		const socket = new WebSocket('ws://localhost:8080/sechsNimmt');
+		const socket = new WebSocket('ws://54.180.57.106:8080/sechsNimmt');
+		//const socket = new WebSocket('ws://localhost:8080/sechsNimmt');
 
 		$('#startBtn').on('click', function(){
 			$('#startBtn').html('매칭 대기중');
