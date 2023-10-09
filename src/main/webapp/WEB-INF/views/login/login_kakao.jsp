@@ -90,8 +90,8 @@
 					          	}
 					        });  
 					        
-					        // 로그인 성공 후 메인페이지로 이동
-							location.href = history.go(-2);
+					        // 로그인 성공 후 이동
+							window.location.href = document.referrer;
 	       
 						}).catch(function(err) {
 							console.error('Failed to request user information: ' + err);
@@ -103,7 +103,6 @@
 					}
 				});
 			});
-			
 			
 		</script>
 	</head>

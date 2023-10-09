@@ -9,8 +9,8 @@
 <script type="text/javascript">
 	window.onload = function(){
 		
-		//const socket = new WebSocket('ws://54.180.57.106:8080/chess');
-		const socket = new WebSocket('ws://localhost:8080/chess');
+		const socket = new WebSocket('ws://54.180.57.106:8080/chess');
+		//const socket = new WebSocket('ws://localhost:8080/chess');
 		let promotableLoc = '';
 		
 		// 매칭버튼
