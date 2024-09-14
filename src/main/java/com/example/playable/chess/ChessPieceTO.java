@@ -9,17 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter 
 public class ChessPieceTO {
-	
-	// bw - false면 백, true면 흑
-	private boolean bw;
-	// 기물 이동여부
-	private boolean moved;
-	// position - 체스보드상 기물위치, 보드좌표 11~88, 십의자리가 가로축, 일의자리가 세로축, 00은 죽은상태
-	private int position;
-	// possibleMoves - 기물이 이동할수있는 위치 저장
-	private ArrayList<Integer> possibleMoves;
-	// grade - 기물 종류 / 0=pawn / 1=knight / 2=bishop / 3=rook / 4=queen / 5=king /
-	private int grade;
+
+	private boolean bw;	// bw - false면 백, true면 흑
+	private boolean moved;	// 기물 이동여부
+	private int position;	// 체스보드상 기물위치, 보드좌표 11~88, 십의자리가 가로축, 일의자리가 세로축, 00은 죽은상태
+	private ArrayList<Integer> possibleMoves;	// possibleMoves - 기물이 이동할수있는 위치 저장
+	private int grade;	// grade - 기물 종류 / 0=pawn / 1=knight / 2=bishop / 3=rook / 4=queen / 5=king /
 
 	// 생성자
 	public ChessPieceTO(boolean bw, int position, int grade) {
@@ -155,9 +150,23 @@ public class ChessPieceTO {
 
 		// knight
 		if(this.grade == 1) {
+			//int nextPosition;
+			int[] nextPositionArr = {21, -21, 19, -19, 12, -12, 8, -8};
+			for(int nextPosition : nextPositionArr){
+				int col = nextPosition / 10;
+				int row = nextPosition % 10;
 
-			// knight - move1
-			int nextPosition = this.position + 20 + 1;
+				if(col<=8 && col>=1 && row<=8 && row>=1) {
+					if(boardStatus.get(this.position + nextPosition) == null) {
+						this.possibleMoves.add(this.position + nextPosition);
+					}else if(boardStatus.get(this.position + nextPosition).bw != this.bw) {
+						this.possibleMoves.add(this.position + nextPosition);
+					}
+				}
+			}
+
+			/*// knight - move1
+			nextPosition = this.position + 20 + 1;
 			int col = nextPosition / 10;
 			int row = nextPosition % 10;
 			if(col<=8 && col>=1 && row<=8 && row>=1) {
@@ -250,7 +259,7 @@ public class ChessPieceTO {
 				}else if(boardStatus.get(this.position - 2 - 10).bw != this.bw) {
 					this.possibleMoves.add(this.position - 2 - 10);
 				}
-			}
+			}*/
 			
 		}
 		
@@ -420,8 +429,17 @@ public class ChessPieceTO {
 			
 			// 현위치 체크여부 판별용
 			this.possibleMoves.add(this.getPosition());
+
+			int[] checkArr = {1, -1, 9, -9, 10, -10, 11, -11};
+			for(int check : checkArr){
+				if(boardStatus.get(this.position + check) == null) {
+					this.possibleMoves.add(this.position + check);
+				}else if(boardStatus.get(this.position + check).bw != this.bw) {
+					this.possibleMoves.add(this.position + check);
+				}
+			}
 			
-			// king - 상
+			/*// king - 상
 			if(boardStatus.get(this.position + 10) == null) {
 				this.possibleMoves.add(this.position + 10);
 			}else if(boardStatus.get(this.position + 10).bw != this.bw) {
@@ -475,7 +493,7 @@ public class ChessPieceTO {
 				this.possibleMoves.add(this.position - 11);
 			}else if(boardStatus.get(this.position - 11).bw != this.bw) {
 				this.possibleMoves.add(this.position - 11);
-			}
+			}*/
 			
 			// 캐슬링
 			if(!this.isMoved()) {
@@ -545,10 +563,9 @@ public class ChessPieceTO {
 			if(cpTO.getGrade() == 5) {
 				positionOfKing = possibleMove;
 			}
-			// 잠재적 위험요소
-			ChessPieceTO candidate = null;
-			// possibleMove 의 안전 여부
-			boolean isSafe = true; 
+
+			ChessPieceTO candidate = null;	// 잠재적 위험요소
+			boolean isSafe = true;	// possibleMove 의 안전 여부
 			
 			// 상대방의 폰으로부터 안전한가?
 			if(cpTO.isBw()) {
@@ -582,7 +599,19 @@ public class ChessPieceTO {
 			}
 			
 			// 상대방의 나이트로부터 안전한가?
-			if(isSafe && modifiedBoardStatus.get(positionOfKing + 8) != null) {
+			int[] knightArr = {8, -8, 12, -12, 19, -19, 21, -21};
+
+			for(int knight : knightArr){
+				if(isSafe && modifiedBoardStatus.get(positionOfKing + knight) != null) {
+					candidate = modifiedBoardStatus.get(positionOfKing + knight);
+					if(candidate.getGrade() == 1 && candidate.isBw() != cpTO.isBw()) {
+						isSafe = false;
+						break;
+					}
+				}
+			}
+
+			/*if(isSafe && modifiedBoardStatus.get(positionOfKing + 8) != null) {
 				candidate = modifiedBoardStatus.get(positionOfKing + 8);
 				if(candidate.getGrade() == 1 && candidate.isBw() != cpTO.isBw()) {
 					isSafe = false;
@@ -629,7 +658,7 @@ public class ChessPieceTO {
 				if(candidate.getGrade() == 1 && candidate.isBw() != cpTO.isBw()) {
 					isSafe = false;
 				}
-			}
+			}*/
 
 			// 상대방의 비숍으로부터 안전한가?
 			if(isSafe) {
@@ -800,6 +829,7 @@ public class ChessPieceTO {
 						count8 ++;
 					}
 				}
+
 			}
 			
 			// 상대방의 퀸으로부터 안전한가?
@@ -809,7 +839,17 @@ public class ChessPieceTO {
 			
 			// 상대방의 킹으로부터 안전한가?
 			if(isSafe) {
-				// 상
+				int[] kingArr = {10, -10, 1, -1, 11, -11, 9, -9};
+
+				for(int king : kingArr){
+					candidate = modifiedBoardStatus.get(positionOfKing + king);
+					if(candidate != null && candidate.getGrade() == 5 && candidate.isBw() != cpTO.isBw()) {
+						isSafe = false;
+						break;
+					}
+				}
+
+				/*// 상
 				candidate = modifiedBoardStatus.get(positionOfKing + 10);
 				if(candidate != null && candidate.getGrade() == 5 && candidate.isBw() != cpTO.isBw()) {
 					isSafe = false;
@@ -855,7 +895,8 @@ public class ChessPieceTO {
 				candidate = modifiedBoardStatus.get(positionOfKing + 9);
 				if(candidate != null && candidate.getGrade() == 5 && candidate.isBw() != cpTO.isBw()) {
 					isSafe = false;
-				}
+				}*/
+
 			}
 			
 			// 모든 경우에 상대 기물로부터의 체크에서 안전하다면 리턴할 결과에 추가
